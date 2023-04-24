@@ -2,7 +2,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.19.0"
 
-  name = "dev-radar-cluster-vpc"
+  name = "${var.environment}-radar-base-cluster-vpc"
   cidr = "10.0.0.0/16"
 
   azs = [
@@ -35,8 +35,5 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = {
-    Name    = "dev-radar-cluster-vpc"
-    Project = "radar-base-development"
-  }
+  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cluster-vpc" }), var.common_tags)
 }

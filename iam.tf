@@ -2,7 +2,7 @@ module "allow_eks_access_iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "5.15.0"
 
-  name          = "dev-allow-eks-access"
+  name          = "${var.environment}-allow-eks-access"
   create_policy = true
 
   policy = jsonencode({
@@ -18,10 +18,7 @@ module "allow_eks_access_iam_policy" {
     ]
   })
 
-  tags = {
-    Name    = "dev-allow-eks-access"
-    Project = "radar-base-development"
-  }
+  tags = merge(tomap({ "Name" : "${var.environment}-allow-eks-access" }), var.common_tags)
 }
 
 module "eks_admins_iam_role" {
@@ -29,7 +26,7 @@ module "eks_admins_iam_role" {
   version          = "5.15.0"
   role_description = "The administrative role for the EKS staging cluster - stage-cluster-1"
 
-  role_name         = "dev-eks-admin-role"
+  role_name         = "${var.environment}-eks-admin-role"
   create_role       = true
   role_requires_mfa = false
 
@@ -39,10 +36,7 @@ module "eks_admins_iam_role" {
     "arn:aws:iam::${module.vpc.vpc_owner_id}:root"
   ]
 
-  tags = {
-    Name    = "dev-eks-admin-role"
-    Project = "radar-base-development"
-  }
+  tags = merge(tomap({ "Name" : "${var.environment}-eks-admin-role" }), var.common_tags)
 }
 
 
@@ -50,7 +44,7 @@ module "allow_assume_eks_admins_iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "5.15.0"
 
-  name          = "dev-allow-assume-eks-admin-role"
+  name          = "${var.environment}-allow-assume-eks-admin-role"
   create_policy = true
 
   policy = jsonencode({
@@ -66,24 +60,18 @@ module "allow_assume_eks_admins_iam_policy" {
     ]
   })
 
-  tags = {
-    Name    = "dev-allow-assume-eks-admin-role"
-    Project = "radar-base-development"
-  }
+  tags = merge(tomap({ "Name" : "${var.environment}-allow-assume-eks-admin-role" }), var.common_tags)
 }
 
 module "eks_admins_iam_group" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-group-with-policies"
   version = "5.15.0"
 
-  name                              = "dev-eks-admin-group"
+  name                              = "${var.environment}-eks-admin-group"
   attach_iam_self_management_policy = false
   create_group                      = true
-  group_users                       = ["username"]
+  group_users                       = var.eks_admins_group_users
   custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
 
-  tags = {
-    Name    = "dev-eks-admin-group"
-    Project = "radar-base-development"
-  }
+  tags = merge(tomap({ "Name" : "${var.environment}-eks-admin-group" }), var.common_tags)
 }
