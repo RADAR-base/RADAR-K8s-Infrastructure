@@ -24,7 +24,7 @@ module "allow_eks_access_iam_policy" {
 module "eks_admins_iam_role" {
   source           = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   version          = "5.15.0"
-  role_description = "The administrative role for the EKS staging cluster - stage-cluster-1"
+  role_description = "The administrative role for the EKS cluster"
 
   role_name         = "${var.environment}-eks-admin-role"
   create_role       = true
