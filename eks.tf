@@ -1,6 +1,6 @@
-module "vpc_cni_irsa" {
+module "vpc_cni_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.17.0"
+  version = "~> 5.0"
 
   role_name             = "${var.environment}-eks-vpc-cni-irsa"
   attach_vpc_cni_policy = true
@@ -16,9 +16,9 @@ module "vpc_cni_irsa" {
   tags = merge(tomap({ "Name" : "${var.environment}-eks-vpc-cni-irsa" }), var.common_tags)
 }
 
-module "ebs_csi_irsa" {
+module "ebs_csi_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.17.0"
+  version = "~> 5.0"
 
   role_name             = "${var.environment}-eks-ebs-cni-irsa"
   attach_ebs_csi_policy = true
@@ -32,6 +32,42 @@ module "ebs_csi_irsa" {
   }
 
   tags = merge(tomap({ "Name" : "${var.environment}-eks-ebs-cni-irsa" }), var.common_tags)
+}
+
+module "external_dns_irsa_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name                     = "${var.environment}-eks-external-dns-irsa"
+  attach_external_dns_policy    = true
+  external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${var.hosted_zone_name}"]
+
+  oidc_providers = {
+    ex = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:external-dns"]
+    }
+  }
+
+  tags = merge(tomap({ "Name" : "${var.environment}-eks-external-dns-irsa" }), var.common_tags)
+}
+
+module "cert_manager_irsa_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name                     = "${var.environment}-eks-cert-manager-irsa"
+  attach_cert_manager_policy    = true
+  cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${var.hosted_zone_name}"]
+
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:cert-manager"]
+    }
+  }
+
+  tags = merge(tomap({ "Name" : "${var.environment}-eks-cert-manager-irsa" }), var.common_tags)
 }
 
 module "eks" {
@@ -57,7 +93,7 @@ module "eks" {
       addon_version            = var.vpc_cni_version
       resolve_conflicts        = "OVERWRITE"
       before_compute           = true
-      service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
+      service_account_role_arn = module.vpc_cni_irsa_role.iam_role_arn
       configuration_values = jsonencode({
         env = {
           # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
@@ -69,7 +105,7 @@ module "eks" {
     aws-ebs-csi-driver = {
       addon_version            = var.ebs_csi_driver_version
       resolve_conflicts        = "OVERWRITE"
-      service_account_role_arn = module.ebs_csi_irsa.iam_role_arn
+      service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
     }
   }
 

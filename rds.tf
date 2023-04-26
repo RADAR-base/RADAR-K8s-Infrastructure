@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "radar_base_dev_rds_subnet" {
-  name       = "radar-base-dev-rds-subnet"
+  name       = "radar-base-${var.environment}-rds-subnet"
   subnet_ids = module.vpc.private_subnets
 }
 
