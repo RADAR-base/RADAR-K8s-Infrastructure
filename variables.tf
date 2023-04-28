@@ -43,7 +43,7 @@ variable "ebs_csi_driver_version" {
 
 variable "instance_types" {
   type    = list(any)
-  default = ["m5.large"]
+  default = ["m5a.large", "m5a.xlarge"]
 }
 
 variable "eks_admins_group_users" {
@@ -54,4 +54,12 @@ variable "eks_admins_group_users" {
 variable "hosted_zone_name" {
   type    = string
   default = ""
+}
+
+variable "AWS_ACCESS_KEY_ID" {
+  type = string
+}
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  type = string
 }

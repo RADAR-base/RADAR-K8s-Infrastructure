@@ -132,9 +132,10 @@ module "eks" {
       EOT
 
       labels = {
-        role = "dmz"
+        role = "dmz-1"
       }
 
+      # Do we need this in the general template?
       taints = [{
         key    = "dmz-pod"
         value  = "false"
@@ -149,8 +150,8 @@ module "eks" {
       }
     }
 
-    wrk = {
-      desired_size = 1
+    worker = {
+      desired_size = 5
       min_size     = 1
       max_size     = 10
 
@@ -162,7 +163,7 @@ module "eks" {
       EOT
 
       labels = {
-        role = "wrk"
+        role = "worker"
       }
 
       instance_types = var.instance_types
