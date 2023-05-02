@@ -85,29 +85,3 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "velero_backups_en
     }
   }
 }
-
-# # For each bucket
-# resource "aws_s3_bucket_policy" "bucket_policy" {
-#   bucket = aws_s3_bucket.example.id
-#   policy = data.aws_iam_policy_document.allow_access_from_another_account.json
-# }
-
-# # For each bucket
-# data "aws_iam_policy_document" "bucket_policy_document" {
-#   statement {
-#     principals {
-#       type        = "AWS"
-#       identifiers = ["123456789012"]
-#     }
-
-#     actions = [
-#       "s3:GetObject",
-#       "s3:ListBucket",
-#     ]
-
-#     resources = [
-#       aws_s3_bucket.example.arn,
-#       "${aws_s3_bucket.example.arn}/*",
-#     ]
-#   }
-# }
