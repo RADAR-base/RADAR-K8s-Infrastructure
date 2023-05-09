@@ -21,29 +21,47 @@ variable "eks_cluster_version" {
   default = "1.25"
 }
 
-variable "coredns_version" {
-  type    = string
-  default = "v1.9.3-eksbuild.2"
-}
-
-variable "kube_proxy_version" {
-  type    = string
-  default = "v1.25.6-eksbuild.2"
-}
-
-variable "vpc_cni_version" {
-  type    = string
-  default = "v1.12.6-eksbuild.1"
-}
-
-variable "ebs_csi_driver_version" {
-  type    = string
-  default = "v1.16.0-eksbuild.1"
+variable "eks_addon_version" {
+  type = map(string)
+  default = {
+    "coredns"        = "v1.9.3-eksbuild.2"
+    "kube_proxy"     = "v1.25.6-eksbuild.2"
+    "vpc_cni"        = "v1.12.6-eksbuild.1"
+    "ebs_csi_driver" = "v1.16.0-eksbuild.1"
+  }
 }
 
 variable "instance_types" {
   type    = list(any)
   default = ["m5a.large", "m5a.xlarge"]
+}
+
+variable "instance_capacity_type" {
+  type    = string
+  default = "SPOT"
+
+  validation {
+    condition     = var.instance_capacity_type == "ON_DEMAND" || var.instance_capacity_type == "SPOT"
+    error_message = "Invalid instance capacity type. Allowed values are 'ON_DEMAND' or 'SPOT'."
+  }
+}
+
+variable "dmz_node_sizes" {
+  type = map(number)
+  default = {
+    "desired" = 1
+    "min"     = 1
+    "max"     = 2
+  }
+}
+
+variable "worker_node_sizes" {
+  type = map(number)
+  default = {
+    "desired" = 6
+    "min"     = 1
+    "max"     = 10
+  }
 }
 
 variable "eks_admins_group_users" {
@@ -57,13 +75,35 @@ variable "hosted_zone_name" {
 }
 
 variable "AWS_ACCESS_KEY_ID" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "AWS_SECRET_ACCESS_KEY" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "AWS_SESSION_TOKEN" {
-  type = string
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "management_portal_postgres_password" {
+  type      = string
+  default   = "CHANGE_ME"
+  sensitive = true
+}
+
+variable "radar_appserver_postgres_password" {
+  type      = string
+  default   = "CHANGE_ME"
+  sensitive = true
+}
+
+variable "radar_rest_sources_backend_postgres_password" {
+  type      = string
+  default   = "CHANGE_ME"
+  sensitive = true
 }

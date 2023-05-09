@@ -40,7 +40,7 @@ resource "aws_db_instance" "managementportal" {
   engine_version               = "13.7"
   instance_class               = "db.t4g.micro"
   username                     = "postgres"
-  password                     = "change_me"
+  password                     = var.management_portal_postgres_password
   allocated_storage            = 5
   storage_type                 = "standard"
   storage_encrypted            = true
@@ -60,7 +60,7 @@ resource "aws_db_instance" "appserver" {
   engine_version               = "13.7"
   instance_class               = "db.t4g.micro"
   username                     = "postgres"
-  password                     = "change_me"
+  password                     = var.radar_appserver_postgres_password
   allocated_storage            = 5
   storage_type                 = "standard"
   storage_encrypted            = true
@@ -80,7 +80,7 @@ resource "aws_db_instance" "rest_sources_auth" {
   engine_version               = "13.7"
   instance_class               = "db.t4g.micro"
   username                     = "postgres"
-  password                     = "change_me"
+  password                     = var.radar_rest_sources_backend_postgres_password
   allocated_storage            = 5
   storage_type                 = "standard"
   storage_encrypted            = true

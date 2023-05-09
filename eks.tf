@@ -82,15 +82,15 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      addon_version     = var.coredns_version
+      addon_version     = var.eks_addon_version.coredns
       resolve_conflicts = "OVERWRITE"
     }
     kube-proxy = {
-      addon_version     = var.kube_proxy_version
+      addon_version     = var.eks_addon_version.kube_proxy
       resolve_conflicts = "OVERWRITE"
     }
     vpc-cni = {
-      addon_version            = var.vpc_cni_version
+      addon_version            = var.eks_addon_version.vpc_cni
       resolve_conflicts        = "OVERWRITE"
       before_compute           = true
       service_account_role_arn = module.vpc_cni_irsa_role.iam_role_arn
@@ -103,7 +103,7 @@ module "eks" {
       })
     }
     aws-ebs-csi-driver = {
-      addon_version            = var.ebs_csi_driver_version
+      addon_version            = var.eks_addon_version.ebs_csi_driver
       resolve_conflicts        = "OVERWRITE"
       service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
     }
@@ -120,9 +120,9 @@ module "eks" {
 
   eks_managed_node_groups = {
     dmz = {
-      desired_size = 1
-      min_size     = 1
-      max_size     = 1
+      desired_size = var.dmz_node_sizes["desired"]
+      min_size     = var.dmz_node_sizes["min"]
+      max_size     = var.dmz_node_sizes["max"]
 
       pre_bootstrap_user_data = <<-EOT
         cd /tmp
@@ -143,7 +143,7 @@ module "eks" {
       }]
 
       instance_types = var.instance_types
-      capacity_type  = "SPOT"
+      capacity_type  = var.instance_capacity_type
 
       iam_role_additional_policies = {
         AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
@@ -151,9 +151,9 @@ module "eks" {
     }
 
     worker = {
-      desired_size = 5
-      min_size     = 1
-      max_size     = 10
+      desired_size = var.worker_node_sizes["desired"]
+      min_size     = var.worker_node_sizes["min"]
+      max_size     = var.worker_node_sizes["max"]
 
       pre_bootstrap_user_data = <<-EOT
         cd /tmp
@@ -167,7 +167,7 @@ module "eks" {
       }
 
       instance_types = var.instance_types
-      capacity_type  = "SPOT"
+      capacity_type  = var.instance_capacity_type
 
       iam_role_additional_policies = {
         AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
