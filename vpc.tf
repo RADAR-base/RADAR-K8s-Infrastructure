@@ -6,9 +6,9 @@ module "vpc" {
   cidr = "10.0.0.0/16"
 
   azs = [
-    "eu-west-2a",
-    "eu-west-2b",
-    "eu-west-2c",
+    "${var.region}a",
+    "${var.region}b",
+    "${var.region}c",
   ]
   private_subnets = [
     "10.0.0.0/19",
