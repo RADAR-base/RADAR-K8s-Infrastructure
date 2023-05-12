@@ -110,7 +110,7 @@ module "eks" {
   }
 
   vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  subnet_ids = [module.vpc.private_subnets[0]] # Single AZ due to EBS mounting limit
 
   enable_irsa = true
 
@@ -120,9 +120,9 @@ module "eks" {
 
   eks_managed_node_groups = {
     dmz = {
-      desired_size = var.dmz_node_sizes["desired"]
-      min_size     = var.dmz_node_sizes["min"]
-      max_size     = var.dmz_node_sizes["max"]
+      desired_size = var.dmz_node_size["desired"]
+      min_size     = var.dmz_node_size["min"]
+      max_size     = var.dmz_node_size["max"]
 
       pre_bootstrap_user_data = <<-EOT
         cd /tmp
@@ -151,9 +151,9 @@ module "eks" {
     }
 
     worker = {
-      desired_size = var.worker_node_sizes["desired"]
-      min_size     = var.worker_node_sizes["min"]
-      max_size     = var.worker_node_sizes["max"]
+      desired_size = var.worker_node_size["desired"]
+      min_size     = var.worker_node_size["min"]
+      max_size     = var.worker_node_size["max"]
 
       pre_bootstrap_user_data = <<-EOT
         cd /tmp

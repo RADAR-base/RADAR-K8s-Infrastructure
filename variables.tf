@@ -18,7 +18,7 @@ variable "common_tags" {
 
 variable "eks_cluster_version" {
   type    = string
-  default = "1.25"
+  default = "1.26"
 }
 
 variable "eks_addon_version" {
@@ -46,7 +46,7 @@ variable "instance_capacity_type" {
   }
 }
 
-variable "dmz_node_sizes" {
+variable "dmz_node_size" {
   type = map(number)
   default = {
     "desired" = 1
@@ -55,7 +55,7 @@ variable "dmz_node_sizes" {
   }
 }
 
-variable "worker_node_sizes" {
+variable "worker_node_size" {
   type = map(number)
   default = {
     "desired" = 6
