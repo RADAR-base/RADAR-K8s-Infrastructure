@@ -6,10 +6,12 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
 
 # Usage
 It is recommended that you use RADAR-K8s-Infrastructure as a template and create your own IaC repository from it (starting with a private one probably). Make sure to customise enclosed templates to your needs before creating the desired infrastructure.
-  <img src="./image/use_this_template.png" alt="use this template" width="500" height="124">
+
+<img src="./image/use_this_template.png" alt="use this template" width="500" height="124">
 
 ## Set up environment variables
 ```
+export TF_VAR_AWS_REGION=$AWS_REGION
 export TF_VAR_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 export TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 # For temporary credentials and SSO

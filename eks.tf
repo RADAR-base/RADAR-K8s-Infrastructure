@@ -110,7 +110,7 @@ module "eks" {
   }
 
   vpc_id     = module.vpc.vpc_id
-  subnet_ids = [module.vpc.private_subnets[0]] # Single AZ due to EBS mounting limit
+  subnet_ids = concat(module.vpc.public_subnets, module.vpc.private_subnets)
 
   enable_irsa = true
 
@@ -144,6 +144,7 @@ module "eks" {
 
       instance_types = var.instance_types
       capacity_type  = var.instance_capacity_type
+      subnet_ids     = [module.vpc.public_subnets[0]]
 
       iam_role_additional_policies = {
         AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
@@ -168,6 +169,7 @@ module "eks" {
 
       instance_types = var.instance_types
       capacity_type  = var.instance_capacity_type
+      subnet_ids     = [module.vpc.private_subnets[0]] # Single AZ due to EBS mounting limit
 
       iam_role_additional_policies = {
         AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"

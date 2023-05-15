@@ -25,7 +25,7 @@ resource "aws_iam_policy" "s3_access" {
 
 resource "aws_vpc_endpoint" "s3" {
   vpc_id       = module.vpc.vpc_id
-  service_name = "com.amazonaws.${var.region}.s3"
+  service_name = "com.amazonaws.${var.AWS_REGION}.s3"
 
   tags = merge(tomap({ "Name" : "${var.environment}-s3-vpc-endpoint" }), var.common_tags)
 }

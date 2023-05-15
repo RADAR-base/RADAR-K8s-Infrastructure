@@ -6,9 +6,9 @@ module "vpc" {
   cidr = "10.0.0.0/16"
 
   azs = [
-    "${var.region}a",
-    "${var.region}b",
-    "${var.region}c",
+    "${var.AWS_REGION}a",
+    "${var.AWS_REGION}b",
+    "${var.AWS_REGION}c",
   ]
   private_subnets = [
     "10.0.0.0/19",

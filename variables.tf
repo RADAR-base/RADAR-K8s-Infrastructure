@@ -1,8 +1,3 @@
-variable "region" {
-  type    = string
-  default = "eu-west-2"
-}
-
 variable "environment" {
   type    = string
   default = "dev"
@@ -72,6 +67,11 @@ variable "eks_admins_group_users" {
 variable "hosted_zone_name" {
   type    = string
   default = ""
+}
+
+variable "AWS_REGION" {
+  type    = string
+  default = "eu-west-2"
 }
 
 variable "AWS_ACCESS_KEY_ID" {
