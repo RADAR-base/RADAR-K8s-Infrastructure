@@ -39,3 +39,7 @@ module "vpc" {
 
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cluster-vpc" }), var.common_tags)
 }
+
+output "radar_base_vpc_public_subnets" {
+  value = module.vpc.public_subnets
+}

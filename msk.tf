@@ -117,3 +117,11 @@ resource "aws_msk_cluster" "msk_cluster" {
     revision = 1
   }
 }
+
+output "radar_base_msk_bootstrap_brokers" {
+  value = aws_msk_cluster.msk_cluster.bootstrap_brokers_tls
+}
+
+output "radar_base_msk_zookeeper_connect" {
+  value = aws_msk_cluster.msk_cluster.zookeeper_connect_string
+}

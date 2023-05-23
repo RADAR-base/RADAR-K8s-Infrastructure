@@ -2,7 +2,7 @@ module "vpc_cni_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name             = "${var.environment}-eks-vpc-cni-irsa"
+  role_name             = "${var.environment}-radar-base-vpc-cni-irsa"
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv4   = true
 
@@ -13,14 +13,14 @@ module "vpc_cni_irsa_role" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-eks-vpc-cni-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-vpc-cni-irsa" }), var.common_tags)
 }
 
 module "ebs_csi_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name             = "${var.environment}-eks-ebs-cni-irsa"
+  role_name             = "${var.environment}-radar-base-ebs-csi-irsa"
   attach_ebs_csi_policy = true
 
 
@@ -31,16 +31,16 @@ module "ebs_csi_irsa_role" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-eks-ebs-cni-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-ebs-csi-irsa" }), var.common_tags)
 }
 
 module "external_dns_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                     = "${var.environment}-eks-external-dns-irsa"
+  role_name                     = "${var.environment}-radar-base-external-dns-irsa"
   attach_external_dns_policy    = true
-  external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${var.hosted_zone_name}"]
+  external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
 
   oidc_providers = {
     ex = {
@@ -49,16 +49,16 @@ module "external_dns_irsa_role" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-eks-external-dns-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-external-dns-irsa" }), var.common_tags)
 }
 
 module "cert_manager_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                     = "${var.environment}-eks-cert-manager-irsa"
+  role_name                     = "${var.environment}-radar-base-cert-manager-irsa"
   attach_cert_manager_policy    = true
-  cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${var.hosted_zone_name}"]
+  cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
 
   oidc_providers = {
     main = {
@@ -67,7 +67,7 @@ module "cert_manager_irsa_role" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-eks-cert-manager-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cert-manager-irsa" }), var.common_tags)
 }
 
 module "eks" {
@@ -213,4 +213,8 @@ resource "aws_security_group" "eks_external_services_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+output "radar_base_eks_cluster_name" {
+  value = module.eks.cluster_name
 }

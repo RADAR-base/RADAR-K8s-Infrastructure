@@ -85,3 +85,15 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "velero_backups_en
     }
   }
 }
+
+output "radar_base_s3_intermediate_output_bucket_name" {
+  value = aws_s3_bucket.intermediate_output_storage.bucket
+}
+
+output "radar_base_s3_output_bucket_name" {
+  value = aws_s3_bucket.output_storage.bucket
+}
+
+output "radar_base_s3_velero_bucket_name" {
+  value = aws_s3_bucket.velero_backups.bucket
+}

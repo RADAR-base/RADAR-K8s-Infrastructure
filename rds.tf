@@ -1,4 +1,4 @@
-resource "aws_db_subnet_group" "radar_base_dev_rds_subnet" {
+resource "aws_db_subnet_group" "rds_subnet" {
   name       = "radar-base-${var.environment}-rds-subnet"
   subnet_ids = module.vpc.private_subnets
 }
@@ -46,7 +46,7 @@ resource "aws_db_instance" "managementportal" {
   storage_encrypted            = true
   skip_final_snapshot          = true
   publicly_accessible          = false
-  db_subnet_group_name         = aws_db_subnet_group.radar_base_dev_rds_subnet.name
+  db_subnet_group_name         = aws_db_subnet_group.rds_subnet.name
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
 
@@ -66,7 +66,7 @@ resource "aws_db_instance" "appserver" {
   storage_encrypted            = true
   skip_final_snapshot          = true
   publicly_accessible          = false
-  db_subnet_group_name         = aws_db_subnet_group.radar_base_dev_rds_subnet.name
+  db_subnet_group_name         = aws_db_subnet_group.rds_subnet.name
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
 
@@ -86,9 +86,45 @@ resource "aws_db_instance" "rest_sources_auth" {
   storage_encrypted            = true
   skip_final_snapshot          = true
   publicly_accessible          = false
-  db_subnet_group_name         = aws_db_subnet_group.radar_base_dev_rds_subnet.name
+  db_subnet_group_name         = aws_db_subnet_group.rds_subnet.name
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
 
   tags = merge(tomap({ "Name" : "radar-base-${var.environment}-rest-sources-auth" }), var.common_tags)
+}
+
+output "radar_base_rds_managementportal_host" {
+  value = aws_db_instance.managementportal.address
+}
+
+output "radar_base_rds_managementportal_port" {
+  value = aws_db_instance.managementportal.port
+}
+
+output "radar_base_rds_managementportal_user" {
+  value = aws_db_instance.managementportal.username
+}
+
+output "radar_base_rds_appserver_host" {
+  value = aws_db_instance.appserver.address
+}
+
+output "radar_base_rds_appserver_port" {
+  value = aws_db_instance.appserver.port
+}
+
+output "radar_base_rds_appserver_user" {
+  value = aws_db_instance.appserver.username
+}
+
+output "radar_base_rds_rest_sources_auth_host" {
+  value = aws_db_instance.rest_sources_auth.address
+}
+
+output "radar_base_rds_rest_sources_auth_port" {
+  value = aws_db_instance.rest_sources_auth.port
+}
+
+output "radar_base_rds_rest_sources_auth_user" {
+  value = aws_db_instance.rest_sources_auth.username
 }

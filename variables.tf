@@ -1,3 +1,25 @@
+
+variable "AWS_REGION" {
+  type    = string
+  default = "eu-west-2"
+}
+
+variable "AWS_ACCESS_KEY_ID" {
+  type      = string
+  sensitive = true
+}
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  type      = string
+  sensitive = true
+}
+
+variable "AWS_SESSION_TOKEN" {
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
 variable "environment" {
   type    = string
   default = "dev"
@@ -28,7 +50,7 @@ variable "eks_addon_version" {
 
 variable "instance_types" {
   type    = list(any)
-  default = ["m5a.large", "m5a.xlarge"]
+  default = ["m5a.large", "m5.large", "m5a.xlarge", "m5.xlarge"]
 }
 
 variable "instance_capacity_type" {
@@ -53,7 +75,7 @@ variable "dmz_node_size" {
 variable "worker_node_size" {
   type = map(number)
   default = {
-    "desired" = 6
+    "desired" = 3
     "min"     = 1
     "max"     = 10
   }
@@ -64,30 +86,9 @@ variable "eks_admins_group_users" {
   default = []
 }
 
-variable "hosted_zone_name" {
+variable "domain_name" {
   type    = string
   default = ""
-}
-
-variable "AWS_REGION" {
-  type    = string
-  default = "eu-west-2"
-}
-
-variable "AWS_ACCESS_KEY_ID" {
-  type      = string
-  sensitive = true
-}
-
-variable "AWS_SECRET_ACCESS_KEY" {
-  type      = string
-  sensitive = true
-}
-
-variable "AWS_SESSION_TOKEN" {
-  type      = string
-  default   = ""
-  sensitive = true
 }
 
 variable "management_portal_postgres_password" {

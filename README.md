@@ -33,4 +33,12 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-N.B.: As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. Last but not least, if your cluster is on longer in use, run `terraform destory` to delete all the resources associated with it and reduce your cloud spending.
+Once the infrastructure update is finished successfully, you can start deploying RADAR-base components to the newly created cluster by following the [Installation Guide](https://github.com/RADAR-base/RADAR-Kubernetes#installation). But before running `helmfile sync`, You will find yourself needing to configure a few resource values required by `production.yaml` and only known post to infrastructure creation. We have exported the values of those resources and you can get them by simply running:
+```
+terraform output
+```
+
+N.B.: As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. Last but not least, if your cluster is no longer in use, run `terraform destory` to delete all the associated resources and reduce your cloud spending.
+
+## Known limits
+* Since the creation of the nginx-ingress's NLB is done inside a pod which is external to Terraform, you need to remove the NLB beforehand to make the terraform destroy command succeed.
