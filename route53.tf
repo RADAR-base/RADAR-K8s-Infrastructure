@@ -8,7 +8,7 @@ resource "aws_route53_record" "main" {
   name    = "${var.environment}.${var.domain_name}"
   type    = "CNAME"
   ttl     = 300
-  records = ["nlb.example.org"] # Replace this value with the DNS name of the NLB after it is created
+  records = [aws_eip.cluster_loadbalancer_eip.public_dns]
 }
 
 resource "aws_route53_record" "alertmanager" {
@@ -57,4 +57,8 @@ resource "aws_route53_record" "s3" {
   type    = "CNAME"
   ttl     = 300
   records = ["${var.environment}.${var.domain_name}"]
+}
+
+output "radar_base_route53_hosted_zone_id" {
+  value = aws_route53_zone.primary.zone_id
 }

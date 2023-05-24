@@ -75,7 +75,7 @@ variable "dmz_node_size" {
 variable "worker_node_size" {
   type = map(number)
   default = {
-    "desired" = 3
+    "desired" = 6
     "min"     = 1
     "max"     = 10
   }
@@ -88,23 +88,23 @@ variable "eks_admins_group_users" {
 
 variable "domain_name" {
   type    = string
-  default = ""
+  default = "change-me-radar-base-dummy-domain.net"
 }
 
 variable "management_portal_postgres_password" {
   type      = string
-  default   = "CHANGE_ME"
+  default   = "change_me"
   sensitive = true
 }
 
 variable "radar_appserver_postgres_password" {
   type      = string
-  default   = "CHANGE_ME"
+  default   = "change_me"
   sensitive = true
 }
 
 variable "radar_rest_sources_backend_postgres_password" {
   type      = string
-  default   = "CHANGE_ME"
+  default   = "change_me"
   sensitive = true
 }
