@@ -42,7 +42,9 @@ terraform output
 ```
 (You could also automate this configuration based on your own customisation to `production.yaml`)
 
-## Known limits
-* Since the creation of the nginx-ingress's NLB is done inside a pod which is external to Terraform, you need to remove the NLB beforehand to make the terraform destroy command succeed.
+## Known limitations
+* Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting limit.
+* Sometimes Terraform tries to replace the existing MSK cluster while re-applying the templates even if there is no change on the cluster. Mitigate this with `terraform untaint aws_msk_cluster.msk_cluster`.
 
-N.B.: As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. Last but not least, if your cluster is no longer in use, run `terraform destory` to delete all the associated resources and reduce your cloud spending.
+
+N.B.: As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. Last but not least, if your cluster is no longer in use, run `terraform destory` to delete all the associated resources and reduce your cloud spending. The creation of the nginx-ingress's NLB is done inside a pod which is external to Terraform and thus, you need to remove the NLB beforehand to make the `terraform destroy` command succeed.
