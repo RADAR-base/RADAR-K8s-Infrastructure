@@ -43,7 +43,7 @@ resource "aws_security_group" "msk_cluster_access" {
     from_port       = 0
     to_port         = 65535
     protocol        = "tcp"
-    security_groups = [aws_security_group.eks_external_services_sg.id]
+    security_groups = [module.eks.node_security_group_id]
   }
 
   tags = merge(tomap({ "Name" : "${var.environment}-msk-cluster-access-sg" }), var.common_tags)

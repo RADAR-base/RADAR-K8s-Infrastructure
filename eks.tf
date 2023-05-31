@@ -178,6 +178,17 @@ module "eks" {
     }
   }
 
+  node_security_group_additional_rules = {
+    node_to_node = {
+      description              = "This security group is for allowing communication between all nodes in the cluster (all ports)"
+      from_port                = 0
+      to_port                  = 0
+      protocol                 = "-1"
+      type                     = "ingress"
+      source_security_group_id = module.eks.node_security_group_id
+    }
+  }
+
   manage_aws_auth_configmap = true
   aws_auth_roles = [
     {
@@ -199,19 +210,6 @@ provider "kubernetes" {
     api_version = "client.authentication.k8s.io/v1beta1"
     args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
     command     = "aws"
-  }
-}
-
-resource "aws_security_group" "eks_external_services_sg" {
-  name_prefix = "${var.environment}-radar-base-"
-  description = "This security group is to control external services access to the EKS cluster, e.g., MKS, S3 and RDS."
-  vpc_id      = module.vpc.vpc_id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 

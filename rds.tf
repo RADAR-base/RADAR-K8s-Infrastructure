@@ -8,12 +8,12 @@ resource "aws_security_group" "rds_access" {
   description = "This security group is for accessing the RDS DB"
   vpc_id      = module.vpc.vpc_id
 
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["188.28.81.208/32"]
-  }
+  # ingress {
+  #   from_port   = 5432
+  #   to_port     = 5432
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["188.28.81.208/32"]
+  # }
 
   ingress {
     from_port       = 0

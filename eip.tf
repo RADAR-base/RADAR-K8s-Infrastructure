@@ -7,3 +7,7 @@ resource "aws_eip" "cluster_loadbalancer_eip" {
 output "radar_base_eip_allocation_id" {
   value = aws_eip.cluster_loadbalancer_eip.allocation_id
 }
+
+output "radar_base_eip_public_dns" {
+  value = aws_eip.cluster_loadbalancer_eip.public_dns
+}
