@@ -28,6 +28,7 @@ module "vpc" {
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
     "subnet-type"                     = "private"
+    "karpenter.sh/discovery"          = "${var.environment}-radar-base-cluster"
   }
 
   enable_nat_gateway     = true

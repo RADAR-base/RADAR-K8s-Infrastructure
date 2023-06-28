@@ -66,6 +66,7 @@ resource "aws_db_instance" "appserver" {
   storage_encrypted            = true
   skip_final_snapshot          = true
   publicly_accessible          = false
+  multi_az                     = false
   db_subnet_group_name         = aws_db_subnet_group.rds_subnet.name
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
@@ -86,6 +87,7 @@ resource "aws_db_instance" "rest_sources_auth" {
   storage_encrypted            = true
   skip_final_snapshot          = true
   publicly_accessible          = false
+  multi_az                     = false
   db_subnet_group_name         = aws_db_subnet_group.rds_subnet.name
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
