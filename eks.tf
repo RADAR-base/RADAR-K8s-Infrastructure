@@ -241,6 +241,10 @@ output "radar_base_eks_cluster_name" {
   value = module.eks.cluster_name
 }
 
+output "radar_base_eks_cluser_endpoint" {
+  value = module.eks.cluster_endpoint
+}
+
 output "radar_base_eks_dmz_node_group_name" {
   value = element(split(":", module.eks.eks_managed_node_groups.dmz.node_group_id), 1)
 }
