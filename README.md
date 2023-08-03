@@ -46,6 +46,7 @@ terraform output
 * Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
 * Sometimes Terraform tries to replace the existing MSK cluster while re-applying the templates even if there is no change on the cluster. Mitigate this with `terraform untaint aws_msk_cluster.msk_cluster`.
 * Before running `terraform destroy`, you need to remove nginx-ingress's NLB first since its creation was done inside a pod which is external to Terraform.
+* Due to [known issues](https://github.com/kubernetes-sigs/aws-ebs-csi-driver/issues/1507), the aws-ebs-csi-driver retains EBS volumes during cluster destruction. These volumes should be manually deleted if no longer needed.
 
 | :information_source:  Important Notice  |
 |:----------------------------------------|
