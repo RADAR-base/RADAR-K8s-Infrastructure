@@ -186,6 +186,8 @@ module "eks" {
       iam_role_additional_policies = {
         AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
         S3Access                     = aws_iam_policy.s3_access.arn
+        ECRAccess                    = aws_iam_policy.ecr_access.arn
+        ECRPullThroughCache          = aws_iam_policy.ecr_pull_through_cache.arn
       }
     }
   }

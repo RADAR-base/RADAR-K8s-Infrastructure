@@ -75,3 +75,28 @@ module "eks_admins_iam_group" {
 
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-eks-admin-group" }), var.common_tags)
 }
+
+module "iam_user" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-user"
+
+  name                          = "${var.environment}-radar-base-ecr-readonly-user"
+  create_iam_user_login_profile = false
+  create_iam_access_key         = true
+  force_destroy                 = false
+  policy_arns = [
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+    "arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicReadOnly",
+  ]
+
+  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-ecr-readonly-user" }), var.common_tags)
+}
+
+output "ecr_readonly_user_key_id" {
+  value     = module.iam_user.iam_access_key_id
+  sensitive = true
+}
+
+output "ecr_readonly_user_key_secret" {
+  value     = module.iam_user.iam_access_key_secret
+  sensitive = true
+}
