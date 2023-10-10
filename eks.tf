@@ -70,18 +70,6 @@ module "cert_manager_irsa_role" {
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cert-manager-irsa" }), var.common_tags)
 }
 
-module "karpenter" {
-  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
-  version = "19.13.1"
-
-  cluster_name = module.eks.cluster_name
-
-  irsa_oidc_provider_arn          = module.eks.oidc_provider_arn
-  irsa_namespace_service_accounts = ["karpenter:karpenter"]
-
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-karpenter" }), var.common_tags)
-}
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.13.1"
@@ -96,6 +84,20 @@ module "eks" {
     coredns = {
       addon_version     = var.eks_addon_version.coredns
       resolve_conflicts = "OVERWRITE"
+      coredns = {
+        addon_version     = var.eks_addon_version.coredns
+        resolve_conflicts = "OVERWRITE"
+        # configuration_values = jsonencode({
+        #   tolerations: [
+        #     {
+        #       key: "dmz-pod",
+        #       operator: "Equal",
+        #       value: "false",
+        #       effect: "NoExecute"
+        #     }
+        #   ]
+        # })
+      }
     }
     kube-proxy = {
       addon_version     = var.eks_addon_version.kube_proxy
@@ -213,15 +215,7 @@ module "eks" {
       rolearn  = module.eks_admins_iam_role.iam_role_arn
       username = module.eks_admins_iam_role.iam_role_name
       groups   = ["system:masters"]
-    },
-    {
-      rolearn  = module.karpenter.role_arn
-      username = "system:node:{{EC2PrivateDNSName}}"
-      groups = [
-        "system:bootstrappers",
-        "system:nodes",
-      ]
-    },
+    }
   ]
 
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cluster" }), var.common_tags)
@@ -253,16 +247,4 @@ output "radar_base_eks_dmz_node_group_name" {
 
 output "radar_base_eks_worker_node_group_name" {
   value = element(split(":", module.eks.eks_managed_node_groups.worker.node_group_id), 1)
-}
-
-output "radar_base_eks_karpenter_irsa_arn" {
-  value = module.karpenter.irsa_arn
-}
-
-output "radar_base_eks_karpenter_discovery_selector" {
-  value = "${var.environment}-radar-base-cluster"
-}
-
-output "radar_base_eks_karpenter_instance_profile" {
-  value = module.karpenter.instance_profile_name
 }

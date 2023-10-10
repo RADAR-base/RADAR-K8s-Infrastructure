@@ -41,7 +41,7 @@ variable "eks_cluster_version" {
 variable "eks_addon_version" {
   type = map(string)
   default = {
-    "coredns"        = "v1.9.3-eksbuild.2"
+    "coredns"        = "v1.9.3-eksbuild.3"
     "kube_proxy"     = "v1.25.6-eksbuild.2"
     "vpc_cni"        = "v1.12.6-eksbuild.1"
     "ebs_csi_driver" = "v1.16.0-eksbuild.1"
@@ -75,7 +75,7 @@ variable "dmz_node_size" {
 variable "worker_node_size" {
   type = map(number)
   default = {
-    "desired" = 6
+    "desired" = 1
     "min"     = 1
     "max"     = 10
   }
