@@ -75,7 +75,7 @@ variable "dmz_node_size" {
 variable "worker_node_size" {
   type = map(number)
   default = {
-    "desired" = 1
+    "desired" = 2
     "min"     = 1
     "max"     = 10
   }
@@ -84,6 +84,11 @@ variable "worker_node_size" {
 variable "eks_admins_group_users" {
   type    = list(string)
   default = []
+}
+
+variable "eks_cluster_base_name" {
+  type    = string
+  default = "radar-base-cluster"
 }
 
 variable "domain_name" {

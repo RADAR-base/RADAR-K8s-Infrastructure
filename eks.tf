@@ -1,4 +1,4 @@
-module "vpc_cni_irsa_role" {
+module "vpc_cni_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
@@ -16,7 +16,7 @@ module "vpc_cni_irsa_role" {
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-vpc-cni-irsa" }), var.common_tags)
 }
 
-module "ebs_csi_irsa_role" {
+module "ebs_csi_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
@@ -34,7 +34,7 @@ module "ebs_csi_irsa_role" {
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-ebs-csi-irsa" }), var.common_tags)
 }
 
-module "external_dns_irsa_role" {
+module "external_dns_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
@@ -52,7 +52,7 @@ module "external_dns_irsa_role" {
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-external-dns-irsa" }), var.common_tags)
 }
 
-module "cert_manager_irsa_role" {
+module "cert_manager_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
@@ -70,11 +70,27 @@ module "cert_manager_irsa_role" {
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cert-manager-irsa" }), var.common_tags)
 }
 
+module "karpenter" {
+  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
+  version = "19.17.2"
+
+  cluster_name = module.eks.cluster_name
+
+  irsa_oidc_provider_arn          = module.eks.oidc_provider_arn
+  irsa_namespace_service_accounts = ["karpenter:karpenter"]
+
+  iam_role_additional_policies = {
+    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  }
+
+  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-karpenter" }), var.common_tags)
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.13.1"
 
-  cluster_name    = "${var.environment}-radar-base-cluster"
+  cluster_name    = "${var.environment}-${var.eks_cluster_base_name}"
   cluster_version = var.eks_cluster_version
 
   cluster_endpoint_private_access = true
@@ -84,20 +100,19 @@ module "eks" {
     coredns = {
       addon_version     = var.eks_addon_version.coredns
       resolve_conflicts = "OVERWRITE"
-      coredns = {
-        addon_version     = var.eks_addon_version.coredns
-        resolve_conflicts = "OVERWRITE"
-        # configuration_values = jsonencode({
-        #   tolerations: [
-        #     {
-        #       key: "dmz-pod",
-        #       operator: "Equal",
-        #       value: "false",
-        #       effect: "NoExecute"
-        #     }
-        #   ]
-        # })
-      }
+      configuration_values = jsonencode({
+        tolerations : [
+          {
+            key : "dmz-pod",
+            operator : "Equal",
+            value : "false",
+            effect : "NoExecute"
+          }
+        ],
+        nodeSelector : {
+          role : "dmz-1"
+        }
+      })
     }
     kube-proxy = {
       addon_version     = var.eks_addon_version.kube_proxy
@@ -107,19 +122,19 @@ module "eks" {
       addon_version            = var.eks_addon_version.vpc_cni
       resolve_conflicts        = "OVERWRITE"
       before_compute           = true
-      service_account_role_arn = module.vpc_cni_irsa_role.iam_role_arn
+      service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
       configuration_values = jsonencode({
-        env = {
+        env : {
           # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
-          ENABLE_PREFIX_DELEGATION = "true"
-          WARM_PREFIX_TARGET       = "1"
+          ENABLE_PREFIX_DELEGATION : "true"
+          WARM_PREFIX_TARGET : "1"
         }
       })
     }
     aws-ebs-csi-driver = {
       addon_version            = var.eks_addon_version.ebs_csi_driver
       resolve_conflicts        = "OVERWRITE"
-      service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
+      service_account_role_arn = module.ebs_csi_irsa.iam_role_arn
     }
   }
 
@@ -206,7 +221,7 @@ module "eks" {
   }
 
   node_security_group_tags = {
-    "karpenter.sh/discovery" : "${var.environment}-radar-base-cluster"
+    "karpenter.sh/discovery" : "${var.environment}-${var.eks_cluster_base_name}"
   }
 
   manage_aws_auth_configmap = true
@@ -215,10 +230,18 @@ module "eks" {
       rolearn  = module.eks_admins_iam_role.iam_role_arn
       username = module.eks_admins_iam_role.iam_role_name
       groups   = ["system:masters"]
-    }
+    },
+    {
+      rolearn  = module.karpenter.role_arn
+      username = "system:node:{{EC2PrivateDNSName}}"
+      groups = [
+        "system:bootstrappers",
+        "system:nodes",
+      ]
+    },
   ]
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cluster" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.environment}-${var.eks_cluster_base_name}" }), var.common_tags)
 
 }
 
