@@ -38,8 +38,8 @@ module "external_dns_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                     = "${var.environment}-radar-base-external-dns-irsa"
-  attach_external_dns_policy    = true
+  role_name                  = "${var.environment}-radar-base-external-dns-irsa"
+  attach_external_dns_policy = true
   external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
 
   oidc_providers = {
@@ -56,8 +56,8 @@ module "cert_manager_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                     = "${var.environment}-radar-base-cert-manager-irsa"
-  attach_cert_manager_policy    = true
+  role_name                  = "${var.environment}-radar-base-cert-manager-irsa"
+  attach_cert_manager_policy = true
   cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
 
   oidc_providers = {
@@ -70,20 +70,15 @@ module "cert_manager_irsa" {
   tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cert-manager-irsa" }), var.common_tags)
 }
 
-module "karpenter" {
-  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
-  version = "19.17.2"
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 
-  cluster_name = module.eks.cluster_name
-
-  irsa_oidc_provider_arn          = module.eks.oidc_provider_arn
-  irsa_namespace_service_accounts = ["karpenter:karpenter"]
-
-  iam_role_additional_policies = {
-    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", var.AWS_REGION]
+    command     = "aws"
   }
-
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-karpenter" }), var.common_tags)
 }
 
 module "eks" {
@@ -231,29 +226,10 @@ module "eks" {
       username = module.eks_admins_iam_role.iam_role_name
       groups   = ["system:masters"]
     },
-    {
-      rolearn  = module.karpenter.role_arn
-      username = "system:node:{{EC2PrivateDNSName}}"
-      groups = [
-        "system:bootstrappers",
-        "system:nodes",
-      ]
-    },
   ]
 
   tags = merge(tomap({ "Name" : "${var.environment}-${var.eks_cluster_base_name}" }), var.common_tags)
 
-}
-
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-    command     = "aws"
-  }
 }
 
 output "radar_base_eks_cluster_name" {
@@ -271,3 +247,15 @@ output "radar_base_eks_dmz_node_group_name" {
 output "radar_base_eks_worker_node_group_name" {
   value = element(split(":", module.eks.eks_managed_node_groups.worker.node_group_id), 1)
 }
+
+# output "radar_base_eks_karpenter_irsa_arn" {
+#   value = module.karpenter.irsa_arn
+# }
+
+# output "radar_base_eks_karpenter_interruption_queue_name" {
+#   value = module.karpenter.queue_name
+# }
+
+# output "radar_base_eks_karpenter_instance_profile" {
+#   value = module.karpenter.instance_profile_name
+# }

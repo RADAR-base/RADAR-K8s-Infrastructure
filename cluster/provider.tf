@@ -8,14 +8,6 @@ terraform {
       source  = "cyrilgdn/postgresql"
       version = ">= 1.19.0"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = ">= 2.11"
-    }
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = ">= 1.14"
-    }
   }
   required_version = "~> 1.0"
 }
