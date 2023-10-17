@@ -38,8 +38,8 @@ module "external_dns_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                  = "${var.environment}-radar-base-external-dns-irsa"
-  attach_external_dns_policy = true
+  role_name                     = "${var.environment}-radar-base-external-dns-irsa"
+  attach_external_dns_policy    = true
   external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
 
   oidc_providers = {
@@ -56,8 +56,8 @@ module "cert_manager_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                  = "${var.environment}-radar-base-cert-manager-irsa"
-  attach_cert_manager_policy = true
+  role_name                     = "${var.environment}-radar-base-cert-manager-irsa"
+  attach_cert_manager_policy    = true
   cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
 
   oidc_providers = {
@@ -247,15 +247,3 @@ output "radar_base_eks_dmz_node_group_name" {
 output "radar_base_eks_worker_node_group_name" {
   value = element(split(":", module.eks.eks_managed_node_groups.worker.node_group_id), 1)
 }
-
-# output "radar_base_eks_karpenter_irsa_arn" {
-#   value = module.karpenter.irsa_arn
-# }
-
-# output "radar_base_eks_karpenter_interruption_queue_name" {
-#   value = module.karpenter.queue_name
-# }
-
-# output "radar_base_eks_karpenter_instance_profile" {
-#   value = module.karpenter.instance_profile_name
-# }

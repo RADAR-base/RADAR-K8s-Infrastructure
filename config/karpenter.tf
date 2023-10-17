@@ -17,8 +17,8 @@ data "aws_eks_node_group" "worker" {
   cluster_name = var.cluster_name
   node_group_name = join("-", [
     element(split("-", [for asg in data.aws_autoscaling_groups.main.names : asg if startswith(asg, "eks-worker-")][0]), 1),
-    element(split("-", [for asg in data.aws_autoscaling_groups.main.names : asg if startswith(asg, "eks-worker-")][0]), 2)
-  ])
+    element(split("-", [for asg in data.aws_autoscaling_groups.main.names : asg if startswith(asg, "eks-worker-")][0]), 2),
+  ]) # This is really hacky and there's gonna be a better way of extracting this.
 }
 
 locals {

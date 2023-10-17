@@ -45,15 +45,3 @@ variable "instance_capacity_type" {
     error_message = "Invalid instance capacity type. Allowed values are 'ON_DEMAND' or 'SPOT'."
   }
 }
-
-# variable "karpenter_irsa_arn" {
-#   type = string
-# }
-
-# variable "karpenter_instance_profile" {
-#   type = string
-# }
-
-# variable "karpenter_interruption_queue_name" {
-#   type = string
-# }
