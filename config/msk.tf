@@ -1,8 +1,3 @@
-variable "kafka_version" {
-  type    = string
-  default = "3.2.0"
-}
-
 resource "aws_iam_role" "msk_role" {
   name = "${var.environment}-msk-role"
 
@@ -30,20 +25,20 @@ resource "aws_iam_role_policy_attachment" "msk_policy_attachment" {
 resource "aws_security_group" "msk_cluster_access" {
   name_prefix = "${var.environment}-radar-base-msk-"
   description = "This security group is for accessing the MSK cluster"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = data.aws_vpc.main.id
 
   ingress {
     from_port       = 0
     to_port         = 65535
     protocol        = "tcp"
-    security_groups = [module.eks.node_security_group_id]
+    security_groups = [data.aws_security_group.node.id]
   }
 
   egress {
     from_port       = 0
     to_port         = 65535
     protocol        = "tcp"
-    security_groups = [module.eks.node_security_group_id]
+    security_groups = [data.aws_security_group.node.id]
   }
 
   tags = merge(tomap({ "Name" : "${var.environment}-msk-cluster-access-sg" }), var.common_tags)
@@ -83,8 +78,8 @@ resource "aws_msk_cluster" "msk_cluster" {
         volume_size = 2
       }
     }
-    client_subnets  = module.vpc.private_subnets
-    security_groups = [module.vpc.default_security_group_id, aws_security_group.msk_cluster_access.id]
+    client_subnets  = data.aws_subnets.private.ids
+    security_groups = [data.aws_security_group.vpc_default.id, aws_security_group.msk_cluster_access.id]
   }
 
   encryption_info {

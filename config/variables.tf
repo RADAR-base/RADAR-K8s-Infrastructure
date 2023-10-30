@@ -45,3 +45,21 @@ variable "instance_capacity_type" {
     error_message = "Invalid instance capacity type. Allowed values are 'ON_DEMAND' or 'SPOT'."
   }
 }
+
+variable "management_portal_postgres_password" {
+  type      = string
+  default   = "change_me"
+  sensitive = true
+}
+
+variable "radar_appserver_postgres_password" {
+  type      = string
+  default   = "change_me"
+  sensitive = true
+}
+
+variable "radar_rest_sources_backend_postgres_password" {
+  type      = string
+  default   = "change_me"
+  sensitive = true
+}

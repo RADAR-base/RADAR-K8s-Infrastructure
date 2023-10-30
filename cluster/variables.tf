@@ -35,7 +35,7 @@ variable "common_tags" {
 
 variable "eks_cluster_version" {
   type    = string
-  default = "1.26"
+  default = "1.27"
 }
 
 variable "eks_addon_version" {
@@ -50,7 +50,7 @@ variable "eks_addon_version" {
 
 variable "instance_types" {
   type    = list(any)
-  default = ["m5a.large", "m5.large", "m5a.xlarge", "m5.xlarge"]
+  default = ["m5a.large", "m5d.large", "m5a.large", "m5ad.large", "m4.large"]
 }
 
 variable "instance_capacity_type" {
@@ -67,7 +67,7 @@ variable "dmz_node_size" {
   type = map(number)
   default = {
     "desired" = 1
-    "min"     = 1
+    "min"     = 0
     "max"     = 2
   }
 }
@@ -76,7 +76,7 @@ variable "worker_node_size" {
   type = map(number)
   default = {
     "desired" = 2
-    "min"     = 1
+    "min"     = 0
     "max"     = 10
   }
 }
@@ -94,22 +94,4 @@ variable "eks_cluster_base_name" {
 variable "domain_name" {
   type    = string
   default = "change-me-radar-base-dummy-domain.net"
-}
-
-variable "management_portal_postgres_password" {
-  type      = string
-  default   = "change_me"
-  sensitive = true
-}
-
-variable "radar_appserver_postgres_password" {
-  type      = string
-  default   = "change_me"
-  sensitive = true
-}
-
-variable "radar_rest_sources_backend_postgres_password" {
-  type      = string
-  default   = "change_me"
-  sensitive = true
 }

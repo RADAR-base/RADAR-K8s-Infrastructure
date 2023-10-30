@@ -1,12 +1,12 @@
 resource "aws_db_subnet_group" "rds_subnet" {
   name       = "radar-base-${var.environment}-rds-subnet"
-  subnet_ids = module.vpc.private_subnets
+  subnet_ids = data.aws_subnets.private.ids
 }
 
 resource "aws_security_group" "rds_access" {
   name_prefix = "radar-base-${var.environment}-"
   description = "This security group is for accessing the RDS DB"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = data.aws_vpc.main.id
 
   # ingress {
   #   from_port   = 5432
@@ -19,7 +19,7 @@ resource "aws_security_group" "rds_access" {
     from_port       = 0
     to_port         = 65535
     protocol        = "tcp"
-    security_groups = [module.eks.node_security_group_id]
+    security_groups = [data.aws_security_group.node.id]
   }
 
   egress {

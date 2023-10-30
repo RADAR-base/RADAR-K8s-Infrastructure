@@ -18,24 +18,49 @@ export TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 export TF_VAR_AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 ```
 
-## Workspaces
-The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and fully available before you proceed with the creation of the `config` ones.
-
 ## Configure your domain name (optional)
 To get DNS and SMTP working, you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in `variables.tf`.
 
-## Initialise the infrastructure directory
+## Workspaces
+The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and fully available before you proceed with the creation of the `config` ones.
+
+## Create the infrastructure
 ```
+cd cluster
+```
+```
+# Initialise the working directory
+
 terraform init
 ```
-
-## Review the changes going to be made 
 ```
+# Review the changes going to be made 
+
 terraform plan
 ```
-
-## Create/update the infrastructure
 ```
+# Create/update the infrastructure
+
+terraform apply --auto-approve
+```
+
+## Configure the cluster (optional)
+```
+cd config
+```
+```
+# Initialise the working directory
+
+terraform init
+```
+```
+# Review the changes going to be made 
+
+terraform plan
+```
+```
+# Create/update the infrastructure
+
 terraform apply --auto-approve
 ```
 
