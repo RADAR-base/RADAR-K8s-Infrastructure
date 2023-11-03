@@ -1,6 +1,6 @@
 resource "aws_route53_zone" "primary" {
   name = var.domain_name
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-primary-zone" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-primary-zone" }), var.common_tags)
 }
 
 resource "aws_route53_record" "main" {

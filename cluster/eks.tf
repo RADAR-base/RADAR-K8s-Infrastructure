@@ -13,14 +13,14 @@ module "vpc_cni_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-vpc-cni-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-vpc-cni-irsa" }), var.common_tags)
 }
 
 module "ebs_csi_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name             = "${var.environment}-radar-base-ebs-csi-irsa"
+  role_name             = "radar-base-ebs-csi-irsa"
   attach_ebs_csi_policy = true
 
 
@@ -31,14 +31,14 @@ module "ebs_csi_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-ebs-csi-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-ebs-csi-irsa" }), var.common_tags)
 }
 
 module "external_dns_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                  = "${var.environment}-radar-base-external-dns-irsa"
+  role_name                  = "radar-base-external-dns-irsa"
   attach_external_dns_policy = true
   # external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
 
@@ -49,7 +49,7 @@ module "external_dns_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-external-dns-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-external-dns-irsa" }), var.common_tags)
 }
 
 module "cert_manager_irsa" {
@@ -67,7 +67,7 @@ module "cert_manager_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-cert-manager-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-cert-manager-irsa" }), var.common_tags)
 }
 
 provider "kubernetes" {
@@ -85,7 +85,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.13.1"
 
-  cluster_name    = "${var.environment}-${var.eks_cluster_base_name}"
+  cluster_name    = var.eks_cluster_name
   cluster_version = var.eks_cluster_version
 
   cluster_endpoint_private_access = true
@@ -216,7 +216,7 @@ module "eks" {
   }
 
   node_security_group_tags = {
-    "karpenter.sh/discovery" : "${var.environment}-${var.eks_cluster_base_name}"
+    "karpenter.sh/discovery" : var.eks_cluster_name
   }
 
   manage_aws_auth_configmap = true
@@ -228,7 +228,7 @@ module "eks" {
     },
   ]
 
-  tags = merge(tomap({ "Name" : "${var.environment}-${var.eks_cluster_base_name}" }), var.common_tags)
+  tags = merge(tomap({ "Name" : var.eks_cluster_name }), var.common_tags)
 
 }
 

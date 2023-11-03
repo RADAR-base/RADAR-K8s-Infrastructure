@@ -18,7 +18,7 @@ module "allow_eks_access_iam_policy" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-allow-eks-access" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-allow-eks-access" }), var.common_tags)
 }
 
 module "eks_admins_iam_role" {
@@ -36,7 +36,7 @@ module "eks_admins_iam_role" {
     "arn:aws:iam::${module.vpc.vpc_owner_id}:root"
   ]
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-admin-role" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-admin-role" }), var.common_tags)
 }
 
 
@@ -60,7 +60,7 @@ module "allow_assume_eks_admins_iam_policy" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-allow-assume-eks-admin-role" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-allow-assume-eks-admin-role" }), var.common_tags)
 }
 
 module "eks_admins_iam_group" {
@@ -73,7 +73,7 @@ module "eks_admins_iam_group" {
   group_users                       = var.eks_admins_group_users
   custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-eks-admin-group" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-eks-admin-group" }), var.common_tags)
 }
 
 module "iam_user" {
@@ -88,15 +88,110 @@ module "iam_user" {
     "arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicReadOnly",
   ]
 
-  tags = merge(tomap({ "Name" : "${var.environment}-radar-base-ecr-readonly-user" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-ecr-readonly-user" }), var.common_tags)
 }
 
-output "ecr_readonly_user_key_id" {
-  value     = module.iam_user.iam_access_key_id
-  sensitive = true
+resource "aws_iam_policy" "s3_access" {
+  name = "radar-base-${var.environment}-s3-access-policy"
+  path = "/eks/"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ]
+        Resource = [
+          "arn:aws:s3:::radar-base-${var.environment}-intermediate-output-storage/*",
+          "arn:aws:s3:::radar-base-${var.environment}-output-storage/*",
+          "arn:aws:s3:::radar-base-${var.environment}-velero-backups/*",
+        ]
+      }
+    ]
+  })
 }
 
-output "ecr_readonly_user_key_secret" {
-  value     = module.iam_user.iam_access_key_secret
-  sensitive = true
+resource "aws_iam_policy" "ecr_access" {
+  name = "radar-base-${var.environment}-ecr-access-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetRepositoryPolicy",
+          "ecr:DescribeRepositories",
+          "ecr:ListImages",
+          "ecr:DescribeImages",
+          "ecr:BatchGetImage",
+          "ecr:GetLifecyclePolicy",
+          "ecr:GetLifecyclePolicyPreview",
+          "ecr:ListTagsForResource",
+          "ecr:DescribeImageScanFindings"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = merge(tomap({ "Name" : "radar-base-ecr-access-policy" }), var.common_tags)
+}
+
+resource "aws_iam_policy" "ecr_pull_through_cache" {
+  name = "radar-base-${var.environment}-ecr-pull-through-cache-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:CreatePullThroughCacheRule",
+          "ecr:BatchImportUpstreamImage",
+          "ecr:CreateRepository"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = merge(tomap({ "Name" : "radar-base-ecr-pull-through-cache-policy" }), var.common_tags)
+}
+
+resource "aws_iam_user" "smtp_user" {
+  name = "${var.environment}-radar-base-smtp-user"
+  tags = merge(tomap({ "Name" : "radar-base-smtp-user" }), var.common_tags)
+}
+
+resource "aws_iam_access_key" "smtp_user_key" {
+  user = aws_iam_user.smtp_user.name
+}
+
+resource "aws_iam_policy" "smtp_user_policy" {
+  name = "${var.environment}-radar-base-smtp-user-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["ses:SendRawEmail"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_user_policy_attachment" "smtp_user_policy_attach" {
+  user       = aws_iam_user.smtp_user.name
+  policy_arn = aws_iam_policy.smtp_user_policy.arn
 }

@@ -9,6 +9,7 @@ It is recommended that you use RADAR-K8s-Infrastructure as a template and create
 
 <img src="./image/use_this_template.png" alt="use this template" width="500" height="124">
 
+
 ## Set up environment variables
 ```
 export TF_VAR_AWS_REGION=$AWS_REGION
@@ -22,7 +23,10 @@ export TF_VAR_AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 To get DNS and SMTP working, you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in `variables.tf`.
 
 ## Workspaces
-The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and fully available before you proceed with the creation of the `config` ones.
+The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and made fully available before you proceed with the creation of the `config` ones.
+| :information_source:  Important Notice  |
+|:----------------------------------------|
+|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destory` to delete all the associated resources and reduce your cloud spending. If you have resources created within `config`, run `terraform destory` in that directory before running the counterpart in `cluster`.|
 
 ## Create the infrastructure
 ```
@@ -73,9 +77,7 @@ terraform output
 ## Known limitations
 * Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
 * Sometimes Terraform tries to replace the existing MSK cluster while re-applying the templates even if there is no change on the cluster. Mitigate this with `terraform untaint aws_msk_cluster.msk_cluster`.
-* Before running `terraform destroy`, you need to remove nginx-ingress's NLB first since its creation was done inside a pod which is external to Terraform.
+* Prior to `terraform destroy`, infrastructure resources created by pods/controllers and may not be visible to Terraform need to be deleted, e.g., nginx-ingress's NLB. A good practice is to always begin by running `helmfile destroy`.
+* If Karpenter is used for node provisioning, ensure the nodes created by it are not lingering around before running `terraform destroy`. 
 * Due to [known issues](https://github.com/kubernetes-sigs/aws-ebs-csi-driver/issues/1507), the aws-ebs-csi-driver retains EBS volumes during cluster destruction. These volumes should be manually deleted if no longer needed.
-
-| :information_source:  Important Notice  |
-|:----------------------------------------|
-|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. Last but not least, if your cluster is no longer in use, run `terraform destory` to delete all the associated resources and reduce your cloud spending.|
+  

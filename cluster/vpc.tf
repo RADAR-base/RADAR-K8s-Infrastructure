@@ -2,7 +2,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name = "${var.environment}-${var.eks_cluster_base_name}-vpc"
+  name = "${var.eks_cluster_name}-vpc"
   cidr = "10.0.0.0/16"
 
   azs = [
@@ -31,7 +31,7 @@ module "vpc" {
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
     "subnet-type"                     = "private"
-    "karpenter.sh/discovery"          = "${var.environment}-${var.eks_cluster_base_name}"
+    "karpenter.sh/discovery"          = var.eks_cluster_name
   }
 
   enable_nat_gateway      = true
@@ -42,8 +42,8 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  default_security_group_tags = merge(tomap({ "Name" : "${var.environment}-${var.eks_cluster_base_name}-vpc-default-sg" }), var.common_tags)
-  tags                        = merge(tomap({ "Name" : "${var.environment}-${var.eks_cluster_base_name}-vpc" }), var.common_tags)
+  default_security_group_tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc-default-sg" }), var.common_tags)
+  tags                        = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc" }), var.common_tags)
 }
 
 output "radar_base_vpc_public_subnets" {

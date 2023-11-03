@@ -1,45 +1,58 @@
 
 variable "AWS_REGION" {
-  type    = string
-  default = "eu-west-2"
+  type        = string
+  description = "Target AWS region"
+  default     = "eu-west-2"
 }
 
 variable "AWS_ACCESS_KEY_ID" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "AWS access key associated with an IAM account"
+  sensitive   = true
 }
 
 variable "AWS_SECRET_ACCESS_KEY" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "AWS secret key associated with the access key"
+  sensitive   = true
 }
 
 variable "AWS_SESSION_TOKEN" {
-  type      = string
-  default   = ""
-  sensitive = true
+  type        = string
+  description = "Session token for temporary security credentials from AWS STS"
+  default     = ""
+  sensitive   = true
 }
 
 variable "environment" {
-  type    = string
-  default = "dev"
+  type        = string
+  description = "Environment name"
+  default     = "dev"
 }
 
 variable "common_tags" {
-  type = map(string)
+  type        = map(string)
+  description = "Common tags associated to resources created"
   default = {
     Project     = "radar-base-development"
     Environment = "dev"
   }
 }
 
+variable "eks_cluster_name" {
+  type        = string
+  description = "EKS cluster name"
+}
+
 variable "eks_cluster_version" {
-  type    = string
-  default = "1.27"
+  type        = string
+  description = "Amazon EKS Kubernetes version"
+  default     = "1.27"
 }
 
 variable "eks_addon_version" {
-  type = map(string)
+  type        = map(string)
+  description = "Amazon EKS add-on versions"
   default = {
     "coredns"        = "v1.9.3-eksbuild.3"
     "kube_proxy"     = "v1.25.6-eksbuild.2"
@@ -49,13 +62,15 @@ variable "eks_addon_version" {
 }
 
 variable "instance_types" {
-  type    = list(any)
-  default = ["m5a.large", "m5d.large", "m5a.large", "m5ad.large", "m4.large"]
+  type        = list(any)
+  description = "List of instance types used by EKS managed node groups"
+  default     = ["m5a.large", "m5d.large", "m5a.large", "m5ad.large", "m4.large"]
 }
 
 variable "instance_capacity_type" {
-  type    = string
-  default = "SPOT"
+  type        = string
+  description = "Capacity type used by EKS managed node groups"
+  default     = "SPOT"
 
   validation {
     condition     = var.instance_capacity_type == "ON_DEMAND" || var.instance_capacity_type == "SPOT"
@@ -64,7 +79,8 @@ variable "instance_capacity_type" {
 }
 
 variable "dmz_node_size" {
-  type = map(number)
+  type        = map(number)
+  description = "Node size of the dmz node group"
   default = {
     "desired" = 1
     "min"     = 0
@@ -73,7 +89,8 @@ variable "dmz_node_size" {
 }
 
 variable "worker_node_size" {
-  type = map(number)
+  type        = map(number)
+  description = "Node size of the worker node group"
   default = {
     "desired" = 2
     "min"     = 0
@@ -82,16 +99,13 @@ variable "worker_node_size" {
 }
 
 variable "eks_admins_group_users" {
-  type    = list(string)
-  default = []
-}
-
-variable "eks_cluster_base_name" {
-  type    = string
-  default = "radar-base-cluster"
+  type        = list(string)
+  description = "EKS admin IAM user group"
+  default     = []
 }
 
 variable "domain_name" {
-  type    = string
-  default = "change-me-radar-base-dummy-domain.net"
+  type        = string
+  description = "Top level domain for deployed applications"
+  default     = "change-me-radar-base-dummy-domain.net"
 }

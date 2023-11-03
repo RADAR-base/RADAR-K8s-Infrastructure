@@ -29,7 +29,7 @@ resource "aws_security_group" "rds_access" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(tomap({ "Name" : "radar-base-${var.environment}-rds-access" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-rds-access" }), var.common_tags)
 
 }
 
@@ -50,7 +50,7 @@ resource "aws_db_instance" "managementportal" {
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
 
-  tags = merge(tomap({ "Name" : "radar-base-${var.environment}-managementportal" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-managementportal" }), var.common_tags)
 }
 
 resource "aws_db_instance" "appserver" {
@@ -71,7 +71,7 @@ resource "aws_db_instance" "appserver" {
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
 
-  tags = merge(tomap({ "Name" : "radar-base-${var.environment}-appserver" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-appserver" }), var.common_tags)
 }
 
 resource "aws_db_instance" "rest_sources_auth" {
@@ -92,7 +92,7 @@ resource "aws_db_instance" "rest_sources_auth" {
   vpc_security_group_ids       = [aws_security_group.rds_access.id]
   performance_insights_enabled = true
 
-  tags = merge(tomap({ "Name" : "radar-base-${var.environment}-rest-sources-auth" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-rest-sources-auth" }), var.common_tags)
 }
 
 output "radar_base_rds_managementportal_host" {
@@ -103,8 +103,13 @@ output "radar_base_rds_managementportal_port" {
   value = aws_db_instance.managementportal.port
 }
 
-output "radar_base_rds_managementportal_user" {
+output "radar_base_rds_managementportal_username" {
   value = aws_db_instance.managementportal.username
+}
+
+output "radar_base_rds_managementportal_password" {
+  value     = aws_db_instance.managementportal.password
+  sensitive = true
 }
 
 output "radar_base_rds_appserver_host" {
@@ -115,8 +120,13 @@ output "radar_base_rds_appserver_port" {
   value = aws_db_instance.appserver.port
 }
 
-output "radar_base_rds_appserver_user" {
+output "radar_base_rds_appserver_username" {
   value = aws_db_instance.appserver.username
+}
+
+output "radar_base_rds_appserver_password" {
+  value     = aws_db_instance.appserver.password
+  sensitive = true
 }
 
 output "radar_base_rds_rest_sources_auth_host" {
@@ -127,6 +137,11 @@ output "radar_base_rds_rest_sources_auth_port" {
   value = aws_db_instance.rest_sources_auth.port
 }
 
-output "radar_base_rds_rest_sources_auth_user" {
+output "radar_base_rds_rest_sources_auth_username" {
   value = aws_db_instance.rest_sources_auth.username
+}
+
+output "radar_base_rds_rest_sources_auth_password" {
+  value     = aws_db_instance.rest_sources_auth.password
+  sensitive = true
 }

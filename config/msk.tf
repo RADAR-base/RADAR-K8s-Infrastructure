@@ -1,3 +1,8 @@
+variable "kafka_version" {
+  type    = string
+  default = "3.2.0"
+}
+
 resource "aws_iam_role" "msk_role" {
   name = "${var.environment}-msk-role"
 
@@ -14,7 +19,7 @@ resource "aws_iam_role" "msk_role" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "${var.environment}-msk-role" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "msk-role" }), var.common_tags)
 }
 
 resource "aws_iam_role_policy_attachment" "msk_policy_attachment" {
@@ -41,7 +46,7 @@ resource "aws_security_group" "msk_cluster_access" {
     security_groups = [data.aws_security_group.node.id]
   }
 
-  tags = merge(tomap({ "Name" : "${var.environment}-msk-cluster-access-sg" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "msk-cluster-access-sg" }), var.common_tags)
 }
 
 resource "aws_msk_configuration" "msk_configuration" {

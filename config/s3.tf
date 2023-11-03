@@ -1,37 +1,12 @@
-resource "aws_iam_policy" "s3_access" {
-  name = "radar-base-${var.environment}-s3-access-policy"
-  path = "/eks/"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "s3:ListBucket",
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:DeleteObject"
-        ]
-        Resource = [
-          "arn:aws:s3:::radar-base-${var.environment}-intermediate-output-storage/*",
-          "arn:aws:s3:::radar-base-${var.environment}-output-storage/*",
-          "arn:aws:s3:::radar-base-${var.environment}-velero-backups/*",
-        ]
-      }
-    ]
-  })
-}
-
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id       = module.vpc.vpc_id
+  vpc_id       = data.aws_vpc.main.id
   service_name = "com.amazonaws.${var.AWS_REGION}.s3"
 
-  tags = merge(tomap({ "Name" : "${var.environment}-s3-vpc-endpoint" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "s3-vpc-endpoint" }), var.common_tags)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "route_table_association" {
-  route_table_id  = module.vpc.vpc_main_route_table_id
+  route_table_id  = data.aws_vpc.main.main_route_table_id
   vpc_endpoint_id = aws_vpc_endpoint.s3.id
 }
 
@@ -39,21 +14,21 @@ resource "aws_s3_bucket" "intermediate_output_storage" {
   bucket = "radar-base-${var.environment}-intermediate-output-storage"
   acl    = "private"
 
-  tags = merge(tomap({ "Name" : "radar-base-${var.environment}-eks-intermediate-output-storage" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-eks-intermediate-output-storage" }), var.common_tags)
 }
 
 resource "aws_s3_bucket" "output_storage" {
   bucket = "radar-base-${var.environment}-output-storage"
   acl    = "private"
 
-  tags = merge(tomap({ "Name" : "radar-base-${var.environment}-eks-output-storage" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-eks-output-storage" }), var.common_tags)
 }
 
 resource "aws_s3_bucket" "velero_backups" {
   bucket = "radar-base-${var.environment}-velero-backups"
   acl    = "private"
 
-  tags = merge(tomap({ "Name" : "radar-base-${var.environment}-eks-velero-backups" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "radar-base-eks-velero-backups" }), var.common_tags)
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "intermediate_output_storage_encryption" {
