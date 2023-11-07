@@ -3,12 +3,8 @@ name: Validate Cluster
 on:
   push:
     branches: [ main ]
-    # paths:
-    #   - "./cluster/*"
   pull_request:
     branches: [ main ]
-    # paths:
-    #   - "./cluster/*"
 
 env:
   TERRAFORM_VERSION: 1.4.2
