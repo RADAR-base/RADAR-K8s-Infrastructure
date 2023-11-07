@@ -23,6 +23,11 @@ variable "AWS_SESSION_TOKEN" {
   sensitive   = true
 }
 
+variable "eks_cluster_name" {
+  type        = string
+  description = "EKS cluster name"
+}
+
 variable "environment" {
   type        = string
   description = "Environment name"
@@ -38,11 +43,6 @@ variable "common_tags" {
   }
 }
 
-variable "eks_cluster_name" {
-  type        = string
-  description = "EKS cluster name"
-}
-
 variable "instance_capacity_type" {
   type        = string
   description = "Capacity type used by EKS managed node groups"
@@ -54,23 +54,25 @@ variable "instance_capacity_type" {
   }
 }
 
-variable "management_portal_postgres_password" {
-  type        = string
-  description = "Password for the PostgreSQL database used by Management Portal"
-  default     = "change_me"
-  sensitive   = true
+variable "kafka_version" {
+  type    = string
+  default = "3.2.0"
 }
 
-variable "radar_appserver_postgres_password" {
-  type        = string
-  description = "Password for the PostgreSQL database used by Radar Appserver"
-  default     = "change_me"
-  sensitive   = true
+variable "postgres_version" {
+  type    = string
+  default = "13.7"
+
 }
 
-variable "radar_rest_sources_backend_postgres_password" {
+variable "karpenter_version" {
+  type    = string
+  default = "v0.29.0"
+}
+
+variable "radar_postgres_password" {
   type        = string
-  description = "Password for the PostgreSQL database used by Radar Rest Sources Authorizer backend"
+  description = "Password for the PostgreSQL database used by Radar components"
   default     = "change_me"
   sensitive   = true
 }

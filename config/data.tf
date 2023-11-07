@@ -5,6 +5,17 @@ data "aws_vpc" "main" {
   }
 }
 
+data "aws_subnets" "public" {
+  filter {
+    name   = "tag:Name"
+    values = ["${var.eks_cluster_name}-vpc"]
+  }
+  filter {
+    name   = "tag:subnet-type"
+    values = ["public"]
+  }
+}
+
 data "aws_subnets" "private" {
   filter {
     name   = "tag:Name"
@@ -28,4 +39,27 @@ data "aws_security_group" "vpc_default" {
     name   = "tag:Name"
     values = ["${var.eks_cluster_name}-vpc-default-sg"]
   }
+}
+
+data "aws_eks_cluster" "main" {
+  name = var.eks_cluster_name
+}
+
+data "aws_eks_cluster_auth" "main" {
+  name = var.eks_cluster_name
+}
+
+data "aws_autoscaling_groups" "main" {
+  filter {
+    name   = "tag:eks:cluster-name"
+    values = [var.eks_cluster_name]
+  }
+}
+
+data "aws_eks_node_group" "worker" {
+  cluster_name = var.eks_cluster_name
+  node_group_name = join("-", [
+    element(split("-", [for asg in data.aws_autoscaling_groups.main.names : asg if startswith(asg, "eks-worker-")][0]), 1),
+    element(split("-", [for asg in data.aws_autoscaling_groups.main.names : asg if startswith(asg, "eks-worker-")][0]), 2),
+  ]) # This is really hacky and there's gonna be a better way of extracting this.
 }
