@@ -33,34 +33,14 @@ resource "aws_security_group" "rds_access" {
 
 }
 
-resource "aws_db_instance" "managementportal" {
-  identifier                   = "radar-base-${var.environment}-managementportal"
-  db_name                      = "managementportal"
+resource "aws_db_instance" "radar_postgres" {
+  identifier                   = "radar-base-${var.environment}-postgres"
+  db_name                      = "radarbase${var.environment}"
   engine                       = "postgres"
-  engine_version               = "13.7"
+  engine_version               = var.postgres_version
   instance_class               = "db.t4g.micro"
   username                     = "postgres"
-  password                     = var.management_portal_postgres_password
-  allocated_storage            = 5
-  storage_type                 = "standard"
-  storage_encrypted            = true
-  skip_final_snapshot          = true
-  publicly_accessible          = false
-  db_subnet_group_name         = aws_db_subnet_group.rds_subnet.name
-  vpc_security_group_ids       = [aws_security_group.rds_access.id]
-  performance_insights_enabled = true
-
-  tags = merge(tomap({ "Name" : "radar-base-managementportal" }), var.common_tags)
-}
-
-resource "aws_db_instance" "appserver" {
-  identifier                   = "radar-base-${var.environment}-appserver"
-  db_name                      = "appserver"
-  engine                       = "postgres"
-  engine_version               = "13.7"
-  instance_class               = "db.t4g.micro"
-  username                     = "postgres"
-  password                     = var.radar_appserver_postgres_password
+  password                     = var.radar_postgres_password
   allocated_storage            = 5
   storage_type                 = "standard"
   storage_encrypted            = true
@@ -74,74 +54,80 @@ resource "aws_db_instance" "appserver" {
   tags = merge(tomap({ "Name" : "radar-base-appserver" }), var.common_tags)
 }
 
-resource "aws_db_instance" "rest_sources_auth" {
-  identifier                   = "radar-base-${var.environment}-rest-sources-auth"
-  db_name                      = "rest_sources_auth"
-  engine                       = "postgres"
-  engine_version               = "13.7"
-  instance_class               = "db.t4g.micro"
-  username                     = "postgres"
-  password                     = var.radar_rest_sources_backend_postgres_password
-  allocated_storage            = 5
-  storage_type                 = "standard"
-  storage_encrypted            = true
-  skip_final_snapshot          = true
-  publicly_accessible          = false
-  multi_az                     = false
-  db_subnet_group_name         = aws_db_subnet_group.rds_subnet.name
-  vpc_security_group_ids       = [aws_security_group.rds_access.id]
-  performance_insights_enabled = true
+resource "kubectl_manifest" "create_databases" {
+  yaml_body = <<-YAML
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: create-radar-postgres-databases
+    spec:
+      template:
+        spec:
+          containers:
+            - name: radar-postgres-db-creator
+              image: postgres:${var.postgres_version}
+              command:
+                - "bash"
+                - "-c"
+                - |
+                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres.address} --port=5432 --username=${aws_db_instance.radar_postgres.username} --dbname=radarbase${var.environment} -c 'CREATE DATABASE managementportal;'
+                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres.address} --port=5432 --username=${aws_db_instance.radar_postgres.username} --dbname=radarbase${var.environment} -c 'CREATE DATABASE appserver;'
+                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres.address} --port=5432 --username=${aws_db_instance.radar_postgres.username} --dbname=radarbase${var.environment} -c 'CREATE DATABASE rest_sources_auth;'
+          restartPolicy: Never
+  YAML
 
-  tags = merge(tomap({ "Name" : "radar-base-rest-sources-auth" }), var.common_tags)
+  depends_on = [
+    aws_db_instance.radar_postgres
+  ]
 }
 
 output "radar_base_rds_managementportal_host" {
-  value = aws_db_instance.managementportal.address
+  value = aws_db_instance.radar_postgres.address
 }
 
 output "radar_base_rds_managementportal_port" {
-  value = aws_db_instance.managementportal.port
+  value = aws_db_instance.radar_postgres.port
 }
 
 output "radar_base_rds_managementportal_username" {
-  value = aws_db_instance.managementportal.username
+  value = aws_db_instance.radar_postgres.username
 }
 
 output "radar_base_rds_managementportal_password" {
-  value     = aws_db_instance.managementportal.password
+  value     = aws_db_instance.radar_postgres.password
   sensitive = true
 }
 
 output "radar_base_rds_appserver_host" {
-  value = aws_db_instance.appserver.address
+  value = aws_db_instance.radar_postgres.address
 }
 
 output "radar_base_rds_appserver_port" {
-  value = aws_db_instance.appserver.port
+  value = aws_db_instance.radar_postgres.port
 }
 
 output "radar_base_rds_appserver_username" {
-  value = aws_db_instance.appserver.username
+  value = aws_db_instance.radar_postgres.username
 }
 
 output "radar_base_rds_appserver_password" {
-  value     = aws_db_instance.appserver.password
+  value     = aws_db_instance.radar_postgres.password
   sensitive = true
 }
 
 output "radar_base_rds_rest_sources_auth_host" {
-  value = aws_db_instance.rest_sources_auth.address
+  value = aws_db_instance.radar_postgres.address
 }
 
 output "radar_base_rds_rest_sources_auth_port" {
-  value = aws_db_instance.rest_sources_auth.port
+  value = aws_db_instance.radar_postgres.port
 }
 
 output "radar_base_rds_rest_sources_auth_username" {
-  value = aws_db_instance.rest_sources_auth.username
+  value = aws_db_instance.radar_postgres.username
 }
 
 output "radar_base_rds_rest_sources_auth_password" {
-  value     = aws_db_instance.rest_sources_auth.password
+  value     = aws_db_instance.radar_postgres.password
   sensitive = true
 }

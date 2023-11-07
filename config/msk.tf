@@ -1,8 +1,3 @@
-variable "kafka_version" {
-  type    = string
-  default = "3.2.0"
-}
-
 resource "aws_iam_role" "msk_role" {
   name = "${var.environment}-msk-role"
 
