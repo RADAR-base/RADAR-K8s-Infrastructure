@@ -1,6 +1,11 @@
 # RADAR-K8s-Infrastructure
 This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) templates for [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes) users who intend to deploy the platform to Kubernetes clusters supported by cloud providers such as [AWS](https://aws.amazon.com/eks/). 
 
+---
+
+[![Terraform validate](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/cluster.yaml/badge.svg)](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/cluster.yaml/badge.svg)
+[![Terraform validate](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/config.yaml/badge.svg)](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/config.yaml/badge.svg)
+
 # Dependencies
 [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.4
 
@@ -18,9 +23,6 @@ export TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 # For temporary credentials and SSO
 export TF_VAR_AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 ```
-
-## Configure your domain name (optional)
-To get DNS and SMTP working, you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in `variables.tf`.
 
 ## Workspaces
 The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and made fully available before you proceed with the creation of the `config` ones.
@@ -49,6 +51,8 @@ terraform apply --auto-approve
 ```
 
 ## Configure the cluster (optional)
+N.B., to get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in `config/variables.tf`.
+
 ```
 cd config
 ```

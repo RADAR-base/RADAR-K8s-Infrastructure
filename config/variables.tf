@@ -43,6 +43,12 @@ variable "common_tags" {
   }
 }
 
+variable "domain_name" {
+  type        = string
+  description = "Top level domain for deployed applications"
+  default     = "change-me-radar-base-dummy-domain.net"
+}
+
 variable "instance_capacity_type" {
   type        = string
   description = "Capacity type used by EKS managed node groups"

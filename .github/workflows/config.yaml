@@ -1,4 +1,4 @@
-name: Validate Config
+name: TF Validate Config
 
 on:
   push:

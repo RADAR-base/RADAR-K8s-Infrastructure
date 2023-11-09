@@ -63,3 +63,8 @@ data "aws_eks_node_group" "worker" {
     element(split("-", [for asg in data.aws_autoscaling_groups.main.names : asg if startswith(asg, "eks-worker-")][0]), 2),
   ]) # This is really hacky and there's gonna be a better way of extracting this.
 }
+
+locals {
+  aws_account = element(split(":", data.aws_eks_cluster.main.arn), 4)
+  oidc_issuer = element(split("//", data.aws_eks_cluster.main.identity[0].oidc[0].issuer), 1)
+}

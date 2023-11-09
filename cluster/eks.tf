@@ -34,42 +34,6 @@ module "ebs_csi_irsa" {
   tags = merge(tomap({ "Name" : "radar-base-ebs-csi-irsa" }), var.common_tags)
 }
 
-module "external_dns_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
-
-  role_name                     = "radar-base-external-dns-irsa"
-  attach_external_dns_policy    = true
-  external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
-
-  oidc_providers = {
-    ex = {
-      provider_arn               = module.eks.oidc_provider_arn
-      namespace_service_accounts = ["kube-system:external-dns"]
-    }
-  }
-
-  tags = merge(tomap({ "Name" : "radar-base-external-dns-irsa" }), var.common_tags)
-}
-
-module "cert_manager_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
-
-  role_name                     = "${var.environment}-radar-base-cert-manager-irsa"
-  attach_cert_manager_policy    = true
-  cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary.id}"]
-
-  oidc_providers = {
-    main = {
-      provider_arn               = module.eks.oidc_provider_arn
-      namespace_service_accounts = ["kube-system:cert-manager"]
-    }
-  }
-
-  tags = merge(tomap({ "Name" : "radar-base-cert-manager-irsa" }), var.common_tags)
-}
-
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
@@ -229,7 +193,6 @@ module "eks" {
   ]
 
   tags = merge(tomap({ "Name" : var.eks_cluster_name }), var.common_tags)
-
 }
 
 output "radar_base_eks_cluster_name" {

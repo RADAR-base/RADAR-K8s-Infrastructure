@@ -103,9 +103,3 @@ variable "eks_admins_group_users" {
   description = "EKS admin IAM user group"
   default     = []
 }
-
-variable "domain_name" {
-  type        = string
-  description = "Top level domain for deployed applications"
-  default     = "change-me-radar-base-dummy-domain.net"
-}

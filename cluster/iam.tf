@@ -166,32 +166,3 @@ resource "aws_iam_policy" "ecr_pull_through_cache" {
 
   tags = merge(tomap({ "Name" : "radar-base-ecr-pull-through-cache-policy" }), var.common_tags)
 }
-
-resource "aws_iam_user" "smtp_user" {
-  name = "${var.environment}-radar-base-smtp-user"
-  tags = merge(tomap({ "Name" : "radar-base-smtp-user" }), var.common_tags)
-}
-
-resource "aws_iam_access_key" "smtp_user_key" {
-  user = aws_iam_user.smtp_user.name
-}
-
-resource "aws_iam_policy" "smtp_user_policy" {
-  name = "${var.environment}-radar-base-smtp-user-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = ["ses:SendRawEmail"]
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_user_policy_attachment" "smtp_user_policy_attach" {
-  user       = aws_iam_user.smtp_user.name
-  policy_arn = aws_iam_policy.smtp_user_policy.arn
-}

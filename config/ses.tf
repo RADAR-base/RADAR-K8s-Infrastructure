@@ -13,6 +13,8 @@ resource "aws_route53_record" "smtp_dkim_record" {
   type    = "CNAME"
   ttl     = "600"
   records = ["${aws_ses_domain_dkim.smtp_dkim.dkim_tokens[count.index]}.dkim.amazonses.com"]
+
+  depends_on = [aws_route53_zone.primary]
 }
 
 resource "aws_ses_domain_mail_from" "smtp_mail_from" {
@@ -26,6 +28,8 @@ resource "aws_route53_record" "smtp_mail_from_mx" {
   type    = "MX"
   ttl     = "600"
   records = ["10 feedback-smtp.${var.AWS_REGION}.amazonses.com"]
+
+  depends_on = [aws_route53_zone.primary]
 }
 
 resource "aws_route53_record" "smtp_mail_from_txt" {
@@ -34,6 +38,37 @@ resource "aws_route53_record" "smtp_mail_from_txt" {
   type    = "TXT"
   ttl     = "600"
   records = ["v=spf1 include:amazonses.com ~all"]
+
+  depends_on = [aws_route53_zone.primary]
+}
+
+resource "aws_iam_user" "smtp_user" {
+  name = "${var.environment}-radar-base-smtp-user"
+  tags = merge(tomap({ "Name" : "radar-base-smtp-user" }), var.common_tags)
+}
+
+resource "aws_iam_access_key" "smtp_user_key" {
+  user = aws_iam_user.smtp_user.name
+}
+
+resource "aws_iam_policy" "smtp_user_policy" {
+  name = "${var.environment}-radar-base-smtp-user-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["ses:SendRawEmail"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_user_policy_attachment" "smtp_user_policy_attach" {
+  user       = aws_iam_user.smtp_user.name
+  policy_arn = aws_iam_policy.smtp_user_policy.arn
 }
 
 output "radar_base_smtp_username" {

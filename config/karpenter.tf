@@ -1,8 +1,3 @@
-locals {
-  aws_account = element(split(":", data.aws_eks_cluster.main.arn), 4)
-  oidc_issuer = element(split("//", data.aws_eks_cluster.main.identity[0].oidc[0].issuer), 1)
-}
-
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.main.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.main.certificate_authority[0].data)

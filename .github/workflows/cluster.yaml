@@ -1,4 +1,4 @@
-name: Validate Cluster
+name: TF Validate Cluster
 
 on:
   push:
