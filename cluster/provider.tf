@@ -2,14 +2,14 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~> 5.0.0"
     }
-    postgresql = {
-      source  = "cyrilgdn/postgresql"
-      version = ">= 1.19.0"
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.24.0"
     }
   }
-  required_version = "~> 1.0"
+  required_version = "~> 1.4.0"
 }
 
 provider "aws" {
