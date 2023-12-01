@@ -50,25 +50,20 @@ terraform plan
 terraform apply --auto-approve
 ```
 
+## Connect to and verify the cluster
+```
+aws eks update-kubeconfig --name [eks_cluster_name]
+kubectl get nodes
+kubectl get pods -A
+```
+
 ## Configure the cluster (optional)
-N.B., to get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in `config/variables.tf`.
+N.B.: To get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in `config/variables.tf`.
 
 ```
 cd config
-```
-```
-# Initialise the working directory
-
 terraform init
-```
-```
-# Review the changes going to be made 
-
 terraform plan
-```
-```
-# Create/update the infrastructure
-
 terraform apply --auto-approve
 ```
 

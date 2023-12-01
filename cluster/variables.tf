@@ -24,6 +24,11 @@ variable "AWS_SESSION_TOKEN" {
   sensitive   = true
 }
 
+variable "eks_cluster_name" {
+  type        = string
+  description = "EKS cluster name"
+}
+
 variable "environment" {
   type        = string
   description = "Environment name"
@@ -39,11 +44,6 @@ variable "common_tags" {
   }
 }
 
-variable "eks_cluster_name" {
-  type        = string
-  description = "EKS cluster name"
-}
-
 variable "eks_cluster_version" {
   type        = string
   description = "Amazon EKS Kubernetes version"
@@ -54,10 +54,10 @@ variable "eks_addon_version" {
   type        = map(string)
   description = "Amazon EKS add-on versions"
   default = {
-    "coredns"        = "v1.9.3-eksbuild.3"
-    "kube_proxy"     = "v1.25.6-eksbuild.2"
-    "vpc_cni"        = "v1.12.6-eksbuild.1"
-    "ebs_csi_driver" = "v1.16.0-eksbuild.1"
+    "coredns"        = "v1.9.3-eksbuild.10"
+    "kube_proxy"     = "v1.26.9-eksbuild.2"
+    "vpc_cni"        = "v1.15.3-eksbuild.1"
+    "ebs_csi_driver" = "v1.25.0-eksbuild.1"
   }
 }
 
