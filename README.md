@@ -52,6 +52,7 @@ terraform apply --auto-approve
 
 ## Connect to and verify the cluster
 ```
+# Make sure to use --region if the cluster is deployed in non-default region and --profile if the cluster is deployed in a non-default AWS account
 aws eks update-kubeconfig --name [eks_cluster_name]
 kubectl get nodes
 kubectl get pods -A
