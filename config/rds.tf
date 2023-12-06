@@ -62,7 +62,7 @@ resource "aws_db_instance" "radar_postgres" {
 
 resource "kubectl_manifest" "create_databases" {
   count = var.enable_rds ? 1 : 0
-  
+
   yaml_body = <<-YAML
     apiVersion: batch/v1
     kind: Job

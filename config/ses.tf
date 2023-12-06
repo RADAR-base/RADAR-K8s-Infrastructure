@@ -29,7 +29,7 @@ resource "aws_ses_domain_mail_from" "smtp_mail_from" {
 }
 
 resource "aws_route53_record" "smtp_mail_from_mx" {
-  count = var.enable_route53 && var.enable_ses ? 1 : 0
+  count   = var.enable_route53 && var.enable_ses ? 1 : 0
   zone_id = aws_route53_zone.primary[0].id
   name    = aws_ses_domain_mail_from.smtp_mail_from[0].mail_from_domain
   type    = "MX"
@@ -40,7 +40,7 @@ resource "aws_route53_record" "smtp_mail_from_mx" {
 }
 
 resource "aws_route53_record" "smtp_mail_from_txt" {
-  count = var.enable_route53 && var.enable_ses ? 1 : 0
+  count   = var.enable_route53 && var.enable_ses ? 1 : 0
   zone_id = aws_route53_zone.primary[0].id
   name    = aws_ses_domain_mail_from.smtp_mail_from[0].mail_from_domain
   type    = "TXT"
