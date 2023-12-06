@@ -39,7 +39,7 @@ variable "common_tags" {
   type        = map(string)
   description = "Common tags associated to resources created"
   default = {
-    Project     = "radar-base-development"
+    Project     = "radar-base"
     Environment = "dev"
   }
 }

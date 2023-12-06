@@ -2,7 +2,7 @@ module "allow_eks_access_iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "5.15.0"
 
-  name          = "${var.environment}-radar-base-allow-eks-access"
+  name          = "${var.eks_cluster_name}-allow-eks-access"
   create_policy = true
 
   policy = jsonencode({
@@ -18,7 +18,7 @@ module "allow_eks_access_iam_policy" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "radar-base-allow-eks-access" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-allow-eks-access" }), var.common_tags)
 }
 
 module "eks_admins_iam_role" {
@@ -26,7 +26,7 @@ module "eks_admins_iam_role" {
   version          = "5.15.0"
   role_description = "The administrative role for the EKS cluster"
 
-  role_name         = "${var.environment}-radar-base-admin-role"
+  role_name         = "${var.eks_cluster_name}-admin-role"
   create_role       = true
   role_requires_mfa = false
 
@@ -36,7 +36,7 @@ module "eks_admins_iam_role" {
     "arn:aws:iam::${module.vpc.vpc_owner_id}:root"
   ]
 
-  tags = merge(tomap({ "Name" : "radar-base-admin-role" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-admin-role" }), var.common_tags)
 }
 
 
@@ -44,7 +44,7 @@ module "allow_assume_eks_admins_iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "5.15.0"
 
-  name          = "${var.environment}-radar-base-allow-assume-eks-admin-role"
+  name          = "${var.eks_cluster_name}-allow-assume-eks-admin-role"
   create_policy = true
 
   policy = jsonencode({
@@ -60,26 +60,26 @@ module "allow_assume_eks_admins_iam_policy" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "radar-base-allow-assume-eks-admin-role" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-allow-assume-eks-admin-role" }), var.common_tags)
 }
 
 module "eks_admins_iam_group" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-group-with-policies"
   version = "5.15.0"
 
-  name                              = "${var.environment}-radar-base-eks-admin-group"
+  name                              = "${var.eks_cluster_name}-eks-admin-group"
   attach_iam_self_management_policy = false
   create_group                      = true
   group_users                       = var.eks_admins_group_users
   custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
 
-  tags = merge(tomap({ "Name" : "radar-base-eks-admin-group" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-eks-admin-group" }), var.common_tags)
 }
 
 module "iam_user" {
   source = "terraform-aws-modules/iam/aws//modules/iam-user"
 
-  name                          = "${var.environment}-radar-base-ecr-readonly-user"
+  name                          = "${var.eks_cluster_name}-ecr-readonly-user"
   create_iam_user_login_profile = false
   create_iam_access_key         = true
   force_destroy                 = false
@@ -88,11 +88,11 @@ module "iam_user" {
     "arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicReadOnly",
   ]
 
-  tags = merge(tomap({ "Name" : "radar-base-ecr-readonly-user" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ecr-readonly-user" }), var.common_tags)
 }
 
 resource "aws_iam_policy" "s3_access" {
-  name = "radar-base-${var.environment}-s3-access-policy"
+  name = "${var.eks_cluster_name}-s3-access-policy"
   path = "/eks/"
 
   policy = jsonencode({
@@ -107,17 +107,19 @@ resource "aws_iam_policy" "s3_access" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::radar-base-${var.environment}-intermediate-output-storage/*",
-          "arn:aws:s3:::radar-base-${var.environment}-output-storage/*",
-          "arn:aws:s3:::radar-base-${var.environment}-velero-backups/*",
+          "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage/*",
+          "arn:aws:s3:::${var.eks_cluster_name}-output-storage/*",
+          "arn:aws:s3:::${var.eks_cluster_name}-velero-backups/*",
         ]
       }
     ]
   })
+
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-s3-access-policy" }), var.common_tags)
 }
 
 resource "aws_iam_policy" "ecr_access" {
-  name = "radar-base-${var.environment}-ecr-access-policy"
+  name = "${var.eks_cluster_name}-ecr-access-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -143,11 +145,11 @@ resource "aws_iam_policy" "ecr_access" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "radar-base-ecr-access-policy" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ecr-access-policy" }), var.common_tags)
 }
 
 resource "aws_iam_policy" "ecr_pull_through_cache" {
-  name = "radar-base-${var.environment}-ecr-pull-through-cache-policy"
+  name = "${var.eks_cluster_name}-ecr-pull-through-cache-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -164,5 +166,5 @@ resource "aws_iam_policy" "ecr_pull_through_cache" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "radar-base-ecr-pull-through-cache-policy" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ecr-pull-through-cache-policy" }), var.common_tags)
 }
