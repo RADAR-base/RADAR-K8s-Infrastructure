@@ -1,4 +1,6 @@
 module "karpenter" {
+  count = var.enable_karpenter ? 1 : 0
+
   source  = "terraform-aws-modules/eks/aws//modules/karpenter"
   version = "19.17.2"
 
@@ -14,6 +16,8 @@ module "karpenter" {
 }
 
 resource "helm_release" "karpenter" {
+  count = var.enable_karpenter ? 1 : 0
+  
   namespace        = "karpenter"
   create_namespace = true
 
@@ -34,21 +38,23 @@ resource "helm_release" "karpenter" {
 
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = module.karpenter.irsa_arn
+    value = module.karpenter[0].irsa_arn
   }
 
   set {
     name  = "settings.aws.defaultInstanceProfile"
-    value = module.karpenter.instance_profile_name
+    value = module.karpenter[0].instance_profile_name
   }
 
   set {
     name  = "settings.aws.interruptionQueueName"
-    value = module.karpenter.queue_name
+    value = module.karpenter[0].queue_name
   }
 }
 
 resource "kubectl_manifest" "karpenter_provisioner" {
+  count = var.enable_karpenter ? 1 : 0
+
   yaml_body = <<-YAML
     apiVersion: karpenter.sh/v1alpha5
     kind: Provisioner
@@ -89,6 +95,8 @@ resource "kubectl_manifest" "karpenter_provisioner" {
 }
 
 resource "kubectl_manifest" "karpenter_node_template" {
+  count = var.enable_karpenter ? 1 : 0
+  
   yaml_body = <<-YAML
     apiVersion: karpenter.k8s.aws/v1alpha1
     kind: AWSNodeTemplate

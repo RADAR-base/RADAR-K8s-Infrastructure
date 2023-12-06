@@ -1,4 +1,6 @@
 resource "aws_iam_role" "msk_role" {
+  count = var.enable_msk ? 1 : 0
+
   name = "${var.environment}-msk-role"
 
   assume_role_policy = jsonencode({
@@ -18,11 +20,15 @@ resource "aws_iam_role" "msk_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "msk_policy_attachment" {
+  count = var.enable_msk ? 1 : 0
+
   policy_arn = "arn:aws:iam::aws:policy/AmazonMSKFullAccess"
-  role       = aws_iam_role.msk_role.name
+  role       = aws_iam_role.msk_role[0].name
 }
 
 resource "aws_security_group" "msk_cluster_access" {
+  count = var.enable_msk ? 1 : 0
+
   name_prefix = "${var.environment}-radar-base-msk-"
   description = "This security group is for accessing the MSK cluster"
   vpc_id      = data.aws_vpc.main.id
@@ -45,6 +51,8 @@ resource "aws_security_group" "msk_cluster_access" {
 }
 
 resource "aws_msk_configuration" "msk_configuration" {
+  count = var.enable_msk ? 1 : 0
+
   kafka_versions = [var.kafka_version]
   name           = "radar-base-${var.environment}-msk-configuration"
 
@@ -66,6 +74,8 @@ PROPERTIES
 }
 
 resource "aws_msk_cluster" "msk_cluster" {
+  count = var.enable_msk ? 1 : 0
+
   cluster_name           = "radar-base-${var.environment}"
   kafka_version          = var.kafka_version
   number_of_broker_nodes = 3
@@ -79,7 +89,7 @@ resource "aws_msk_cluster" "msk_cluster" {
       }
     }
     client_subnets  = data.aws_subnets.private.ids
-    security_groups = [data.aws_security_group.vpc_default.id, aws_security_group.msk_cluster_access.id]
+    security_groups = [data.aws_security_group.vpc_default.id, aws_security_group.msk_cluster_access[0].id]
   }
 
   encryption_info {
@@ -108,15 +118,15 @@ resource "aws_msk_cluster" "msk_cluster" {
   }
 
   configuration_info {
-    arn      = aws_msk_configuration.msk_configuration.arn
+    arn      = aws_msk_configuration.msk_configuration[0].arn
     revision = 1
   }
 }
 
 output "radar_base_msk_bootstrap_brokers" {
-  value = aws_msk_cluster.msk_cluster.bootstrap_brokers_tls
+  value = aws_msk_cluster.msk_cluster != [] ? aws_msk_cluster.msk_cluster[0].bootstrap_brokers_tls : ""
 }
 
 output "radar_base_msk_zookeeper_connect" {
-  value = aws_msk_cluster.msk_cluster.zookeeper_connect_string
+  value = aws_msk_cluster.msk_cluster != [] ? aws_msk_cluster.msk_cluster[0].zookeeper_connect_string : ""
 }
