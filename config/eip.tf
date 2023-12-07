@@ -7,9 +7,9 @@ resource "aws_eip" "cluster_loadbalancer_eip" {
 }
 
 output "radar_base_eip_allocation_id" {
-  value = aws_eip.cluster_loadbalancer_eip != [] ? aws_eip.cluster_loadbalancer_eip[0].allocation_id : ""
+  value = var.enable_eip ? aws_eip.cluster_loadbalancer_eip[0].allocation_id : null
 }
 
 output "radar_base_eip_public_dns" {
-  value = aws_eip.cluster_loadbalancer_eip != [] ? aws_eip.cluster_loadbalancer_eip[0].public_dns : ""
+  value = var.enable_eip ? aws_eip.cluster_loadbalancer_eip[0].public_dns : null
 }

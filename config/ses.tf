@@ -88,11 +88,11 @@ resource "aws_iam_user_policy_attachment" "smtp_user_policy_attach" {
 }
 
 output "radar_base_smtp_username" {
-  value = aws_iam_access_key.smtp_user_key != [] ? aws_iam_access_key.smtp_user_key[0].id : ""
+  value = var.enable_ses ? aws_iam_access_key.smtp_user_key[0].id : null
 }
 
 output "radar_base_smtp_password" {
-  value     = aws_iam_access_key.smtp_user_key != [] ? aws_iam_access_key.smtp_user_key[0].ses_smtp_password_v4 : ""
+  value     = var.enable_ses ? aws_iam_access_key.smtp_user_key[0].ses_smtp_password_v4 : null
   sensitive = true
 }
 

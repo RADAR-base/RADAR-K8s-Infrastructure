@@ -116,5 +116,5 @@ module "cert_manager_irsa" {
 }
 
 output "radar_base_route53_hosted_zone_id" {
-  value = aws_route53_zone.primary != [] ? aws_route53_zone.primary[0].zone_id : ""
+  value = var.enable_route53 ? aws_route53_zone.primary[0].zone_id : null
 }

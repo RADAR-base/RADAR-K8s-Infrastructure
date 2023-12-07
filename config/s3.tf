@@ -135,13 +135,13 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "velero_backups_en
 }
 
 output "radar_base_s3_intermediate_output_bucket_name" {
-  value = aws_s3_bucket.intermediate_output_storage != [] ? aws_s3_bucket.intermediate_output_storage[0].bucket : ""
+  value = var.enable_s3 ? aws_s3_bucket.intermediate_output_storage[0].bucket : null
 }
 
 output "radar_base_s3_output_bucket_name" {
-  value = aws_s3_bucket.output_storage != [] ? aws_s3_bucket.intermediate_output_storage[0].bucket : ""
+  value = var.enable_s3 ? aws_s3_bucket.intermediate_output_storage[0].bucket : null
 }
 
 output "radar_base_s3_velero_bucket_name" {
-  value = aws_s3_bucket.velero_backups != [] ? aws_s3_bucket.intermediate_output_storage[0].bucket : ""
+  value = var.enable_s3 ? aws_s3_bucket.intermediate_output_storage[0].bucket : null
 }

@@ -124,9 +124,9 @@ resource "aws_msk_cluster" "msk_cluster" {
 }
 
 output "radar_base_msk_bootstrap_brokers" {
-  value = aws_msk_cluster.msk_cluster != [] ? aws_msk_cluster.msk_cluster[0].bootstrap_brokers_tls : ""
+  value = var.enable_msk ? aws_msk_cluster.msk_cluster[0].bootstrap_brokers_tls : null
 }
 
 output "radar_base_msk_zookeeper_connect" {
-  value = aws_msk_cluster.msk_cluster != [] ? aws_msk_cluster.msk_cluster[0].zookeeper_connect_string : ""
+  value = var.enable_msk ? aws_msk_cluster.msk_cluster[0].zookeeper_connect_string : null
 }

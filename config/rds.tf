@@ -90,52 +90,52 @@ resource "kubectl_manifest" "create_databases" {
 }
 
 output "radar_base_rds_managementportal_host" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].address : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].address : null
 }
 
 output "radar_base_rds_managementportal_port" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].port : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].port : null
 }
 
 output "radar_base_rds_managementportal_username" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].username : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].username : null
 }
 
 output "radar_base_rds_managementportal_password" {
-  value     = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].password : ""
+  value     = var.enable_rds ? aws_db_instance.radar_postgres[0].password : null
   sensitive = true
 }
 
 output "radar_base_rds_appserver_host" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].address : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].address : null
 }
 
 output "radar_base_rds_appserver_port" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].port : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].port : null
 }
 
 output "radar_base_rds_appserver_username" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].username : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].username : null
 }
 
 output "radar_base_rds_appserver_password" {
-  value     = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].password : ""
+  value     = var.enable_rds ? aws_db_instance.radar_postgres[0].password : null
   sensitive = true
 }
 
 output "radar_base_rds_rest_sources_auth_host" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].address : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].address : null
 }
 
 output "radar_base_rds_rest_sources_auth_port" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].port : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].port : null
 }
 
 output "radar_base_rds_rest_sources_auth_username" {
-  value = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].username : ""
+  value = var.enable_rds ? aws_db_instance.radar_postgres[0].username : null
 }
 
 output "radar_base_rds_rest_sources_auth_password" {
-  value     = aws_db_instance.radar_postgres != [] ? aws_db_instance.radar_postgres[0].password : ""
+  value     = var.enable_rds ? aws_db_instance.radar_postgres[0].password : null
   sensitive = true
 }
