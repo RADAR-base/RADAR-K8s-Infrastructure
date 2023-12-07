@@ -76,6 +76,11 @@ variable "postgres_version" {
 
 }
 
+variable "enable_karpenter" {
+  type    = bool
+  default = false
+}
+
 variable "karpenter_version" {
   type    = string
   default = "v0.29.0"
@@ -86,4 +91,34 @@ variable "radar_postgres_password" {
   description = "Password for the PostgreSQL database used by Radar components"
   default     = "change_me"
   sensitive   = true
+}
+
+variable "enable_msk" {
+  type    = bool
+  default = false
+}
+
+variable "enable_rds" {
+  type    = bool
+  default = false
+}
+
+variable "enable_route53" {
+  type    = bool
+  default = false
+}
+
+variable "enable_ses" {
+  type    = bool
+  default = false
+}
+
+variable "enable_s3" {
+  type    = bool
+  default = false
+}
+
+variable "enable_eip" {
+  type    = bool
+  default = false
 }
