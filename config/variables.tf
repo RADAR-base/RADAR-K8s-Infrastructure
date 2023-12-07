@@ -76,11 +76,6 @@ variable "postgres_version" {
 
 }
 
-variable "enable_karpenter" {
-  type    = bool
-  default = false
-}
-
 variable "karpenter_version" {
   type    = string
   default = "v0.29.0"
@@ -93,32 +88,37 @@ variable "radar_postgres_password" {
   sensitive   = true
 }
 
+variable "enable_karpenter" {
+  type        = bool
+  description = "Do you need Karpenter? [true, false]"
+}
+
 variable "enable_msk" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Do you need MSK? [true, false]"
 }
 
 variable "enable_rds" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Do you need RDS? [true, false]"
 }
 
 variable "enable_route53" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Do you need Route53? [true, false]"
 }
 
 variable "enable_ses" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Do you need SES? [true, false]"
 }
 
 variable "enable_s3" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Do you need S3? [true, false]"
 }
 
 variable "enable_eip" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Do you need EIP? [true, false]"
 }

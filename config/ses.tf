@@ -99,9 +99,9 @@ output "radar_base_smtp_password" {
 }
 
 output "radar_base_smtp_host" {
-  value = "email-smtp.${var.AWS_REGION}.amazonaws.com"
+  value = var.enable_ses ? "email-smtp.${var.AWS_REGION}.amazonaws.com" : null
 }
 
 output "radar_base_smtp_port" {
-  value = 587
+  value = var.enable_ses ? 587 : null
 }
