@@ -1,7 +1,7 @@
 resource "aws_iam_role" "msk_role" {
   count = var.enable_msk ? 1 : 0
 
-  name = "${var.environment}-msk-role"
+  name = "${var.eks_cluster_name}-msk-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -16,7 +16,7 @@ resource "aws_iam_role" "msk_role" {
     ]
   })
 
-  tags = merge(tomap({ "Name" : "msk-role" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-msk-role" }), var.common_tags)
 }
 
 resource "aws_iam_role_policy_attachment" "msk_policy_attachment" {
@@ -29,7 +29,8 @@ resource "aws_iam_role_policy_attachment" "msk_policy_attachment" {
 resource "aws_security_group" "msk_cluster_access" {
   count = var.enable_msk ? 1 : 0
 
-  name_prefix = "${var.environment}-radar-base-msk-"
+  name_prefix = "${var.eks_cluster_name}-msk-"
+
   description = "This security group is for accessing the MSK cluster"
   vpc_id      = data.aws_vpc.main.id
 
@@ -47,14 +48,14 @@ resource "aws_security_group" "msk_cluster_access" {
     security_groups = [data.aws_security_group.node.id]
   }
 
-  tags = merge(tomap({ "Name" : "msk-cluster-access-sg" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-msk-cluster-access-sg" }), var.common_tags)
 }
 
 resource "aws_msk_configuration" "msk_configuration" {
   count = var.enable_msk ? 1 : 0
 
   kafka_versions = [var.kafka_version]
-  name           = "radar-base-${var.environment}-msk-configuration"
+  name           = "${var.eks_cluster_name}-msk-configuration"
 
   server_properties = <<PROPERTIES
 auto.create.topics.enable=false
@@ -76,7 +77,8 @@ PROPERTIES
 resource "aws_msk_cluster" "msk_cluster" {
   count = var.enable_msk ? 1 : 0
 
-  cluster_name           = "radar-base-${var.environment}"
+  cluster_name           = "${var.eks_cluster_name}-msk-cluster"
+  
   kafka_version          = var.kafka_version
   number_of_broker_nodes = 3
   enhanced_monitoring    = "DEFAULT"

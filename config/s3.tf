@@ -4,7 +4,7 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id       = data.aws_vpc.main.id
   service_name = "com.amazonaws.${var.AWS_REGION}.s3"
 
-  tags = merge(tomap({ "Name" : "s3-vpc-endpoint" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-s3-vpc-endpoint" }), var.common_tags)
 }
 
 resource "aws_vpc_endpoint_route_table_association" "route_table_association" {
@@ -17,9 +17,9 @@ resource "aws_vpc_endpoint_route_table_association" "route_table_association" {
 resource "aws_s3_bucket" "intermediate_output_storage" {
   count = var.enable_s3 ? 1 : 0
 
-  bucket = "radar-base-${var.environment}-intermediate-output-storage"
+  bucket = "${var.eks_cluster_name}-intermediate-output-storage"
 
-  tags = merge(tomap({ "Name" : "radar-base-eks-intermediate-output-storage" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-intermediate-output-storage" }), var.common_tags)
 }
 
 resource "aws_s3_bucket_ownership_controls" "intermediate_output" {
@@ -45,9 +45,9 @@ resource "aws_s3_bucket_acl" "intermediate_output" {
 resource "aws_s3_bucket" "output_storage" {
   count = var.enable_s3 ? 1 : 0
 
-  bucket = "radar-base-${var.environment}-output-storage"
+  bucket = "${var.eks_cluster_name}-output-storage"
 
-  tags = merge(tomap({ "Name" : "radar-base-eks-output-storage" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-output-storage" }), var.common_tags)
 }
 
 resource "aws_s3_bucket_ownership_controls" "output" {
@@ -73,9 +73,9 @@ resource "aws_s3_bucket_acl" "output" {
 resource "aws_s3_bucket" "velero_backups" {
   count = var.enable_s3 ? 1 : 0
 
-  bucket = "radar-base-${var.environment}-velero-backups"
+  bucket = "${var.eks_cluster_name}-velero-backups"
 
-  tags = merge(tomap({ "Name" : "radar-base-eks-velero-backups" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-velero-backups" }), var.common_tags)
 }
 
 resource "aws_s3_bucket_ownership_controls" "velero" {

@@ -2,7 +2,7 @@ resource "aws_route53_zone" "primary" {
   count = var.enable_route53 ? 1 : 0
 
   name = var.domain_name
-  tags = merge(tomap({ "Name" : "radar-base-primary-zone" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-primary-zone" }), var.common_tags)
 }
 
 resource "aws_route53_record" "main" {
@@ -81,7 +81,7 @@ module "external_dns_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                     = "${var.environment}-radar-base-external-dns-irsa"
+  role_name                     = "${var.eks_cluster_name}-external-dns-irsa"
   attach_external_dns_policy    = true
   external_dns_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary[0].id}"]
 
@@ -92,7 +92,7 @@ module "external_dns_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "radar-base-external-dns-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-external-dns-irsa" }), var.common_tags)
 }
 
 module "cert_manager_irsa" {
@@ -101,7 +101,7 @@ module "cert_manager_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name                     = "${var.environment}-radar-base-cert-manager-irsa"
+  role_name                     = "${var.eks_cluster_name}-cert-manager-irsa"
   attach_cert_manager_policy    = true
   cert_manager_hosted_zone_arns = ["arn:aws:route53:::hostedzone/${aws_route53_zone.primary[0].id}"]
 
@@ -112,7 +112,7 @@ module "cert_manager_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "radar-base-cert-manager-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-cert-manager-irsa" }), var.common_tags)
 }
 
 output "radar_base_route53_hosted_zone_id" {

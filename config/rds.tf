@@ -1,14 +1,14 @@
 resource "aws_db_subnet_group" "rds_subnet" {
   count = var.enable_rds ? 1 : 0
 
-  name       = "radar-base-${var.environment}-rds-subnet"
+  name       = "${var.eks_cluster_name}-rds-subnet"
   subnet_ids = data.aws_subnets.private.ids
 }
 
 resource "aws_security_group" "rds_access" {
   count = var.enable_rds ? 1 : 0
 
-  name_prefix = "radar-base-${var.environment}-"
+  name_prefix = "${var.eks_cluster_name}-"
   description = "This security group is for accessing the RDS DB"
   vpc_id      = data.aws_vpc.main.id
 
@@ -33,15 +33,15 @@ resource "aws_security_group" "rds_access" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(tomap({ "Name" : "radar-base-rds-access" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-rds-access" }), var.common_tags)
 
 }
 
 resource "aws_db_instance" "radar_postgres" {
   count = var.enable_rds ? 1 : 0
 
-  identifier                   = "radar-base-${var.environment}-postgres"
-  db_name                      = "radarbase${var.environment}"
+  identifier                   = "${var.eks_cluster_name}-postgres"
+  db_name                      = "radarbase"
   engine                       = "postgres"
   engine_version               = var.postgres_version
   instance_class               = "db.t4g.micro"
@@ -57,7 +57,7 @@ resource "aws_db_instance" "radar_postgres" {
   vpc_security_group_ids       = [aws_security_group.rds_access[0].id]
   performance_insights_enabled = true
 
-  tags = merge(tomap({ "Name" : "radar-base-appserver" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-postgres" }), var.common_tags)
 }
 
 resource "kubectl_manifest" "create_databases" {
@@ -78,9 +78,9 @@ resource "kubectl_manifest" "create_databases" {
                 - "bash"
                 - "-c"
                 - |
-                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase${var.environment} -c 'CREATE DATABASE managementportal;'
-                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase${var.environment} -c 'CREATE DATABASE appserver;'
-                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase${var.environment} -c 'CREATE DATABASE rest_sources_auth;'
+                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase -c 'CREATE DATABASE managementportal;'
+                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase -c 'CREATE DATABASE appserver;'
+                  PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase -c 'CREATE DATABASE rest_sources_auth;'
           restartPolicy: Never
   YAML
 

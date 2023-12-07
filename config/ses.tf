@@ -53,8 +53,8 @@ resource "aws_route53_record" "smtp_mail_from_txt" {
 resource "aws_iam_user" "smtp_user" {
   count = var.enable_ses ? 1 : 0
 
-  name = "${var.environment}-radar-base-smtp-user"
-  tags = merge(tomap({ "Name" : "radar-base-smtp-user" }), var.common_tags)
+  name = "${var.eks_cluster_name}-smtp-user"
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-smtp-user" }), var.common_tags)
 }
 
 resource "aws_iam_access_key" "smtp_user_key" {
@@ -66,7 +66,7 @@ resource "aws_iam_access_key" "smtp_user_key" {
 resource "aws_iam_policy" "smtp_user_policy" {
   count = var.enable_ses ? 1 : 0
 
-  name = "${var.environment}-radar-base-smtp-user-policy"
+  name = "${var.eks_cluster_name}-smtp-user-policy"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -78,6 +78,8 @@ resource "aws_iam_policy" "smtp_user_policy" {
       }
     ]
   })
+
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-smtp-user-policy" }), var.common_tags)
 }
 
 resource "aws_iam_user_policy_attachment" "smtp_user_policy_attach" {

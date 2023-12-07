@@ -2,7 +2,7 @@ module "vpc_cni_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name             = "${var.environment}-radar-base-vpc-cni-irsa"
+  role_name             = "${var.eks_cluster_name}-vpc-cni-irsa"
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv4   = true
 
@@ -13,14 +13,14 @@ module "vpc_cni_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "radar-base-vpc-cni-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc-cni-irsa" }), var.common_tags)
 }
 
 module "ebs_csi_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name             = "radar-base-ebs-csi-irsa"
+  role_name             = "${var.eks_cluster_name}-ebs-csi-irsa"
   attach_ebs_csi_policy = true
 
 
@@ -31,7 +31,7 @@ module "ebs_csi_irsa" {
     }
   }
 
-  tags = merge(tomap({ "Name" : "radar-base-ebs-csi-irsa" }), var.common_tags)
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ebs-csi-irsa" }), var.common_tags)
 }
 
 module "eks" {
