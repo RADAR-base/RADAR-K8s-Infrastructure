@@ -77,8 +77,8 @@ PROPERTIES
 resource "aws_msk_cluster" "msk_cluster" {
   count = var.enable_msk ? 1 : 0
 
-  cluster_name           = "${var.eks_cluster_name}-msk-cluster"
-  
+  cluster_name = "${var.eks_cluster_name}-msk-cluster"
+
   kafka_version          = var.kafka_version
   number_of_broker_nodes = 3
   enhanced_monitoring    = "DEFAULT"
