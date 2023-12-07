@@ -7,7 +7,8 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
 [![Terraform validate](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/config.yaml/badge.svg)](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/config.yaml/badge.svg)
 
 # Dependencies
-[Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.4
+[Terraform](https://developer.hashicorp.com/terraform/downloads) ~> 1.4.0
+[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) >= 2.11
 
 # Usage
 It is recommended that you use RADAR-K8s-Infrastructure as a template and create your own IaC repository from it (starting with a private one probably). Make sure to customise enclosed templates to your needs before creating the desired infrastructure.
@@ -58,8 +59,14 @@ kubectl get nodes
 kubectl get pods -A
 ```
 
+Once the infrastructure update is finished successfully, you can start deploying RADAR-base components to the newly created cluster by following the [Installation Guide](https://github.com/RADAR-base/RADAR-Kubernetes#installation). Before running `helmfile sync`, you will find it necessary to configure certain resource values which are required by `production.yaml` but only known post to infrastructure creation. We have exported the values of those resources and you can get them by simply running:
+```
+terraform output
+```
+You could also automate this value injection by implementing your own templating strategy to customise `production.yaml`
+
 ## Configure the cluster (optional)
-N.B.: To get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in `config/variables.tf`.
+N.B.: To get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in [config/variables.tf](./config/variables.tf).
 
 ```
 cd config
@@ -67,12 +74,6 @@ terraform init
 terraform plan
 terraform apply --auto-approve
 ```
-
-Once the infrastructure update is finished successfully, you can start deploying RADAR-base components to the newly created cluster by following the [Installation Guide](https://github.com/RADAR-base/RADAR-Kubernetes#installation). Before running `helmfile sync`, You will find it necessary to configure certain resource values which are required by `production.yaml` but only known post to infrastructure creation. We have exported the values of those resources and you can get them by simply running:
-```
-terraform output
-```
-(You could also automate this configuration based on your own customisation to `production.yaml`)
 
 ## Known limitations
 * Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.

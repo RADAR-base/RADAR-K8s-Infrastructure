@@ -27,6 +27,11 @@ variable "AWS_SESSION_TOKEN" {
 variable "eks_cluster_name" {
   type        = string
   description = "EKS cluster name"
+
+  validation {
+    condition     = length(var.eks_cluster_name) > 0
+    error_message = "The cluster name cannot be empty."
+  }
 }
 
 variable "environment" {
