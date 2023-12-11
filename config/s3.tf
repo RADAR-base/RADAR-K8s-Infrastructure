@@ -134,14 +134,80 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "velero_backups_en
   }
 }
 
+resource "aws_iam_policy" "s3_access" {
+  count = var.enable_s3 ? 1 : 0
+
+  name        = "${var.eks_cluster_name}-s3-access"
+  path        = "/${var.eks_cluster_name}/"
+  description = "Allow S3 access for apps in ${var.eks_cluster_name} cluster"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:*",
+                "s3-object-lambda:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage",
+                "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage/*",
+                "arn:aws:s3:::${var.eks_cluster_name}-output-storage",
+                "arn:aws:s3:::${var.eks_cluster_name}-output-storage/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*"
+        }
+    ]
+  })
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-s3-access" }), var.common_tags)
+}
+
+resource "aws_iam_user" "s3_access" {
+  count = var.enable_s3 ? 1 : 0
+
+  name = "${var.eks_cluster_name}-s3-access"
+  path = "/${var.eks_cluster_name}/"
+
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-s3-access" }), var.common_tags)
+}
+
+resource "aws_iam_access_key" "s3_access" {
+  count = var.enable_s3 ? 1 : 0
+
+  user = aws_iam_user.s3_access[0].name
+}
+
+resource "aws_iam_user_policy_attachment" "s3_access" {
+  count = var.enable_s3 ? 1 : 0
+
+  user   = aws_iam_user.s3_access[0].name
+  policy_arn = aws_iam_policy.s3_access[0].arn
+}
+
 output "radar_base_s3_intermediate_output_bucket_name" {
   value = var.enable_s3 ? aws_s3_bucket.intermediate_output_storage[0].bucket : null
 }
 
 output "radar_base_s3_output_bucket_name" {
-  value = var.enable_s3 ? aws_s3_bucket.intermediate_output_storage[0].bucket : null
+  value = var.enable_s3 ? aws_s3_bucket.output_storage[0].bucket : null
 }
 
 output "radar_base_s3_velero_bucket_name" {
-  value = var.enable_s3 ? aws_s3_bucket.intermediate_output_storage[0].bucket : null
+  value = var.enable_s3 ? aws_s3_bucket.velero_backups[0].bucket : null
+}
+
+output "radar_base_s3_access_key" {
+  value = var.enable_s3 ? aws_iam_access_key.s3_access[0].id : null
+}
+
+output "radar_base_s3_secret_key" {
+  value = var.enable_s3 ? aws_iam_access_key.s3_access[0].secret : null
+  sensitive = true
 }
