@@ -144,26 +144,26 @@ resource "aws_iam_policy" "s3_access" {
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
   policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:*",
-                "s3-object-lambda:*"
-            ],
-            "Resource": [
-                "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage",
-                "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage/*",
-                "arn:aws:s3:::${var.eks_cluster_name}-output-storage",
-                "arn:aws:s3:::${var.eks_cluster_name}-output-storage/*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": "s3:ListAllMyBuckets",
-            "Resource": "*"
-        }
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "s3:*",
+          "s3-object-lambda:*"
+        ],
+        "Resource" : [
+          "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage",
+          "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage/*",
+          "arn:aws:s3:::${var.eks_cluster_name}-output-storage",
+          "arn:aws:s3:::${var.eks_cluster_name}-output-storage/*"
+        ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "s3:ListAllMyBuckets",
+        "Resource" : "*"
+      }
     ]
   })
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-s3-access" }), var.common_tags)
@@ -187,7 +187,7 @@ resource "aws_iam_access_key" "s3_access" {
 resource "aws_iam_user_policy_attachment" "s3_access" {
   count = var.enable_s3 ? 1 : 0
 
-  user   = aws_iam_user.s3_access[0].name
+  user       = aws_iam_user.s3_access[0].name
   policy_arn = aws_iam_policy.s3_access[0].arn
 }
 
@@ -208,6 +208,6 @@ output "radar_base_s3_access_key" {
 }
 
 output "radar_base_s3_secret_key" {
-  value = var.enable_s3 ? aws_iam_access_key.s3_access[0].secret : null
+  value     = var.enable_s3 ? aws_iam_access_key.s3_access[0].secret : null
   sensitive = true
 }
