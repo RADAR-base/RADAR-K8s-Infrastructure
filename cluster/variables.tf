@@ -69,7 +69,7 @@ variable "eks_addon_version" {
 variable "instance_types" {
   type        = list(any)
   description = "List of instance types used by EKS managed node groups"
-  default     = ["m5a.large", "m5d.large", "m5a.large", "m5ad.large", "m4.large"]
+  default     = ["m5.large", "m5d.large", "m5a.large", "m5ad.large", "m4.large"]
 }
 
 variable "instance_capacity_type" {

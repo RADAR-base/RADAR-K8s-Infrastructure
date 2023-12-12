@@ -83,6 +83,13 @@ module "eks" {
       addon_version            = var.eks_addon_version.ebs_csi_driver
       resolve_conflicts        = "OVERWRITE"
       service_account_role_arn = module.ebs_csi_irsa.iam_role_arn
+      configuration_values = jsonencode({
+        sidecars : {
+          snapshotter : {
+            forceEnable : false
+          }
+        }
+      })
     }
   }
 
