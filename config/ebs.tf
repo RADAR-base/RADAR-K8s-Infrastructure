@@ -72,7 +72,12 @@ resource "kubernetes_annotations" "set_defaut_storage_class" {
     "storageclass.kubernetes.io/is-default-class" = "true"
   }
 
-  depends_on = [kubernetes_annotations.unset_eks_default_gp2]
+  depends_on = [
+    kubectl_manifest.ebs_sc_gp2,
+    kubectl_manifest.ebs_sc_gp3,
+    kubectl_manifest.ebs_sc_io1,
+    kubernetes_annotations.unset_eks_default_gp2,
+  ]
 }
 
 output "radar_base_ebs_storage_class_gp2" {
