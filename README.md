@@ -79,6 +79,4 @@ terraform apply --auto-approve
 * Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
 * Sometimes Terraform tries to replace the existing MSK cluster while re-applying the templates even if there is no change on the cluster. Mitigate this with `terraform untaint aws_msk_cluster.msk_cluster`.
 * Prior to `terraform destroy`, infrastructure resources created by pods/controllers and may not be visible to Terraform need to be deleted, e.g., nginx-ingress's NLB. A good practice is to always begin by running `helmfile destroy`.
-* If Karpenter is used for node provisioning, ensure the nodes created by it are not lingering around before running `terraform destroy`. 
-* Due to [known issues](https://github.com/kubernetes-sigs/aws-ebs-csi-driver/issues/1507), the aws-ebs-csi-driver retains EBS volumes during cluster destruction. These volumes should be manually deleted if no longer needed.
-  
+* If Karpenter is used for node provisioning, ensure the nodes created by it are not lingering around before running `terraform destroy`.
