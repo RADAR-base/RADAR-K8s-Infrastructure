@@ -9,7 +9,7 @@ resource "kubectl_manifest" "ebs_sc_gp2" {
     allowVolumeExpansion: true
     reclaimPolicy: Retain
     parameters:
-      type: gp3
+      type: gp2
       fstype: ext4
   YAML
 }
