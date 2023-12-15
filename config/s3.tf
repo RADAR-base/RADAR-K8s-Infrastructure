@@ -149,20 +149,22 @@ resource "aws_iam_policy" "s3_access" {
       {
         "Effect" : "Allow",
         "Action" : [
-          "s3:*",
-          "s3-object-lambda:*"
+          "s3:ListBucket"
         ],
         "Resource" : [
           "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage",
-          "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage/*",
           "arn:aws:s3:::${var.eks_cluster_name}-output-storage",
-          "arn:aws:s3:::${var.eks_cluster_name}-output-storage/*"
+          "arn:aws:s3:::${var.eks_cluster_name}-velero-backups"
         ]
       },
       {
         "Effect" : "Allow",
-        "Action" : "s3:ListAllMyBuckets",
-        "Resource" : "*"
+        "Action" : "s3:*Object",
+        "Resource" : [
+          "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage/*",
+          "arn:aws:s3:::${var.eks_cluster_name}-output-storage/*",
+          "arn:aws:s3:::${var.eks_cluster_name}-velero-backups/*"
+        ]
       }
     ]
   })
