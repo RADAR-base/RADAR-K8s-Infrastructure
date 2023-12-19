@@ -45,7 +45,3 @@ module "vpc" {
   default_security_group_tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc-default-sg" }), var.common_tags)
   tags                        = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc" }), var.common_tags)
 }
-
-output "radar_base_vpc_public_subnets" {
-  value = module.vpc.public_subnets
-}
