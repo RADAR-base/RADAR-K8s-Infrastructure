@@ -27,6 +27,8 @@ export TF_VAR_AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 
 ## Workspaces
 The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and made fully available before you proceed with the creation of the `config` ones.
+
+To retain the user-specific configurations for future infrastructure updates, modify `terraform.tfvars` within the workspace and push the change to your repository. If needed, additional variables defined in `variables.tf` can also be included there.
 | :information_source:  Important Notice  |
 |:----------------------------------------|
 |As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destory` to delete all the associated resources and reduce your cloud spending. If you have resources created within `config`, run `terraform destory` in that directory before running the counterpart in `cluster`.|

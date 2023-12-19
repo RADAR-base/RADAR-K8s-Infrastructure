@@ -72,5 +72,22 @@ locals {
     gp2 = "radar-base-ebs-sc-gp2"
     gp3 = "radar-base-ebs-sc-gp3"
     io1 = "radar-base-ebs-sc-io1"
+    io2 = "radar-base-ebs-sc-io2"
   }
+
+  s3_bucket_names = {
+    intermediate_output_storage = "${var.eks_cluster_name}-intermediate-output-storage"
+    output_storage              = "${var.eks_cluster_name}-output-storage"
+    velero_backups              = "${var.eks_cluster_name}-velero-backups"
+  }
+
+  cname_prefixes = [
+    "alertmanager",
+    "dashboard",
+    "grafana",
+    "graylog",
+    "prometheus",
+    "s3",
+  ]
+
 }

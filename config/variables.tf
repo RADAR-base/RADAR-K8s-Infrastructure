@@ -71,8 +71,8 @@ variable "defaut_storage_class" {
   default     = "radar-base-ebs-sc-gp2"
 
   validation {
-    condition     = var.defaut_storage_class == "radar-base-ebs-sc-gp2" || var.defaut_storage_class == "radar-base-ebs-sc-gp3" || var.defaut_storage_class == "radar-base-ebs-sc-io1"
-    error_message = "Invalid storage class. Allowed values are 'radar-base-ebs-sc-gp2', 'radar-base-ebs-sc-gp3' or 'radar-base-ebs-sc-io1'."
+    condition     = var.defaut_storage_class == "radar-base-ebs-sc-gp2" || var.defaut_storage_class == "radar-base-ebs-sc-gp3" || var.defaut_storage_class == "radar-base-ebs-sc-io1" || var.defaut_storage_class == "radar-base-ebs-sc-io2"
+    error_message = "Invalid storage class. Allowed values are 'radar-base-ebs-sc-gp2', 'radar-base-ebs-sc-gp3', 'radar-base-ebs-sc-io1' or 'radar-base-ebs-sc-io2'."
   }
 }
 
@@ -95,8 +95,9 @@ variable "karpenter_version" {
 variable "radar_postgres_password" {
   type        = string
   description = "Password for the PostgreSQL database used by Radar components"
-  default     = "change_me"
-  sensitive   = true
+  # Make sure to chage the default value when var.enable_rds is set to "true"
+  default   = "change_me"
+  sensitive = true
 }
 
 variable "enable_karpenter" {

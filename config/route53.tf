@@ -15,61 +15,11 @@ resource "aws_route53_record" "main" {
   records = [aws_eip.cluster_loadbalancer_eip[0].public_dns]
 }
 
-resource "aws_route53_record" "alertmanager" {
-  count = var.enable_route53 ? 1 : 0
+resource "aws_route53_record" "this" {
+  for_each = toset([for prefix in local.cname_prefixes : prefix if var.enable_route53])
 
   zone_id = aws_route53_zone.primary[0].zone_id
-  name    = "alertmanager.${var.environment}.${var.domain_name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = ["${var.environment}.${var.domain_name}"]
-}
-
-resource "aws_route53_record" "dashboard" {
-  count = var.enable_route53 ? 1 : 0
-
-  zone_id = aws_route53_zone.primary[0].zone_id
-  name    = "dashboard.${var.environment}.${var.domain_name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = ["${var.environment}.${var.domain_name}"]
-}
-
-resource "aws_route53_record" "grafana" {
-  count = var.enable_route53 ? 1 : 0
-
-  zone_id = aws_route53_zone.primary[0].zone_id
-  name    = "grafana.${var.environment}.${var.domain_name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = ["${var.environment}.${var.domain_name}"]
-}
-
-resource "aws_route53_record" "graylog" {
-  count = var.enable_route53 ? 1 : 0
-
-  zone_id = aws_route53_zone.primary[0].zone_id
-  name    = "graylog.${var.environment}.${var.domain_name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = ["${var.environment}.${var.domain_name}"]
-}
-
-resource "aws_route53_record" "prometheus" {
-  count = var.enable_route53 ? 1 : 0
-
-  zone_id = aws_route53_zone.primary[0].zone_id
-  name    = "prometheus.${var.environment}.${var.domain_name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = ["${var.environment}.${var.domain_name}"]
-}
-
-resource "aws_route53_record" "s3" {
-  count = var.enable_route53 ? 1 : 0
-
-  zone_id = aws_route53_zone.primary[0].zone_id
-  name    = "s3.${var.environment}.${var.domain_name}"
+  name    = "${each.value}.${var.environment}.${var.domain_name}"
   type    = "CNAME"
   ttl     = 300
   records = ["${var.environment}.${var.domain_name}"]
