@@ -14,6 +14,10 @@ resource "kubectl_manifest" "ebs_storage_classes" {
       type: ${each.key}
       fstype: ext4
   YAML
+
+  depends_on = [
+    module.eks
+  ]
 }
 
 resource "kubernetes_annotations" "unset_eks_default_gp2" {
@@ -27,6 +31,10 @@ resource "kubernetes_annotations" "unset_eks_default_gp2" {
   annotations = {
     "storageclass.kubernetes.io/is-default-class" = "false"
   }
+
+  depends_on = [
+    module.eks
+  ]
 }
 
 resource "kubernetes_annotations" "set_defaut_storage_class" {
@@ -45,20 +53,4 @@ resource "kubernetes_annotations" "set_defaut_storage_class" {
     kubectl_manifest.ebs_storage_classes,
     kubernetes_annotations.unset_eks_default_gp2,
   ]
-}
-
-output "radar_base_ebs_storage_class_gp2" {
-  value = local.storage_classes.gp2
-}
-
-output "radar_base_ebs_storage_class_gp3" {
-  value = local.storage_classes.gp3
-}
-
-output "radar_base_ebs_storage_class_io1" {
-  value = local.storage_classes.io1
-}
-
-output "radar_base_ebs_storage_class_io2" {
-  value = local.storage_classes.io2
 }

@@ -68,13 +68,6 @@ locals {
   aws_account = element(split(":", data.aws_eks_cluster.main.arn), 4)
   oidc_issuer = element(split("//", data.aws_eks_cluster.main.identity[0].oidc[0].issuer), 1)
 
-  storage_classes = {
-    gp2 = "radar-base-ebs-sc-gp2"
-    gp3 = "radar-base-ebs-sc-gp3"
-    io1 = "radar-base-ebs-sc-io1"
-    io2 = "radar-base-ebs-sc-io2"
-  }
-
   s3_bucket_names = {
     intermediate_output_storage = "${var.eks_cluster_name}-intermediate-output-storage"
     output_storage              = "${var.eks_cluster_name}-output-storage"

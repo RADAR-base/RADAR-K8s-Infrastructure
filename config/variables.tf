@@ -65,17 +65,6 @@ variable "instance_capacity_type" {
   }
 }
 
-variable "defaut_storage_class" {
-  type        = string
-  description = "Default storage class used for describing the EBS usage"
-  default     = "radar-base-ebs-sc-gp2"
-
-  validation {
-    condition     = var.defaut_storage_class == "radar-base-ebs-sc-gp2" || var.defaut_storage_class == "radar-base-ebs-sc-gp3" || var.defaut_storage_class == "radar-base-ebs-sc-io1" || var.defaut_storage_class == "radar-base-ebs-sc-io2"
-    error_message = "Invalid storage class. Allowed values are 'radar-base-ebs-sc-gp2', 'radar-base-ebs-sc-gp3', 'radar-base-ebs-sc-io1' or 'radar-base-ebs-sc-io2'."
-  }
-}
-
 variable "kafka_version" {
   type    = string
   default = "3.2.0"
