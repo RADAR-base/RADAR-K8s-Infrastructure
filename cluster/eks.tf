@@ -53,7 +53,7 @@ module "eks" {
           {
             key : "dmz-pod",
             operator : "Equal",
-            value : "false",
+            value : "yes",
             effect : "NoExecute"
           }
         ],
@@ -126,9 +126,10 @@ module "eks" {
 
       # Do we need this in the general template?
       taints = [{
-        key    = "dmz-pod"
-        value  = "false"
-        effect = "NO_EXECUTE"
+        key      = "dmz-pod"
+        operator = "Equal"
+        value    = "yes"
+        effect   = "NO_EXECUTE"
       }]
 
       instance_types = var.instance_types

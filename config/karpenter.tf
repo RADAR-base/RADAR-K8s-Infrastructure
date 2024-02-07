@@ -50,6 +50,32 @@ resource "helm_release" "karpenter" {
     name  = "settings.aws.interruptionQueueName"
     value = module.karpenter[0].queue_name
   }
+
+  set {
+    name  = "replicas"
+    value = 1 # The initial value should match var.dmz_node_size["desired"] defined in cluster/variables.tf
+  }
+
+  set {
+    name  = "tolerations[0].key"
+    value = "dmz-pod"
+  }
+
+  set {
+    name  = "tolerations[0].value"
+    value = "yes"
+  }
+
+  set {
+    name  = "tolerations[0].operator"
+    value = "Equal"
+  }
+
+  set {
+    name  = "tolerations[0].effect"
+    value = "NoExecute"
+  }
+
 }
 
 resource "kubectl_manifest" "karpenter_provisioner" {
