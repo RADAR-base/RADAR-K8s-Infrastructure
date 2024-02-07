@@ -53,6 +53,19 @@ terraform plan
 terraform apply --auto-approve
 ```
 
+Created resources:
+* VPC featuring both public and private subnets
+* Internet and NAT gateways
+* EKS cluster with distinct DMZ and worker node groups
+* EKS coredns, kube-proxy, vpc-cni and aws-ebs-csi-driver addons
+* EBS storage classes referenced by PVCs
+* IRSAs for VPC CNI and EBS CSI controllers
+* Default EC2 instances
+* Default network ACLs and route tables
+* KMS keys and CloudWatch logs groups
+* Essential IAM policies, roles, users and user groups for accessing these resources
+
+
 ## Connect to and verify the cluster
 ```
 # Make sure to use --region if the cluster is deployed in non-default region and --profile if the cluster is deployed in a non-default AWS account
@@ -76,6 +89,20 @@ terraform init
 terraform plan
 terraform apply --auto-approve
 ```
+
+Optional resource creations are disabled by default. To enable the creation of a specific resource named `X`, navigate to [config/terraform.tfvars](./config/terraform.tfvars) and update the value of `enable_X` to `true` before applying the tempate.
+
+Created resources (if all enabled):
+* EIP allocated for the load balancer created by Ingress-NGINX
+* Karpenter provisioner, the node template and the SQS interruption queue
+* MSK cluster featuring Kafka brokers and zookeepers
+* RDS instance running managementportal, appserver and rest_sources_auth databases
+* Route53 zone and records accompanied by IRSAs for external DNS and Cert Manager
+* S3 buckets for intermediate-output-storage, output-storage and velero-backups
+* VPC endpoint for S3
+* SES SMTP endpoint
+* CloudWatch event rules and targets
+* Essential IAM policies, roles, users for accessing these resources
 
 ## Known limitations
 * Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
