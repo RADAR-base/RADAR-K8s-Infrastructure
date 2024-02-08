@@ -1,19 +1,3 @@
-resource "aws_vpc_endpoint" "s3" {
-  count = var.enable_s3 ? 1 : 0
-
-  vpc_id       = data.aws_vpc.main.id
-  service_name = "com.amazonaws.${var.AWS_REGION}.s3"
-
-  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-s3-vpc-endpoint" }), var.common_tags)
-}
-
-resource "aws_vpc_endpoint_route_table_association" "route_table_association" {
-  count = var.enable_s3 ? 1 : 0
-
-  route_table_id  = data.aws_vpc.main.main_route_table_id
-  vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
-}
-
 resource "aws_s3_bucket" "this" {
   for_each = { for k, v in local.s3_bucket_names : k => v if var.enable_s3 }
 

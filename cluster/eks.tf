@@ -196,3 +196,15 @@ module "eks" {
 
   tags = merge(tomap({ "Name" : var.eks_cluster_name }), var.common_tags)
 }
+
+resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_access" {
+  security_group_id            = aws_security_group.vpc_endpoint.id
+  ip_protocol                  = "-1"
+  referenced_security_group_id = module.eks.node_security_group_id
+
+  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc-endpoints-access" }), var.common_tags)
+
+  depends_on = [
+    aws_security_group.vpc_endpoint
+  ]
+}

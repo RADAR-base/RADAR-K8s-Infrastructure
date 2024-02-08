@@ -55,15 +55,16 @@ terraform apply --auto-approve
 
 Created resources:
 * VPC featuring both public and private subnets
+* VPC endpoints for privately accessing AWS services
 * Internet and NAT gateways
-* EKS cluster with distinct DMZ and worker node groups
+* EKS cluster with distinct DMZ and Worker node groups
 * EKS coredns, kube-proxy, vpc-cni and aws-ebs-csi-driver addons
 * EBS storage classes referenced by PVCs
 * IRSAs for VPC CNI and EBS CSI controllers
-* Default EC2 instances
+* Initial EC2 instances launched with Spot capacity
 * Default network ACLs and route tables
-* KMS keys and CloudWatch logs groups
-* Essential IAM policies, roles, users and user groups for accessing these resources
+* KMS keys and CloudWatch log groups
+* Essential IAM policies, roles, users and user groups for accessing aforementioned resources
 
 
 ## Connect to and verify the cluster
@@ -99,10 +100,9 @@ Created resources (if all enabled):
 * RDS instance running managementportal, appserver and rest_sources_auth databases
 * Route53 zone and records accompanied by IRSAs for external DNS and Cert Manager
 * S3 buckets for intermediate-output-storage, output-storage and velero-backups
-* VPC endpoint for S3
 * SES SMTP endpoint
 * CloudWatch event rules and targets
-* Essential IAM policies, roles, users for accessing these resources
+* Essential IAM policies, roles, users for aforementioned resources
 
 ## Known limitations
 * Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
