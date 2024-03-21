@@ -57,7 +57,7 @@ Created resources:
 * VPC featuring both public and private subnets
 * VPC endpoints for privately accessing AWS services
 * Internet and NAT gateways
-* EKS cluster with distinct DMZ and Worker node groups
+* EKS cluster with a default worker node group
 * EKS coredns, kube-proxy, vpc-cni and aws-ebs-csi-driver addons
 * EBS storage classes referenced by PVCs
 * IRSAs for VPC CNI and EBS CSI controllers

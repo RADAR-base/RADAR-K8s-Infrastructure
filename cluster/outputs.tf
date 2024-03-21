@@ -7,7 +7,7 @@ output "radar_base_eks_cluser_endpoint" {
 }
 
 output "radar_base_eks_dmz_node_group_name" {
-  value = element(split(":", module.eks.eks_managed_node_groups.dmz.node_group_id), 1)
+  value = var.create_dmz_node_group ? element(split(":", module.eks.eks_managed_node_groups.dmz.node_group_id), 1) : null
 }
 
 output "radar_base_eks_worker_node_group_name" {

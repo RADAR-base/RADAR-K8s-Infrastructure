@@ -89,6 +89,12 @@ variable "radar_postgres_password" {
   sensitive = true
 }
 
+variable "create_dmz_node_group" {
+  type        = bool
+  description = "Whether or not to create a DMZ node group with taints"
+  default     = false
+}
+
 variable "enable_karpenter" {
   type        = bool
   description = "Do you need Karpenter? [true, false]"

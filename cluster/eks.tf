@@ -34,6 +34,72 @@ module "ebs_csi_irsa" {
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ebs-csi-irsa" }), var.common_tags)
 }
 
+locals {
+  dmz_node_group = {
+    dmz = {
+      desired_size = var.dmz_node_size["desired"]
+      min_size     = var.dmz_node_size["min"]
+      max_size     = var.dmz_node_size["max"]
+
+      pre_bootstrap_user_data = <<-EOT
+        cd /tmp
+        sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+        sudo systemctl enable amazon-ssm-agent
+        sudo systemctl start amazon-ssm-agent
+      EOT
+
+      labels = {
+        role = "dmz-1"
+      }
+
+      taints = [{
+        key      = "dmz-pod"
+        operator = "Equal"
+        value    = "yes"
+        effect   = "NO_EXECUTE"
+      }]
+
+      instance_types = var.instance_types
+      capacity_type  = var.instance_capacity_type
+      subnet_ids     = [module.vpc.public_subnets[0]]
+
+      iam_role_additional_policies = {
+        AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      }
+    }
+  }
+
+  worker_node_group = {
+    worker = {
+      desired_size = var.worker_node_size["desired"]
+      min_size     = var.worker_node_size["min"]
+      max_size     = var.worker_node_size["max"]
+
+      pre_bootstrap_user_data = <<-EOT
+        cd /tmp
+        sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+        sudo systemctl enable amazon-ssm-agent
+        sudo systemctl start amazon-ssm-agent
+      EOT
+
+      labels = {
+        role = "worker"
+      }
+
+      instance_types = var.instance_types
+      capacity_type  = var.instance_capacity_type
+      subnet_ids     = [module.vpc.private_subnets[0]] # Single AZ due to EBS mounting limit
+
+      iam_role_additional_policies = {
+        AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+        S3Access                     = aws_iam_policy.s3_access.arn
+        ECRAccess                    = aws_iam_policy.ecr_access.arn
+        ECRPullThroughCache          = aws_iam_policy.ecr_pull_through_cache.arn
+      }
+    }
+  }
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.13.1"
@@ -48,7 +114,7 @@ module "eks" {
     coredns = {
       addon_version     = var.eks_addon_version.coredns
       resolve_conflicts = "OVERWRITE"
-      configuration_values = jsonencode({
+      configuration_values = var.create_dmz_node_group ? jsonencode({
         tolerations : [
           {
             key : "dmz-pod",
@@ -60,6 +126,9 @@ module "eks" {
         nodeSelector : {
           role : "dmz-1"
         }
+        }) : jsonencode({
+        tolerations : [],
+        nodeSelector : {}
       })
     }
     kube-proxy = {
@@ -107,68 +176,7 @@ module "eks" {
     disk_size = 50
   }
 
-  eks_managed_node_groups = {
-    dmz = {
-      desired_size = var.dmz_node_size["desired"]
-      min_size     = var.dmz_node_size["min"]
-      max_size     = var.dmz_node_size["max"]
-
-      pre_bootstrap_user_data = <<-EOT
-        cd /tmp
-        sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-        sudo systemctl enable amazon-ssm-agent
-        sudo systemctl start amazon-ssm-agent
-      EOT
-
-      labels = {
-        role = "dmz-1"
-      }
-
-      # Do we need this in the general template?
-      taints = [{
-        key      = "dmz-pod"
-        operator = "Equal"
-        value    = "yes"
-        effect   = "NO_EXECUTE"
-      }]
-
-      instance_types = var.instance_types
-      capacity_type  = var.instance_capacity_type
-      subnet_ids     = [module.vpc.public_subnets[0]]
-
-      iam_role_additional_policies = {
-        AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-      }
-    }
-
-    worker = {
-      desired_size = var.worker_node_size["desired"]
-      min_size     = var.worker_node_size["min"]
-      max_size     = var.worker_node_size["max"]
-
-      pre_bootstrap_user_data = <<-EOT
-        cd /tmp
-        sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-        sudo systemctl enable amazon-ssm-agent
-        sudo systemctl start amazon-ssm-agent
-      EOT
-
-      labels = {
-        role = "worker"
-      }
-
-      instance_types = var.instance_types
-      capacity_type  = var.instance_capacity_type
-      subnet_ids     = [module.vpc.private_subnets[0]] # Single AZ due to EBS mounting limit
-
-      iam_role_additional_policies = {
-        AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-        S3Access                     = aws_iam_policy.s3_access.arn
-        ECRAccess                    = aws_iam_policy.ecr_access.arn
-        ECRPullThroughCache          = aws_iam_policy.ecr_pull_through_cache.arn
-      }
-    }
-  }
+  eks_managed_node_groups = merge(local.worker_node_group, var.create_dmz_node_group ? local.dmz_node_group : {})
 
   node_security_group_additional_rules = {
     node_to_node = {

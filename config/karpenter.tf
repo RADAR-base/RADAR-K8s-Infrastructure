@@ -26,56 +26,64 @@ resource "helm_release" "karpenter" {
   chart      = "karpenter"
   version    = var.karpenter_version
 
-  set {
-    name  = "settings.aws.clusterName"
-    value = data.aws_eks_cluster.main.id
-  }
+  dynamic "set" {
+    for_each = var.create_dmz_node_group ? [
+      {
+        name  = "settings.aws.clusterName"
+        value = data.aws_eks_cluster.main.id
+        }, {
+        name  = "settings.aws.clusterEndpoint"
+        value = data.aws_eks_cluster.main.endpoint
+        }, {
+        name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+        value = module.karpenter[0].irsa_arn
+        }, {
+        name  = "settings.aws.defaultInstanceProfile"
+        value = module.karpenter[0].instance_profile_name
+        }, {
+        name  = "settings.aws.interruptionQueueName"
+        value = module.karpenter[0].queue_name
+        }, {
+        name  = "replicas"
+        value = 1 # The initial value should match the "desired" node size defined in cluster/variables.tf
+        }, {
+        name  = "tolerations[0].key"
+        value = "dmz-pod"
+        }, {
+        name  = "tolerations[0].value"
+        value = "yes"
+        }, {
+        name  = "tolerations[0].operator"
+        value = "Equal"
+        }, {
+        name  = "tolerations[0].effect"
+        value = "NoExecute"
+      },
+      ] : [{
+        name  = "settings.aws.clusterName"
+        value = data.aws_eks_cluster.main.id
+        }, {
+        name  = "settings.aws.clusterEndpoint"
+        value = data.aws_eks_cluster.main.endpoint
+        }, {
+        name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+        value = module.karpenter[0].irsa_arn
+        }, {
+        name  = "settings.aws.defaultInstanceProfile"
+        value = module.karpenter[0].instance_profile_name
+        }, {
+        name  = "settings.aws.interruptionQueueName"
+        value = module.karpenter[0].queue_name
+        }, {
+        name  = "replicas"
+        value = 1 # The initial value should match the "desired" node size defined in cluster/variables.tf
+    }]
 
-  set {
-    name  = "settings.aws.clusterEndpoint"
-    value = data.aws_eks_cluster.main.endpoint
+    content {
+      name  = set.value.name
+      value = set.value.value
+    }
   }
-
-  set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = module.karpenter[0].irsa_arn
-  }
-
-  set {
-    name  = "settings.aws.defaultInstanceProfile"
-    value = module.karpenter[0].instance_profile_name
-  }
-
-  set {
-    name  = "settings.aws.interruptionQueueName"
-    value = module.karpenter[0].queue_name
-  }
-
-  set {
-    name  = "replicas"
-    value = 1 # The initial value should match var.dmz_node_size["desired"] defined in cluster/variables.tf
-  }
-
-  set {
-    name  = "tolerations[0].key"
-    value = "dmz-pod"
-  }
-
-  set {
-    name  = "tolerations[0].value"
-    value = "yes"
-  }
-
-  set {
-    name  = "tolerations[0].operator"
-    value = "Equal"
-  }
-
-  set {
-    name  = "tolerations[0].effect"
-    value = "NoExecute"
-  }
-
 }
 
 resource "kubectl_manifest" "karpenter_provisioner" {

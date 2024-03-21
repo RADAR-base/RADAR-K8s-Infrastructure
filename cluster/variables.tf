@@ -83,9 +83,15 @@ variable "instance_capacity_type" {
   }
 }
 
+variable "create_dmz_node_group" {
+  type        = bool
+  description = "Whether or not to create a DMZ node group with taints"
+  default     = false
+}
+
 variable "dmz_node_size" {
   type        = map(number)
-  description = "Node size of the dmz node group"
+  description = "Node size of the DMZ node group"
   default = {
     "desired" = 1
     "min"     = 0
