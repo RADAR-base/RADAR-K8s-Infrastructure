@@ -1,4 +1,3 @@
-
 variable "AWS_REGION" {
   type        = string
   description = "Target AWS region"
@@ -49,20 +48,14 @@ variable "common_tags" {
   }
 }
 
-variable "eks_cluster_version" {
+variable "eks_kubernetes_version" {
   type        = string
   description = "Amazon EKS Kubernetes version"
   default     = "1.27"
-}
 
-variable "eks_addon_version" {
-  type        = map(string)
-  description = "Amazon EKS add-on versions"
-  default = {
-    "coredns"        = "v1.9.3-eksbuild.10"
-    "kube_proxy"     = "v1.26.9-eksbuild.2"
-    "vpc_cni"        = "v1.15.3-eksbuild.1"
-    "ebs_csi_driver" = "v1.25.0-eksbuild.1"
+  validation {
+    condition     = contains(["1.27", "1.26", "1.25"], var.eks_kubernetes_version)
+    error_message = "Invalid EKS Kubernetes version. Supported versions are  '1.27', '1.26', '1.25'."
   }
 }
 
@@ -79,23 +72,7 @@ variable "instance_capacity_type" {
 
   validation {
     condition     = var.instance_capacity_type == "ON_DEMAND" || var.instance_capacity_type == "SPOT"
-    error_message = "Invalid instance capacity type. Allowed values are 'ON_DEMAND' or 'SPOT'."
-  }
-}
-
-variable "create_dmz_node_group" {
-  type        = bool
-  description = "Whether or not to create a DMZ node group with taints"
-  default     = false
-}
-
-variable "dmz_node_size" {
-  type        = map(number)
-  description = "Node size of the DMZ node group"
-  default = {
-    "desired" = 1
-    "min"     = 0
-    "max"     = 2
+    error_message = "Invalid instance capacity type. Allowed values are 'ON_DEMAND', 'SPOT'."
   }
 }
 
@@ -115,6 +92,21 @@ variable "eks_admins_group_users" {
   default     = []
 }
 
+variable "create_dmz_node_group" {
+  type        = bool
+  description = "Whether or not to create a DMZ node group with taints"
+  default     = false
+}
+
+variable "dmz_node_size" {
+  type        = map(number)
+  description = "Node size of the DMZ node group"
+  default = {
+    "desired" = 1
+    "min"     = 0
+    "max"     = 2
+  }
+}
 
 variable "defaut_storage_class" {
   type        = string

@@ -105,14 +105,14 @@ module "eks" {
   version = "19.13.1"
 
   cluster_name    = var.eks_cluster_name
-  cluster_version = var.eks_cluster_version
+  cluster_version = local.eks_core_versions[var.eks_kubernetes_version].cluster_version
 
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
 
   cluster_addons = {
     coredns = {
-      addon_version     = var.eks_addon_version.coredns
+      addon_version     = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.coredns
       resolve_conflicts = "OVERWRITE"
       configuration_values = var.create_dmz_node_group ? jsonencode({
         tolerations : [
@@ -132,11 +132,11 @@ module "eks" {
       })
     }
     kube-proxy = {
-      addon_version     = var.eks_addon_version.kube_proxy
+      addon_version     = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.kube_proxy
       resolve_conflicts = "OVERWRITE"
     }
     vpc-cni = {
-      addon_version            = var.eks_addon_version.vpc_cni
+      addon_version            = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.vpc_cni
       resolve_conflicts        = "OVERWRITE"
       before_compute           = true
       service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
@@ -149,7 +149,7 @@ module "eks" {
       })
     }
     aws-ebs-csi-driver = {
-      addon_version            = var.eks_addon_version.ebs_csi_driver
+      addon_version            = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.ebs_csi_driver
       resolve_conflicts        = "OVERWRITE"
       service_account_role_arn = module.ebs_csi_irsa.iam_role_arn
       configuration_values = jsonencode({

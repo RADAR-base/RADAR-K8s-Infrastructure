@@ -15,6 +15,54 @@ module "karpenter" {
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-karpenter" }), var.common_tags)
 }
 
+locals {
+  common_settings = [
+    {
+      name  = "settings.aws.clusterName"
+      value = data.aws_eks_cluster.main.id
+    },
+    {
+      name  = "settings.aws.clusterEndpoint"
+      value = data.aws_eks_cluster.main.endpoint
+    },
+    {
+      name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+      value = module.karpenter[0].irsa_arn
+    },
+    {
+      name  = "settings.aws.defaultInstanceProfile"
+      value = module.karpenter[0].instance_profile_name
+    },
+    {
+      name  = "settings.aws.interruptionQueueName"
+      value = module.karpenter[0].queue_name
+    },
+    {
+      name  = "replicas"
+      value = 2
+    },
+  ]
+
+  tolerations_settings = [
+    {
+      name  = "tolerations[0].key"
+      value = "dmz-pod"
+    },
+    {
+      name  = "tolerations[0].value"
+      value = "yes"
+    },
+    {
+      name  = "tolerations[0].operator"
+      value = "Equal"
+    },
+    {
+      name  = "tolerations[0].effect"
+      value = "NoExecute"
+    },
+  ]
+}
+
 resource "helm_release" "karpenter" {
   count = var.enable_karpenter ? 1 : 0
 
@@ -26,58 +74,10 @@ resource "helm_release" "karpenter" {
   chart      = "karpenter"
   version    = var.karpenter_version
 
+
+
   dynamic "set" {
-    for_each = var.create_dmz_node_group ? [
-      {
-        name  = "settings.aws.clusterName"
-        value = data.aws_eks_cluster.main.id
-        }, {
-        name  = "settings.aws.clusterEndpoint"
-        value = data.aws_eks_cluster.main.endpoint
-        }, {
-        name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-        value = module.karpenter[0].irsa_arn
-        }, {
-        name  = "settings.aws.defaultInstanceProfile"
-        value = module.karpenter[0].instance_profile_name
-        }, {
-        name  = "settings.aws.interruptionQueueName"
-        value = module.karpenter[0].queue_name
-        }, {
-        name  = "replicas"
-        value = 1 # The initial value should match the "desired" node size defined in cluster/variables.tf
-        }, {
-        name  = "tolerations[0].key"
-        value = "dmz-pod"
-        }, {
-        name  = "tolerations[0].value"
-        value = "yes"
-        }, {
-        name  = "tolerations[0].operator"
-        value = "Equal"
-        }, {
-        name  = "tolerations[0].effect"
-        value = "NoExecute"
-      },
-      ] : [{
-        name  = "settings.aws.clusterName"
-        value = data.aws_eks_cluster.main.id
-        }, {
-        name  = "settings.aws.clusterEndpoint"
-        value = data.aws_eks_cluster.main.endpoint
-        }, {
-        name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-        value = module.karpenter[0].irsa_arn
-        }, {
-        name  = "settings.aws.defaultInstanceProfile"
-        value = module.karpenter[0].instance_profile_name
-        }, {
-        name  = "settings.aws.interruptionQueueName"
-        value = module.karpenter[0].queue_name
-        }, {
-        name  = "replicas"
-        value = 1 # The initial value should match the "desired" node size defined in cluster/variables.tf
-    }]
+    for_each = var.create_dmz_node_group ? concat(local.common_settings, local.tolerations_settings) : local.common_settings
 
     content {
       name  = set.value.name
