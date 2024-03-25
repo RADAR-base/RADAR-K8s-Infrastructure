@@ -89,9 +89,9 @@ variable "radar_postgres_password" {
   sensitive = true
 }
 
-variable "create_dmz_node_group" {
+variable "with_dmz_pods" {
   type        = bool
-  description = "Whether or not to create a DMZ node group with taints"
+  description = "Whether or not to utilise the DMZ node group if it exists"
   default     = false
 }
 

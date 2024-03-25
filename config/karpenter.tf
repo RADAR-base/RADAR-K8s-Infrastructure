@@ -27,15 +27,15 @@ locals {
     },
     {
       name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-      value = module.karpenter[0].irsa_arn
+      value = length(module.karpenter) > 0 ? module.karpenter[0].irsa_arn : null
     },
     {
       name  = "settings.aws.defaultInstanceProfile"
-      value = module.karpenter[0].instance_profile_name
+      value = length(module.karpenter) > 0 ? module.karpenter[0].instance_profile_name : null
     },
     {
       name  = "settings.aws.interruptionQueueName"
-      value = module.karpenter[0].queue_name
+      value = length(module.karpenter) > 0 ? module.karpenter[0].queue_name : null
     },
     {
       name  = "replicas"
@@ -77,7 +77,7 @@ resource "helm_release" "karpenter" {
 
 
   dynamic "set" {
-    for_each = var.create_dmz_node_group ? concat(local.common_settings, local.tolerations_settings) : local.common_settings
+    for_each = var.with_dmz_pods ? concat(local.common_settings, local.tolerations_settings) : local.common_settings
 
     content {
       name  = set.value.name

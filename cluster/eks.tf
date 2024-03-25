@@ -112,34 +112,45 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      addon_version     = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.coredns
-      resolve_conflicts = "OVERWRITE"
-      configuration_values = var.create_dmz_node_group ? jsonencode({
-        tolerations : [
+      addon_version               = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.coredns
+      resolve_conflicts_on_create = "OVERWRITE"
+      configuration_values = jsonencode({
+        tolerations : var.create_dmz_node_group ? [
           {
             key : "dmz-pod",
             operator : "Equal",
             value : "yes",
             effect : "NoExecute"
           }
-        ],
-        nodeSelector : {
+        ] : [],
+        nodeSelector : var.create_dmz_node_group ? {
           role : "dmz-1"
+        } : {},
+        affinity : {
+          podAntiAffinity : {
+            requiredDuringSchedulingIgnoredDuringExecution : [{
+              labelSelector : {
+                matchExpressions : [{
+                  key : "k8s-app"
+                  operator : "In"
+                  values : ["kube-dns"]
+                }]
+              },
+              topologyKey : "kubernetes.io/hostname"
+            }]
+          }
         }
-        }) : jsonencode({
-        tolerations : [],
-        nodeSelector : {}
       })
     }
     kube-proxy = {
-      addon_version     = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.kube_proxy
-      resolve_conflicts = "OVERWRITE"
+      addon_version               = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.kube_proxy
+      resolve_conflicts_on_create = "OVERWRITE"
     }
     vpc-cni = {
-      addon_version            = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.vpc_cni
-      resolve_conflicts        = "OVERWRITE"
-      before_compute           = true
-      service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
+      addon_version               = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.vpc_cni
+      resolve_conflicts_on_create = "OVERWRITE"
+      before_compute              = true
+      service_account_role_arn    = module.vpc_cni_irsa.iam_role_arn
       configuration_values = jsonencode({
         env : {
           # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
@@ -149,9 +160,9 @@ module "eks" {
       })
     }
     aws-ebs-csi-driver = {
-      addon_version            = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.ebs_csi_driver
-      resolve_conflicts        = "OVERWRITE"
-      service_account_role_arn = module.ebs_csi_irsa.iam_role_arn
+      addon_version               = local.eks_core_versions[var.eks_kubernetes_version].cluster_addons.ebs_csi_driver
+      resolve_conflicts_on_create = "OVERWRITE"
+      service_account_role_arn    = module.ebs_csi_irsa.iam_role_arn
       configuration_values = jsonencode({
         sidecars : {
           snapshotter : {
