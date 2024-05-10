@@ -1,6 +1,15 @@
 locals {
 
   eks_core_versions = {
+    "1.28" : {
+      "cluster_version" = "1.28"
+      "cluster_addons" = {
+        "coredns"        = "v1.10.1-eksbuild.10"
+        "kube_proxy"     = "v1.28.1-eksbuild.1"
+        "vpc_cni"        = "v1.16.4-eksbuild.2"
+        "ebs_csi_driver" = "v1.26.1-eksbuild.1"
+      }
+    },
     "1.27" : {
       "cluster_version" = "1.27"
       "cluster_addons" = {

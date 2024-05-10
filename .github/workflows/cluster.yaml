@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  TERRAFORM_VERSION: 1.6.5
+  TERRAFORM_VERSION: 1.7.5
 
 jobs:
   build:
@@ -24,7 +24,9 @@ jobs:
           with:
             terraform_version: ${{ env.TERRAFORM_VERSION }}
         - name: Init
-          run: terraform init
+          run: |
+            rm -rf .terraform
+            terraform init -backend=false
         - name: Format
           run: terraform fmt -check
         - name: Validate

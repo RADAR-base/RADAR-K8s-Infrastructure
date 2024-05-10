@@ -81,7 +81,7 @@ module "iam_user" {
 
   name                          = "${var.eks_cluster_name}-ecr-readonly-user"
   create_iam_user_login_profile = false
-  create_iam_access_key         = true
+  create_iam_access_key         = false
   force_destroy                 = false
   policy_arns = [
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
@@ -107,9 +107,7 @@ resource "aws_iam_policy" "s3_access" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${var.eks_cluster_name}-intermediate-output-storage/*",
-          "arn:aws:s3:::${var.eks_cluster_name}-output-storage/*",
-          "arn:aws:s3:::${var.eks_cluster_name}-velero-backups/*",
+          "arn:aws:s3:::${var.eks_cluster_name}-*/*",
         ]
       }
     ]

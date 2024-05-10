@@ -213,6 +213,13 @@ module "eks" {
     },
   ]
 
+  kms_key_administrators = [
+    "arn:aws:iam::${module.vpc.vpc_owner_id}:root"
+  ]
+  kms_key_users = [
+    module.eks_admins_iam_role.iam_role_arn,
+  ]
+
   tags = merge(tomap({ "Name" : var.eks_cluster_name }), var.common_tags)
 }
 

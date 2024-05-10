@@ -60,14 +60,14 @@ resource "aws_db_instance" "radar_postgres" {
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-postgres" }), var.common_tags)
 }
 
-resource "kubectl_manifest" "create_databases" {
+resource "kubectl_manifest" "create_databases_if_not_exist" {
   count = var.enable_rds ? 1 : 0
 
   yaml_body = <<-YAML
     apiVersion: batch/v1
     kind: Job
     metadata:
-      name: create-radar-postgres-databases
+      name: create-radar-postgres-databases-if-not-exist
     spec:
       template:
         spec:
@@ -81,7 +81,10 @@ resource "kubectl_manifest" "create_databases" {
                   PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase -c 'CREATE DATABASE managementportal;'
                   PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase -c 'CREATE DATABASE appserver;'
                   PGPASSWORD=${var.radar_postgres_password} psql --host=${aws_db_instance.radar_postgres[0].address} --port=5432 --username=${aws_db_instance.radar_postgres[0].username} --dbname=radarbase -c 'CREATE DATABASE rest_sources_auth;'
+                  true
           restartPolicy: Never
+      activeDeadlineSeconds: 60
+      ttlSecondsAfterFinished: 60
   YAML
 
   depends_on = [

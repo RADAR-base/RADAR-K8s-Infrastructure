@@ -43,15 +43,20 @@ variable "common_tags" {
   type        = map(string)
   description = "Common tags associated to resources created"
   default = {
-    Project     = "radar-base-development"
+    Project     = "radar-base"
     Environment = "dev"
   }
 }
 
 variable "domain_name" {
-  type        = string
-  description = "Top level domain for deployed applications"
-  default     = "change-me-radar-base-dummy-domain.net"
+  type        = map(string)
+  description = "Pair of top level domain and hosted zone ID for deployed applications"
+  default     = {}
+
+  validation {
+    condition     = length(var.domain_name) < 2
+    error_message = "Multiple domain and hosted zone pairs are not supported."
+  }
 }
 
 variable "instance_capacity_type" {
@@ -72,7 +77,7 @@ variable "kafka_version" {
 
 variable "postgres_version" {
   type    = string
-  default = "13.7"
+  default = "13.14"
 
 }
 
