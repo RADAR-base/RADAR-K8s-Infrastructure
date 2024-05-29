@@ -10,7 +10,7 @@ module "karpenter" {
   irsa_namespace_service_accounts = ["karpenter:karpenter"]
 
   create_iam_role = false
-  iam_role_arn    = data.aws_eks_node_group.worker.node_role_arn
+  iam_role_arn    = local.worker_node_group.node_role_arn
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-karpenter" }), var.common_tags)
 }
