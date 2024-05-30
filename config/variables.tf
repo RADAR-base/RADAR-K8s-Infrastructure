@@ -70,6 +70,11 @@ variable "instance_capacity_type" {
   }
 }
 
+variable "metrics_server_version" {
+  type    = string
+  default = "3.12.1"
+}
+
 variable "kafka_version" {
   type    = string
   default = "3.2.0"
@@ -98,6 +103,11 @@ variable "with_dmz_pods" {
   type        = bool
   description = "Whether or not to utilise the DMZ node group if it exists"
   default     = false
+}
+
+variable "enable_metrics" {
+  type        = bool
+  description = "Do you need Metrics Server? [true, false]"
 }
 
 variable "enable_karpenter" {
