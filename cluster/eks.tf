@@ -36,7 +36,7 @@ module "ebs_csi_irsa" {
 
 locals {
   dmz_node_group = {
-    dmz = {
+    "dmz-${var.eks_cluster_name}" = {
       desired_size = var.dmz_node_size["desired"]
       min_size     = var.dmz_node_size["min"]
       max_size     = var.dmz_node_size["max"]
@@ -70,7 +70,7 @@ locals {
   }
 
   worker_node_group = {
-    worker = {
+    "worker-${var.eks_cluster_name}" = {
       desired_size = var.worker_node_size["desired"]
       min_size     = var.worker_node_size["min"]
       max_size     = var.worker_node_size["max"]
