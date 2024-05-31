@@ -75,6 +75,11 @@ variable "metrics_server_version" {
   default = "3.12.1"
 }
 
+variable "kubernetes_dashboard_version" {
+  type    = string
+  default = "7.3.2"
+}
+
 variable "kafka_version" {
   type    = string
   default = "3.2.0"

@@ -101,7 +101,8 @@ output "radar_base_s3_velero_bucket_name" {
 }
 
 output "radar_base_s3_access_key" {
-  value = var.enable_s3 ? aws_iam_access_key.s3_access[0].id : null
+  value     = var.enable_s3 ? aws_iam_access_key.s3_access[0].id : null
+  sensitive = true
 }
 
 output "radar_base_s3_secret_key" {
