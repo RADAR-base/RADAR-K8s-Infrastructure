@@ -82,7 +82,7 @@ terraform output
 You could also automate this value injection by implementing your own templating strategy to customise `production.yaml`
 
 ## Configure the cluster (optional)
-N.B.: To get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to replace `change-me-radar-base-dummy-domain.net` with your registered second-level domain name for variable `domain_name` in [config/variables.tf](./config/variables.tf).
+N.B.: To get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to configure your registered top-level domain and its corresponding hosted zone ID via variable `domain_name` in [config/terraform.tfvars](./config/terraform.tfvars). Additionally, set `enable_route53` to `true`.
 
 ```
 cd config
