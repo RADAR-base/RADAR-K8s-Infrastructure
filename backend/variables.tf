@@ -44,17 +44,17 @@ variable "common_tags" {
 
 variable "enable_backend" {
   type        = bool
-  description = "Do you need backend for storing TF state? [true, false]"
+  description = "Do you need a remote backend for storing TF state? [true, false]"
 }
 
 variable "backend_bucket_name" {
   type        = string
-  description = "Default name for the S3 bucket for storing TF state"
-  default     = "radar-base-dev-cluster-1-infrastructure"
+  description = "Default name of the S3 bucket for storing TF state"
+  default     = "radar-base-infrastructure"
 }
 
 variable "backend_state_locking" {
   type        = string
-  description = "Default name for the DynamoDB table for TF state locking"
-  default     = "radar-base-dev-cluster-1-infrastructure-state-locking"
+  description = "Default name of the DynamoDB table for TF state locking"
+  default     = "radar-base-infrastructure-state-locking"
 }
