@@ -17,5 +17,15 @@ terraform {
       version = "~> 1.14.0"
     }
   }
+
+  # Uncomment the following backend block to enable remote TF state persistance.
+  # Replace placeholder values with actual output values from the "backend" workspace.
+  # backend "s3" {
+  #   bucket         = "[backend_bucket_name]"
+  #   key            = "config/terraform.tfstate"
+  #   region         = "[backend_aws_region]"
+  #   dynamodb_table = "[backend_state_locking]"
+  # }
+
   required_version = ">= 1.7.0"
 }
