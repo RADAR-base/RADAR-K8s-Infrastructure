@@ -126,20 +126,6 @@ module "eks" {
         nodeSelector : var.create_dmz_node_group ? {
           role : "dmz-1"
         } : {},
-        affinity : {
-          podAntiAffinity : {
-            requiredDuringSchedulingIgnoredDuringExecution : [{
-              labelSelector : {
-                matchExpressions : [{
-                  key : "k8s-app"
-                  operator : "In"
-                  values : ["kube-dns"]
-                }]
-              },
-              topologyKey : "kubernetes.io/hostname"
-            }]
-          }
-        }
       })
     }
     kube-proxy = {
