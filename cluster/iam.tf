@@ -11,6 +11,25 @@ module "allow_eks_access_iam_policy" {
       {
         Action = [
           "eks:DescribeCluster",
+
+          # # Further enable and narrow down access permissions below for your admin users.
+          # "eks:*",
+          # "ec2:*",
+          # "iam:*",
+          # "cloudwatch:*",
+          # "kms:*",
+          # "logs:*",
+          # "autoscaling:*",
+          # "elasticloadbalancing:*",
+          # # For accessing optional resources
+          # "rds:*",
+          # "route53:*",
+          # "ses:*",
+          # "kafka:*",
+          # "s3:*",
+          # "sqs:*",
+          # "events:*",
+          # "sns:*",
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -63,17 +82,10 @@ module "allow_assume_eks_admins_iam_policy" {
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-allow-assume-eks-admin-role" }), var.common_tags)
 }
 
-module "eks_admins_iam_group" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-group-with-policies"
-  version = "5.15.0"
-
-  name                              = "${var.eks_cluster_name}-eks-admin-group"
-  attach_iam_self_management_policy = false
-  create_group                      = true
-  group_users                       = var.eks_admins_group_users
-  custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
-
-  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-eks-admin-group" }), var.common_tags)
+resource "aws_iam_policy_attachment" "eks_admins_policy_attachment" {
+  name       = "${var.eks_cluster_name}-eks-admins-policy-attachment"
+  policy_arn = module.allow_assume_eks_admins_iam_policy.arn
+  users      = var.eks_admins_group_users
 }
 
 module "iam_user" {
