@@ -7,12 +7,14 @@ variable "AWS_REGION" {
 variable "AWS_ACCESS_KEY_ID" {
   type        = string
   description = "AWS access key associated with an IAM account"
+  default     = ""
   sensitive   = true
 }
 
 variable "AWS_SECRET_ACCESS_KEY" {
   type        = string
   description = "AWS secret key associated with the access key"
+  default     = ""
   sensitive   = true
 }
 
@@ -21,6 +23,12 @@ variable "AWS_SESSION_TOKEN" {
   description = "Session token for temporary security credentials from AWS STS"
   default     = ""
   sensitive   = true
+}
+
+variable "AWS_PROFILE" {
+  type        = string
+  description = "AWS Profile that resources are created in"
+  default     = "default"
 }
 
 variable "eks_cluster_name" {
