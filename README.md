@@ -105,6 +105,16 @@ Created resources (if all enabled):
 * CloudWatch event rules and targets
 * Essential IAM policies, roles, users for aforementioned resources
 
+## Configure the remote backend (optional)
+At some point, you might want the infrastructure state created by operations performed on `cluster` and `config` workspances to be persisted, encrypted and versioned at a remote location. This template provides a default option using an S3 backend and to set this up:
+```
+cd backend
+terraform init
+terraform apply --auto-approve
+terraform output
+```
+Then return to a workspace directory and replace the placeholder values in `versions.tf` with the actual output values from the previous step. Note that changing the backend configuration requires (re)initialisation and if you have existing local .tfstate files, they will be copied or migrated to the newly configured remote backend. To utilise a backend other than S3, please refer to this [Terraform Doc](https://developer.hashicorp.com/terraform/language/settings/backends/configuration).
+
 ## Known limitations
 * Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
 * Sometimes Terraform tries to replace the existing MSK cluster while re-applying the templates even if there is no change on the cluster. Mitigate this with `terraform untaint aws_msk_cluster.msk_cluster`.
