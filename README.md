@@ -122,6 +122,16 @@ Created resources (if all enabled):
 
 Make sure to install [terraform-docs](https://github.com/terraform-docs/terraform-docs) and run `make prepare` before making a commit to make sure the documentation is up to date and the code is valid.
 
+## Configure the remote backend (optional)
+At some point, you might want the infrastructure state created by operations performed on `cluster` and `config` workspances to be persisted, encrypted and versioned at a remote location. This template provides a default option using an S3 backend and to set this up:
+```
+cd backend
+terraform init
+terraform apply --auto-approve
+terraform output
+```
+Then return to a workspace directory and replace the placeholder values in `versions.tf` with the actual output values from the previous step. Note that changing the backend configuration requires (re)initialisation and if you have existing local .tfstate files, they will be copied or migrated to the newly configured remote backend. To utilise a backend other than S3, please refer to this [Terraform Doc](https://developer.hashicorp.com/terraform/language/settings/backends/configuration).
+
 ## Known limitations
 
 - Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
