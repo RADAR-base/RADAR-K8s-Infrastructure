@@ -75,11 +75,22 @@ Created resources:
 - KMS keys and CloudWatch log groups
 - Essential IAM policies, roles, users and user groups for accessing aforementioned resources
 
+## Crete an AWS profile with EKS admin role
+
+Before accessing the cluster you need to create a new profile in your AWS configuration that uses the role that has been created.
+Copy this this to your AWS configuration file typically located at `~/.aws/config`
+
+```
+[profile eks-admin]
+role_arn = # Put result of the `terraform output assume_eks_admins_role` in here.
+source_profile = # Source profile in AWS config that is a user defined in `eks_admins_group_users` input value.
+```
+
 ## Connect to and verify the cluster
 
 ```
 # Make sure to use --region if the cluster is deployed in non-default region and --profile if the cluster is deployed in a non-default AWS account
-aws eks update-kubeconfig --name [eks_cluster_name]
+aws --profile eks-admin eks update-kubeconfig --name [eks_cluster_name]
 kubectl get nodes
 kubectl get pods -A
 ```

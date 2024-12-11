@@ -82,10 +82,21 @@ module "allow_assume_eks_admins_iam_policy" {
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-allow-assume-eks-admin-role" }), var.common_tags)
 }
 
-resource "aws_iam_policy_attachment" "eks_admins_policy_attachment" {
-  name       = "${var.eks_cluster_name}-eks-admins-policy-attachment"
+resource "aws_iam_group" "eks_admins_group" {
+  name = "${var.eks_cluster_name}-admins"
+  path = "/${var.eks_cluster_name}/"
+}
+
+resource "aws_iam_group_policy_attachment" "eks_admins_policy_attachment" {
+  group      = "${var.eks_cluster_name}-admins"
   policy_arn = module.allow_assume_eks_admins_iam_policy.arn
-  users      = var.eks_admins_group_users
+}
+
+resource "aws_iam_group_membership" "eks_admins_group_membership" {
+  name = "${var.eks_cluster_name}-admin-users"
+
+  users = var.eks_admins_group_users
+  group = "${var.eks_cluster_name}-admins"
 }
 
 module "iam_user" {
