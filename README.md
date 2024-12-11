@@ -122,6 +122,8 @@ Created resources (if all enabled):
 
 Make sure to install [terraform-docs](https://github.com/terraform-docs/terraform-docs) and run `make prepare` before making a commit to make sure the documentation is up to date and the code is valid.
 
+In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatiblity with running `aws eks describe-addons-versions` and then searching for the addons that are defined in `cluster/data.tf`.
+
 ## Known limitations
 
 - Since EBS has been chosen as the default storage, node groups will be created in a single AZ due to the mounting restriction.
