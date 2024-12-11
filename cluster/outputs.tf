@@ -37,3 +37,7 @@ output "radar_base_ebs_storage_class_io1" {
 output "radar_base_ebs_storage_class_io2" {
   value = local.storage_classes.io2
 }
+
+output "assume_eks_admins_role" {
+  value = module.allow_assume_eks_admins_iam_policy.arn
+}
