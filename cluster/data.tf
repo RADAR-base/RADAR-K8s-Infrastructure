@@ -1,42 +1,42 @@
 locals {
 
   eks_core_versions = {
+    "1.31" : {
+      "cluster_version" = "1.31"
+      "cluster_addons" = {
+        "coredns"        = "v1.11.3-eksbuild.2"
+        "kube_proxy"     = "v1.31.2-eksbuild.3"
+        "vpc_cni"        = "v1.19.0-eksbuild.1"
+        "ebs_csi_driver" = "v1.37.0-eksbuild.1"
+      }
+    },
+    "1.30" : {
+      "cluster_version" = "1.30"
+      "cluster_addons" = {
+        "coredns"        = "v1.11.3-eksbuild.2"
+        "kube_proxy"     = "v1.30.6-eksbuild.3"
+        "vpc_cni"        = "v1.19.0-eksbuild.1"
+        "ebs_csi_driver" = "v1.37.0-eksbuild.1"
+      }
+    },
     "1.29" : {
       "cluster_version" = "1.29"
       "cluster_addons" = {
-        "coredns"        = "v1.11.1-eksbuild.4"
-        "kube_proxy"     = "v1.29.0-eksbuild.2"
-        "vpc_cni"        = "v1.16.4-eksbuild.2"
-        "ebs_csi_driver" = "v1.26.1-eksbuild.1"
+        "coredns"        = "v1.11.3-eksbuild.2"
+        "kube_proxy"     = "v1.29.10-eksbuild.3"
+        "vpc_cni"        = "v1.19.0-eksbuild.1"
+        "ebs_csi_driver" = "v1.37.0-eksbuild.1"
       }
     },
     "1.28" : {
       "cluster_version" = "1.28"
       "cluster_addons" = {
-        "coredns"        = "v1.10.1-eksbuild.10"
-        "kube_proxy"     = "v1.28.1-eksbuild.1"
-        "vpc_cni"        = "v1.16.4-eksbuild.2"
-        "ebs_csi_driver" = "v1.26.1-eksbuild.1"
+        "coredns"        = "v1.10.1-eksbuild.15"
+        "kube_proxy"     = "v1.28.15-eksbuild.4"
+        "vpc_cni"        = "v1.19.0-eksbuild.1"
+        "ebs_csi_driver" = "v1.37.0-eksbuild.1"
       }
     },
-    "1.27" : {
-      "cluster_version" = "1.27"
-      "cluster_addons" = {
-        "coredns"        = "v1.10.1-eksbuild.7"
-        "kube_proxy"     = "v1.27.10-eksbuild.2"
-        "vpc_cni"        = "v1.15.3-eksbuild.1"
-        "ebs_csi_driver" = "v1.25.0-eksbuild.1"
-      }
-    },
-    "1.26" : {
-      "cluster_version" = "1.26"
-      "cluster_addons" = {
-        "coredns"        = "v1.9.3-eksbuild.2"
-        "kube_proxy"     = "v1.26.2-eksbuild.1"
-        "vpc_cni"        = "v1.12.2-eksbuild.1"
-        "ebs_csi_driver" = "v1.17.0-eksbuild.1"
-      }
-    }
   }
 
   storage_classes = {
