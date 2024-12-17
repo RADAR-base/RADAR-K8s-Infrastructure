@@ -35,7 +35,7 @@ The definition of resources required for running RADAR-base components is locate
 To retain the user-specific configurations for future infrastructure updates, modify `terraform.tfvars` within the workspace and push the change to your repository. If needed, additional variables defined in `variables.tf` can also be included there.
 | :information_source: Important Notice |
 |:----------------------------------------|
-|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destory` to delete all the associated resources and reduce your cloud spending. If you have resources created within `config`, run `terraform destory` in that directory before running the counterpart in `cluster`.|
+|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destroy` to delete all the associated resources and reduce your cloud spending. If you have resources created within `config`, run `terraform destroy` in that directory before running the counterpart in `cluster`.|
 
 ## Create the infrastructure
 
@@ -90,7 +90,21 @@ Once the infrastructure update is finished successfully, you can start deploying
 terraform output
 ```
 
-You could also automate this value injection by implementing your own templating strategy to customise `production.yaml`
+Note that output values can be crucial for configuring certain RADAR-base components prior to deployment. For instance, if you are using the nginx-ingress controller with NLB, specify the subnet(s) and the EIP allocation ID as follows:
+```yaml
+nginx_ingress:
+    _install: true
+    controller:
+        ...
+        service:
+            annotations:
+                service.beta.kubernetes.io/aws-load-balancer-type: nlb
+                service.beta.kubernetes.io/aws-load-balancer-subnets: <radar_base_vpc_public_subnets[0]>
+                service.beta.kubernetes.io/aws-load-balancer-eip-allocations: <radar_base_eip_allocation_id>
+```
+
+You could also automate this value injection by implementing your own templating strategy to customise `production.yaml`.
+
 
 ## Configure the cluster (optional)
 
@@ -103,7 +117,7 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-Optional resource creations are disabled by default. To enable the creation of a specific resource named `X`, navigate to [config/terraform.tfvars](./config/terraform.tfvars) and update the value of `enable_X` to `true` before applying the tempate.
+Optional resource creations are disabled by default. To enable the creation of a specific resource named `X`, navigate to [config/terraform.tfvars](./config/terraform.tfvars) and update the value of `enable_X` to `true` before applying the template.
 
 Created resources (if all enabled):
 
