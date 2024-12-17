@@ -32,10 +32,12 @@
 
 | Name | Type |
 |------|------|
+| [aws_iam_group.eks_admins_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_group) | resource |
+| [aws_iam_group_membership.eks_admins_group_membership](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_group_membership) | resource |
+| [aws_iam_group_policy_attachment.eks_admins_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_group_policy_attachment) | resource |
 | [aws_iam_policy.ecr_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.ecr_pull_through_cache](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.s3_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
-| [aws_iam_policy_attachment.eks_admins_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
 | [aws_security_group.vpc_endpoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group_rule.vpc_endpoint_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.vpc_endpoint_self_ingress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
@@ -72,6 +74,7 @@
 
 | Name | Description |
 |------|-------------|
+| <a name="output_assume_eks_admins_role"></a> [assume\_eks\_admins\_role](#output\_assume\_eks\_admins\_role) | n/a |
 | <a name="output_radar_base_ebs_storage_class_gp2"></a> [radar\_base\_ebs\_storage\_class\_gp2](#output\_radar\_base\_ebs\_storage\_class\_gp2) | n/a |
 | <a name="output_radar_base_ebs_storage_class_gp3"></a> [radar\_base\_ebs\_storage\_class\_gp3](#output\_radar\_base\_ebs\_storage\_class\_gp3) | n/a |
 | <a name="output_radar_base_ebs_storage_class_io1"></a> [radar\_base\_ebs\_storage\_class\_io1](#output\_radar\_base\_ebs\_storage\_class\_io1) | n/a |

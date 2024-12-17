@@ -25,3 +25,7 @@ output "radar_base_vpc_public_subnets" {
 output "radar_base_default_storage_class" {
   value = var.defaut_storage_class
 }
+
+output "assume_eks_admins_role" {
+  value = module.allow_assume_eks_admins_iam_policy.arn
+}
