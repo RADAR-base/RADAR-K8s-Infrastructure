@@ -65,6 +65,12 @@ variable "domain_name" {
   }
 }
 
+variable "ses_bounce_destinations" {
+  type        = list(string)
+  description = "List of email addresses for receiving bounced email notifications"
+  default     = []
+}
+
 variable "instance_capacity_type" {
   type        = string
   description = "Capacity type used by EKS managed node groups"
