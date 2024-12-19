@@ -89,7 +89,7 @@
 | <a name="input_AWS_REGION"></a> [AWS\_REGION](#input\_AWS\_REGION) | Target AWS region | `string` | `"eu-west-2"` | no |
 | <a name="input_AWS_SECRET_ACCESS_KEY"></a> [AWS\_SECRET\_ACCESS\_KEY](#input\_AWS\_SECRET\_ACCESS\_KEY) | AWS secret key associated with the access key | `string` | n/a | yes |
 | <a name="input_AWS_SESSION_TOKEN"></a> [AWS\_SESSION\_TOKEN](#input\_AWS\_SESSION\_TOKEN) | Session token for temporary security credentials from AWS STS | `string` | `""` | no |
-| <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Common tags associated to resources created | `map(string)` | <pre>{<br>  "Environment": "dev",<br>  "Project": "radar-base"<br>}</pre> | no |
+| <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Common tags associated to resources created | `map(string)` | <pre>{<br/>  "Environment": "dev",<br/>  "Project": "radar-base"<br/>}</pre> | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Pair of top level domain and hosted zone ID for deployed applications | `map(string)` | `{}` | no |
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | EKS cluster name | `string` | n/a | yes |
 | <a name="input_enable_eip"></a> [enable\_eip](#input\_enable\_eip) | Do you need EIP? [true, false] | `bool` | n/a | yes |

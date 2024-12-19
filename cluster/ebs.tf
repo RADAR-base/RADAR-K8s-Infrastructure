@@ -2,7 +2,7 @@ resource "kubectl_manifest" "ebs_storage_classes" {
   for_each = local.storage_classes
 
   yaml_body = <<-YAML
-    apiVersion: storage.k8s.io/v1 
+    apiVersion: storage.k8s.io/v1
     kind: StorageClass
     metadata:
       name: ${each.value}
@@ -37,13 +37,13 @@ resource "kubernetes_annotations" "unset_eks_default_gp2" {
   ]
 }
 
-resource "kubernetes_annotations" "set_defaut_storage_class" {
+resource "kubernetes_annotations" "set_default_storage_class" {
   api_version = "storage.k8s.io/v1"
   kind        = "StorageClass"
   force       = "true"
 
   metadata {
-    name = var.defaut_storage_class
+    name = var.default_storage_class
   }
   annotations = {
     "storageclass.kubernetes.io/is-default-class" = "true"

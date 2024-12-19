@@ -5,11 +5,11 @@ prepare:
 	@echo Fixing the formatting
 	@cd cluster && terraform fmt
 	@echo Validating Terraform code
-	@cd cluster && terraform validate
+	@cd cluster && terraform init -backend=false && terraform validate
 	@echo === Config ===
 	@echo Generate docs
 	@terraform-docs markdown table config
 	@echo Fixing the formatting
 	@cd config && terraform fmt
 	@echo Validating Terraform code
-	@cd config && terraform validate
+	@cd config && terraform init -backend=false && terraform validate
