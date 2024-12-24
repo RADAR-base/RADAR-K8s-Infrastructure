@@ -66,16 +66,16 @@
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name | `string` | `"dev"` | no |
 | <a name="input_instance_capacity_type"></a> [instance\_capacity\_type](#input\_instance\_capacity\_type) | Capacity type used by EKS managed node groups | `string` | `"SPOT"` | no |
 | <a name="input_instance_types"></a> [instance\_types](#input\_instance\_types) | List of instance types used by EKS managed node groups | `list(any)` | <pre>[<br>  "m5.large",<br>  "m5d.large",<br>  "m5a.large",<br>  "m5ad.large",<br>  "m4.large"<br>]</pre> | no |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | VPC CIDR | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_vpc_private_subnet_cidr"></a> [vpc\_private\_subnet\_cidr](#input\_vpc\_private\_subnet\_cidr) | List of private subnet configurations | `list(any)` | <pre>[<br>  "10.0.0.0/19",<br>  "10.0.32.0/19",<br>  "10.0.64.0/19"<br>]</pre> | no |
+| <a name="input_vpc_public_subnet_cidr"></a> [vpc\_public\_subnet\_cidr](#input\_vpc\_public\_subnet\_cidr) | List of public subnet configurations | `list(any)` | <pre>[<br>  "10.0.96.0/19",<br>  "10.0.128.0/19",<br>  "10.0.160.0/19"<br>]</pre> | no |
 | <a name="input_worker_node_size"></a> [worker\_node\_size](#input\_worker\_node\_size) | Node size of the worker node group | `map(number)` | <pre>{<br>  "desired": 2,<br>  "max": 10,<br>  "min": 0<br>}</pre> | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_radar_base_ebs_storage_class_gp2"></a> [radar\_base\_ebs\_storage\_class\_gp2](#output\_radar\_base\_ebs\_storage\_class\_gp2) | n/a |
-| <a name="output_radar_base_ebs_storage_class_gp3"></a> [radar\_base\_ebs\_storage\_class\_gp3](#output\_radar\_base\_ebs\_storage\_class\_gp3) | n/a |
-| <a name="output_radar_base_ebs_storage_class_io1"></a> [radar\_base\_ebs\_storage\_class\_io1](#output\_radar\_base\_ebs\_storage\_class\_io1) | n/a |
-| <a name="output_radar_base_ebs_storage_class_io2"></a> [radar\_base\_ebs\_storage\_class\_io2](#output\_radar\_base\_ebs\_storage\_class\_io2) | n/a |
+| <a name="output_radar_base_default_storage_class"></a> [radar\_base\_default\_storage\_class](#output\_radar\_base\_default\_storage\_class) | n/a |
 | <a name="output_radar_base_eks_cluser_endpoint"></a> [radar\_base\_eks\_cluser\_endpoint](#output\_radar\_base\_eks\_cluser\_endpoint) | n/a |
 | <a name="output_radar_base_eks_cluser_kms_key_arn"></a> [radar\_base\_eks\_cluser\_kms\_key\_arn](#output\_radar\_base\_eks\_cluser\_kms\_key\_arn) | n/a |
 | <a name="output_radar_base_eks_cluster_name"></a> [radar\_base\_eks\_cluster\_name](#output\_radar\_base\_eks\_cluster\_name) | n/a |

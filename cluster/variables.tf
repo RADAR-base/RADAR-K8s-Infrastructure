@@ -116,6 +116,32 @@ variable "dmz_node_size" {
   }
 }
 
+variable "vpc_cidr" {
+  type        = string
+  description = "VPC CIDR"
+  default     = "10.0.0.0/16"
+}
+
+variable "vpc_private_subnet_cidr" {
+  description = "List of private subnet configurations"
+  type        = list(any)
+  default = [
+    "10.0.0.0/19",
+    "10.0.32.0/19",
+    "10.0.64.0/19",
+  ]
+}
+
+variable "vpc_public_subnet_cidr" {
+  description = "List of public subnet configurations"
+  type        = list(any)
+  default = [
+    "10.0.96.0/19",
+    "10.0.128.0/19",
+    "10.0.160.0/19",
+  ]
+}
+
 variable "defaut_storage_class" {
   type        = string
   description = "Default storage class used for describing the EBS usage"
