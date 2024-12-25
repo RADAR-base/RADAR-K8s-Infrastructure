@@ -5,17 +5,6 @@ data "aws_vpc" "main" {
   }
 }
 
-data "aws_subnets" "public" {
-  filter {
-    name   = "tag:Name"
-    values = ["${var.eks_cluster_name}-vpc"]
-  }
-  filter {
-    name   = "tag:subnet-type"
-    values = ["public"]
-  }
-}
-
 data "aws_subnets" "private" {
   filter {
     name   = "tag:Name"

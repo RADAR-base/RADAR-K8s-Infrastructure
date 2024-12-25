@@ -2,7 +2,7 @@ resource "kubectl_manifest" "ebs_storage_classes" {
   for_each = local.storage_classes
 
   yaml_body = <<-YAML
-    apiVersion: storage.k8s.io/v1 
+    apiVersion: storage.k8s.io/v1
     kind: StorageClass
     metadata:
       name: ${each.value}

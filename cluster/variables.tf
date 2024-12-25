@@ -41,12 +41,6 @@ variable "eks_cluster_name" {
   }
 }
 
-variable "environment" {
-  type        = string
-  description = "Environment name"
-  default     = "dev"
-}
-
 variable "common_tags" {
   type        = map(string)
   description = "Common tags associated to resources created"

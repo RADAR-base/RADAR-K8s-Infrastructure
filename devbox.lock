@@ -1,0 +1,373 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "checkov@latest": {
+      "last_modified": "2024-12-17T11:43:56Z",
+      "resolved": "github:NixOS/nixpkgs/4989a246d7a390a859852baddb1013f825435cee#checkov",
+      "source": "devbox-search",
+      "version": "3.2.336",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/34qgizhgb7340fp9ssry67lsz3qsn0b0-checkov-3.2.336",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/hr9y9y08ywhb1z6j9j13lka0fnjrj6id-checkov-3.2.336-dist"
+            }
+          ],
+          "store_path": "/nix/store/34qgizhgb7340fp9ssry67lsz3qsn0b0-checkov-3.2.336"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/yzz2a1srrmb73465yhngap6mzfjxm87z-checkov-3.2.336",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/c9811shl3145i4fgrqjwqhvqc5lwqpkz-checkov-3.2.336-dist"
+            }
+          ],
+          "store_path": "/nix/store/yzz2a1srrmb73465yhngap6mzfjxm87z-checkov-3.2.336"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/mi1nwxrxrgyc3ky84vnm8qmcf1z71l67-checkov-3.2.336",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/mwqgah52hix58np5smzrw1b0iccn5dvk-checkov-3.2.336-dist"
+            }
+          ],
+          "store_path": "/nix/store/mi1nwxrxrgyc3ky84vnm8qmcf1z71l67-checkov-3.2.336"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/98ygsbfm2ngzz5czs39lvw6q9rz86a53-checkov-3.2.336",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/ijvaqnsamy7alvlia84p8r6yh8wm1acy-checkov-3.2.336-dist"
+            }
+          ],
+          "store_path": "/nix/store/98ygsbfm2ngzz5czs39lvw6q9rz86a53-checkov-3.2.336"
+        }
+      }
+    },
+    "kubernetes-helm@latest": {
+      "last_modified": "2024-11-28T07:51:56Z",
+      "resolved": "github:NixOS/nixpkgs/226216574ada4c3ecefcbbec41f39ce4655f78ef#kubernetes-helm",
+      "source": "devbox-search",
+      "version": "3.16.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ppr8wia2hmshknp9yfhr7ivqqigqqq4j-kubernetes-helm-3.16.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ppr8wia2hmshknp9yfhr7ivqqigqqq4j-kubernetes-helm-3.16.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vsps7v36p9nbx08v8c7x1a36mmknhacy-kubernetes-helm-3.16.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/vsps7v36p9nbx08v8c7x1a36mmknhacy-kubernetes-helm-3.16.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8xbrzsfv1q0kkranniy99fcszpwmjglr-kubernetes-helm-3.16.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8xbrzsfv1q0kkranniy99fcszpwmjglr-kubernetes-helm-3.16.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nyrghdw5xi4kiwbsw6vdvnnyra5cy0x7-kubernetes-helm-3.16.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/nyrghdw5xi4kiwbsw6vdvnnyra5cy0x7-kubernetes-helm-3.16.3"
+        }
+      }
+    },
+    "pre-commit@latest": {
+      "last_modified": "2024-12-11T16:51:25Z",
+      "resolved": "github:NixOS/nixpkgs/5a48e3c2e435e95103d56590188cfed7b70e108c#pre-commit",
+      "source": "devbox-search",
+      "version": "4.0.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jbh4llinhndf7h57plssg0ms40f4fk7y-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/zmsci0rj7a6x7zjz55vymljad5sswyrf-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/jbh4llinhndf7h57plssg0ms40f4fk7y-pre-commit-4.0.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vpzshjjwb4s9cfawv3g29zlagzl5lsb8-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/hsw0bqhqwv8d8qb2228piyvxj2gdzl0z-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/vpzshjjwb4s9cfawv3g29zlagzl5lsb8-pre-commit-4.0.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/kx7jzp4ypyx763n3l5rj9yks2p8x0ihy-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/3m6i4wvfb9lkfx624976ggrghv9qbkvm-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/kx7jzp4ypyx763n3l5rj9yks2p8x0ihy-pre-commit-4.0.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/93i4sz47hjv2zgyjg3mnqv73bq9maw6x-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/0qqa4xv9igqg2s5n6lymzg6ialmn0mri-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/93i4sz47hjv2zgyjg3mnqv73bq9maw6x-pre-commit-4.0.1"
+        }
+      }
+    },
+    "terraform-docs@latest": {
+      "last_modified": "2024-11-28T07:51:56Z",
+      "resolved": "github:NixOS/nixpkgs/226216574ada4c3ecefcbbec41f39ce4655f78ef#terraform-docs",
+      "source": "devbox-search",
+      "version": "0.19.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9jxrh3ykia6mywnv0qcgbvxlikr5hpd4-terraform-docs-0.19.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9jxrh3ykia6mywnv0qcgbvxlikr5hpd4-terraform-docs-0.19.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4vh1gz6b2q4qz9zjwyngk1cwpx9j1s55-terraform-docs-0.19.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4vh1gz6b2q4qz9zjwyngk1cwpx9j1s55-terraform-docs-0.19.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/y4dz04z633irc23v9bkwns90438fnh0j-terraform-docs-0.19.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/y4dz04z633irc23v9bkwns90438fnh0j-terraform-docs-0.19.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/am9l6va75gfm576nkz6hn2sp64c1g68n-terraform-docs-0.19.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/am9l6va75gfm576nkz6hn2sp64c1g68n-terraform-docs-0.19.0"
+        }
+      }
+    },
+    "terraform@latest": {
+      "last_modified": "2024-12-13T21:43:23Z",
+      "resolved": "github:NixOS/nixpkgs/71a6392e367b08525ee710a93af2e80083b5b3e2#terraform",
+      "source": "devbox-search",
+      "version": "1.10.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/klr8n653xzzamqr5d90lp3wp76adiwlr-terraform-1.10.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/klr8n653xzzamqr5d90lp3wp76adiwlr-terraform-1.10.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bzz0rh5411j9xin9iv1648w2j8a1jn9q-terraform-1.10.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/bzz0rh5411j9xin9iv1648w2j8a1jn9q-terraform-1.10.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1nydwdx7zzz1h0wa4fazy5kmckm34300-terraform-1.10.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/1nydwdx7zzz1h0wa4fazy5kmckm34300-terraform-1.10.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4r7rridp45wcgrcpdpqdj04k47vlm59r-terraform-1.10.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4r7rridp45wcgrcpdpqdj04k47vlm59r-terraform-1.10.2"
+        }
+      }
+    },
+    "tflint@latest": {
+      "last_modified": "2024-12-03T12:40:06Z",
+      "resolved": "github:NixOS/nixpkgs/566e53c2ad750c84f6d31f9ccb9d00f823165550#tflint",
+      "source": "devbox-search",
+      "version": "0.54.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/sabnazxmprkn41jlmjm3rs7nq7lgpx65-tflint-0.54.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/sabnazxmprkn41jlmjm3rs7nq7lgpx65-tflint-0.54.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/r1ji0p28hi8saglv7xf0jddkxf7cr05n-tflint-0.54.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/r1ji0p28hi8saglv7xf0jddkxf7cr05n-tflint-0.54.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5x6g32x9s5vmq392b2i6zivcxwl8zrk0-tflint-0.54.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/5x6g32x9s5vmq392b2i6zivcxwl8zrk0-tflint-0.54.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/317bjlhpw3qnpnwh18wff0rsgk2lqms4-tflint-0.54.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/317bjlhpw3qnpnwh18wff0rsgk2lqms4-tflint-0.54.0"
+        }
+      }
+    },
+    "trivy@latest": {
+      "last_modified": "2024-12-08T11:15:23Z",
+      "resolved": "github:NixOS/nixpkgs/93dc9803a1ee435e590b02cde9589038d5cc3a4e#trivy",
+      "source": "devbox-search",
+      "version": "0.58.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/s2qcbkjqafmq0n81jcpmvczhkhcx47la-trivy-0.58.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/s2qcbkjqafmq0n81jcpmvczhkhcx47la-trivy-0.58.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6w98v86y1mfgxav9wydqsnpwygwvhiib-trivy-0.58.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/6w98v86y1mfgxav9wydqsnpwygwvhiib-trivy-0.58.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/p6h9gw6qsw0g9xmnzhj4mfdf16jfjnz4-trivy-0.58.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/p6h9gw6qsw0g9xmnzhj4mfdf16jfjnz4-trivy-0.58.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1yk8qv2bp70id52yp220gyy0bv1fp93r-trivy-0.58.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/1yk8qv2bp70id52yp220gyy0bv1fp93r-trivy-0.58.0"
+        }
+      }
+    }
+  }
+}
