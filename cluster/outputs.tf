@@ -2,11 +2,11 @@ output "radar_base_eks_cluster_name" {
   value = module.eks.cluster_name
 }
 
-output "radar_base_eks_cluser_endpoint" {
+output "radar_base_eks_cluster_endpoint" {
   value = module.eks.cluster_endpoint
 }
 
-output "radar_base_eks_cluser_kms_key_arn" {
+output "radar_base_eks_cluster_kms_key_arn" {
   value = module.eks.kms_key_arn
 }
 
@@ -28,5 +28,5 @@ output "radar_base_vpc_public_subnets" {
 }
 
 output "radar_base_default_storage_class" {
-  value = var.defaut_storage_class
+  value = var.default_storage_class
 }

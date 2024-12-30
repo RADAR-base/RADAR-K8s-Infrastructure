@@ -142,7 +142,7 @@ devbox shell
 
 To download all of the dependencies and install to Git hooks to lint the configuration before it is commited.
 
-In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatiblity with running `aws eks describe-addons-versions` and then searching for the addons that are defined in `cluster/data.tf`.
+In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatiblity with running `aws eks describe-addons-versions` and then searching for the addons that are defined in [cluster/data.tf](./cluster/data.tf).
 
 ## Known limitations
 

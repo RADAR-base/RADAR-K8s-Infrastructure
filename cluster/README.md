@@ -44,7 +44,7 @@
 | [aws_vpc_endpoint.sts](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_security_group_ingress_rule.vpc_endpoints_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [kubectl_manifest.ebs_storage_classes](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
-| [kubernetes_annotations.set_defaut_storage_class](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/annotations) | resource |
+| [kubernetes_annotations.set_default_storage_class](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/annotations) | resource |
 | [kubernetes_annotations.unset_eks_default_gp2](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/annotations) | resource |
 
 ## Inputs
@@ -58,7 +58,7 @@
 | <a name="input_AWS_SESSION_TOKEN"></a> [AWS\_SESSION\_TOKEN](#input\_AWS\_SESSION\_TOKEN) | Session token for temporary security credentials from AWS STS | `string` | `""` | no |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Common tags associated to resources created | `map(string)` | <pre>{<br/>  "Environment": "dev",<br/>  "Project": "radar-base"<br/>}</pre> | no |
 | <a name="input_create_dmz_node_group"></a> [create\_dmz\_node\_group](#input\_create\_dmz\_node\_group) | Whether or not to create a DMZ node group with taints | `bool` | `false` | no |
-| <a name="input_defaut_storage_class"></a> [defaut\_storage\_class](#input\_defaut\_storage\_class) | Default storage class used for describing the EBS usage | `string` | `"radar-base-ebs-sc-gp2"` | no |
+| <a name="input_default_storage_class"></a> [default\_storage\_class](#input\_default\_storage\_class) | Default storage class used for describing the EBS usage | `string` | `"radar-base-ebs-sc-gp2"` | no |
 | <a name="input_dmz_node_size"></a> [dmz\_node\_size](#input\_dmz\_node\_size) | Node size of the DMZ node group | `map(number)` | <pre>{<br/>  "desired": 1,<br/>  "max": 2,<br/>  "min": 0<br/>}</pre> | no |
 | <a name="input_eks_admins_group_users"></a> [eks\_admins\_group\_users](#input\_eks\_admins\_group\_users) | EKS admin IAM user group | `list(string)` | `[]` | no |
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | EKS cluster name | `string` | n/a | yes |
@@ -73,8 +73,8 @@
 |------|-------------|
 | <a name="output_assume_eks_admins_role"></a> [assume\_eks\_admins\_role](#output\_assume\_eks\_admins\_role) | EKS admin role ARN |
 | <a name="output_radar_base_default_storage_class"></a> [radar\_base\_default\_storage\_class](#output\_radar\_base\_default\_storage\_class) | n/a |
-| <a name="output_radar_base_eks_cluser_endpoint"></a> [radar\_base\_eks\_cluser\_endpoint](#output\_radar\_base\_eks\_cluser\_endpoint) | n/a |
-| <a name="output_radar_base_eks_cluser_kms_key_arn"></a> [radar\_base\_eks\_cluser\_kms\_key\_arn](#output\_radar\_base\_eks\_cluser\_kms\_key\_arn) | n/a |
+| <a name="output_radar_base_eks_cluster_endpoint"></a> [radar\_base\_eks\_cluster\_endpoint](#output\_radar\_base\_eks\_cluster\_endpoint) | n/a |
+| <a name="output_radar_base_eks_cluster_kms_key_arn"></a> [radar\_base\_eks\_cluster\_kms\_key\_arn](#output\_radar\_base\_eks\_cluster\_kms\_key\_arn) | n/a |
 | <a name="output_radar_base_eks_cluster_name"></a> [radar\_base\_eks\_cluster\_name](#output\_radar\_base\_eks\_cluster\_name) | n/a |
 | <a name="output_radar_base_eks_dmz_node_group_name"></a> [radar\_base\_eks\_dmz\_node\_group\_name](#output\_radar\_base\_eks\_dmz\_node\_group\_name) | n/a |
 | <a name="output_radar_base_eks_worker_node_group_name"></a> [radar\_base\_eks\_worker\_node\_group\_name](#output\_radar\_base\_eks\_worker\_node\_group\_name) | n/a |

@@ -37,13 +37,13 @@ resource "kubernetes_annotations" "unset_eks_default_gp2" {
   ]
 }
 
-resource "kubernetes_annotations" "set_defaut_storage_class" {
+resource "kubernetes_annotations" "set_default_storage_class" {
   api_version = "storage.k8s.io/v1"
   kind        = "StorageClass"
   force       = "true"
 
   metadata {
-    name = var.defaut_storage_class
+    name = var.default_storage_class
   }
   annotations = {
     "storageclass.kubernetes.io/is-default-class" = "true"
