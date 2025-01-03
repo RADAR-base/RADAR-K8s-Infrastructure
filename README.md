@@ -4,8 +4,8 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
 
 ---
 
-[![Terraform validate](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/cluster.yaml/badge.svg)](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/cluster.yaml/badge.svg)
-[![Terraform validate](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/config.yaml/badge.svg)](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/config.yaml/badge.svg)
+[![Lint and validate](https://github.com/RADAR-base/RADAR-K8s-Infrastructure/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/pre-commit.yaml/badge.svg)
+[![Join our community Slack](https://img.shields.io/badge/slack-radarbase-success.svg?logo=slack)](https://docs.google.com/forms/d/e/1FAIpQLScKNZ-QonmxNkekDMLLbP-b_IrNHyDRuQValBy1BAsLOjEFpg/viewform)
 
 # Dependencies
 
@@ -18,6 +18,15 @@ It is recommended that you use RADAR-K8s-Infrastructure as a template and create
 
 <img src="./image/use_this_template.png" alt="use this template" width="500" height="124">
 
+## Workspaces
+
+The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and made fully available before you proceed with the creation of the `config` ones.
+
+To retain the user-specific configurations for future infrastructure updates, modify `terraform.tfvars` within the workspace and push the change to your repository. If needed, additional variables defined in `variables.tf` can also be included there.
+| :information_source: Important Notice |
+|:----------------------------------------|
+|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destroy` to delete all the associated resources and reduce your cloud spending. If you have resources created within `config`, run `terraform destroy` in that directory before running the counterpart in `cluster`.|
+
 ## Configure credentials
 
 ```
@@ -27,15 +36,6 @@ export TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 # For temporary credentials and SSO
 export TF_VAR_AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 ```
-
-## Workspaces
-
-The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and made fully available before you proceed with the creation of the `config` ones.
-
-To retain the user-specific configurations for future infrastructure updates, modify `terraform.tfvars` within the workspace and push the change to your repository. If needed, additional variables defined in `variables.tf` can also be included there.
-| :information_source: Important Notice |
-|:----------------------------------------|
-|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destroy` to delete all the associated resources and reduce your cloud spending. If you have resources created within `config`, run `terraform destroy` in that directory before running the counterpart in `cluster`.|
 
 ## Create the infrastructure
 
@@ -79,7 +79,7 @@ Created resources:
 
 ```
 # Make sure to use --region if the cluster is deployed in non-default region and --profile if the cluster is deployed in a non-default AWS account
-aws eks update-kubeconfig --name [eks_cluster_name]
+aws eks update-kubeconfig --name `terraform output eks_cluster_name` --alias `terraform output eks_cluster_name` --role-arn `terraform output assume_eks_admins_role`
 kubectl get nodes
 kubectl get pods -A
 ```
@@ -91,6 +91,7 @@ terraform output
 ```
 
 Note that output values can be crucial for configuring certain RADAR-base components prior to deployment. For instance, if you are using the nginx-ingress controller with NLB, specify the subnet(s) and the EIP allocation ID as follows:
+
 ```yaml
 nginx_ingress:
     _install: true
@@ -104,7 +105,6 @@ nginx_ingress:
 ```
 
 You could also automate this value injection by implementing your own templating strategy to customise `production.yaml`.
-
 
 ## Configure the cluster (optional)
 
@@ -134,7 +134,13 @@ Created resources (if all enabled):
 
 ## Contributing
 
-Make sure to install [terraform-docs](https://github.com/terraform-docs/terraform-docs) and run `make prepare` before making a commit to make sure the documentation is up to date and the code is valid.
+The dependencies and linting tools and managed via Devbox, you need to [install it](https://jetify-com.vercel.app/docs/devbox/installing_devbox/#install-devbox) before proceeding. Once that is done you can run
+
+```
+devbox shell
+```
+
+To download all of the dependencies and install to Git hooks to lint the configuration before it is commited.
 
 In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatiblity with running `aws eks describe-addons-versions` and then searching for the addons that are defined in [cluster/data.tf](./cluster/data.tf).
 

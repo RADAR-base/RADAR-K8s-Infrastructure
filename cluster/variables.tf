@@ -41,12 +41,6 @@ variable "eks_cluster_name" {
   }
 }
 
-variable "environment" {
-  type        = string
-  description = "Environment name"
-  default     = "dev"
-}
-
 variable "common_tags" {
   type        = map(string)
   description = "Common tags associated to resources created"
@@ -151,4 +145,15 @@ variable "default_storage_class" {
     condition     = var.default_storage_class == "radar-base-ebs-sc-gp2" || var.default_storage_class == "radar-base-ebs-sc-gp3" || var.default_storage_class == "radar-base-ebs-sc-io1" || var.default_storage_class == "radar-base-ebs-sc-io2"
     error_message = "Invalid storage class. Allowed values are 'radar-base-ebs-sc-gp2', 'radar-base-ebs-sc-gp3', 'radar-base-ebs-sc-io1' or 'radar-base-ebs-sc-io2'."
   }
+}
+
+variable "ecr_repository_names" {
+  type        = list(string)
+  description = "Default prefixes for ECR repositories if used for hosting the images"
+  default = [
+    "ecr-public*",
+    "k8s*",
+    "quay*",
+    "radarbase*",
+  ]
 }

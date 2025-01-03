@@ -1,3 +1,9 @@
+locals {
+  private_cidr_blocks = [
+    for subnet_id in data.aws_subnets.private.ids : data.aws_subnet.private_subnet[subnet_id].cidr_block
+  ]
+}
+
 resource "aws_db_subnet_group" "rds_subnet" {
   count = var.enable_rds ? 1 : 0
 
@@ -12,25 +18,18 @@ resource "aws_security_group" "rds_access" {
   description = "This security group is for accessing the RDS DB"
   vpc_id      = data.aws_vpc.main.id
 
-  # ingress {
-  #   from_port   = 5432
-  #   to_port     = 5432
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["188.28.81.208/32"]
-  # }
-
   ingress {
-    from_port       = 0
-    to_port         = 65535
-    protocol        = "tcp"
-    security_groups = [data.aws_security_group.node.id]
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = local.private_cidr_blocks
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = local.private_cidr_blocks
   }
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-rds-access" }), var.common_tags)
@@ -56,6 +55,7 @@ resource "aws_db_instance" "radar_postgres" {
   db_subnet_group_name         = aws_db_subnet_group.rds_subnet[0].name
   vpc_security_group_ids       = [aws_security_group.rds_access[0].id]
   performance_insights_enabled = true
+  copy_tags_to_snapshot        = true
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-postgres" }), var.common_tags)
 }

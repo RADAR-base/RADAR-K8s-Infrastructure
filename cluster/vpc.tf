@@ -50,7 +50,7 @@ resource "aws_security_group_rule" "vpc_endpoint_egress" {
   protocol          = "-1"
   from_port         = 0
   to_port           = 0
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = var.vpc_private_subnet_cidr
 }
 
 resource "aws_security_group_rule" "vpc_endpoint_self_ingress" {

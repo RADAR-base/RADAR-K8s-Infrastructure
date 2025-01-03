@@ -224,6 +224,7 @@ module "eks" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_access" {
+  description                  = "Allow ingress traffic to the VPC endpoints from EKS nodes"
   security_group_id            = aws_security_group.vpc_endpoint.id
   ip_protocol                  = "-1"
   referenced_security_group_id = module.eks.node_security_group_id

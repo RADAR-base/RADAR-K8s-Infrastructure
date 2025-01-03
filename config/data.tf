@@ -5,17 +5,6 @@ data "aws_vpc" "main" {
   }
 }
 
-data "aws_subnets" "public" {
-  filter {
-    name   = "tag:Name"
-    values = ["${var.eks_cluster_name}-vpc"]
-  }
-  filter {
-    name   = "tag:subnet-type"
-    values = ["public"]
-  }
-}
-
 data "aws_subnets" "private" {
   filter {
     name   = "tag:Name"
@@ -25,6 +14,11 @@ data "aws_subnets" "private" {
     name   = "tag:subnet-type"
     values = ["private"]
   }
+}
+
+data "aws_subnet" "private_subnet" {
+  for_each = toset(data.aws_subnets.private.ids)
+  id       = each.value
 }
 
 data "aws_security_group" "node" {
