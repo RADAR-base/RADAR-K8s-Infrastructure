@@ -151,7 +151,9 @@ resource "aws_iam_policy" "ecr_access" {
           "ecr:ListTagsForResource",
           "ecr:DescribeImageScanFindings"
         ]
-        Resource = "*"
+        Resource = [
+          for repository_name in var.ecr_repository_names : "arn:aws:ecr:::repository/${repository_name}"
+        ]
       }
     ]
   })

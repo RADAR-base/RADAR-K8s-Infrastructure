@@ -10,7 +10,7 @@ resource "aws_s3_bucket_ownership_controls" "this" {
 
   bucket = aws_s3_bucket.this[each.key].id
   rule {
-    object_ownership = "BucketOwnerPreferred"
+    object_ownership = "BucketOwnerEnforced"
   }
 
   depends_on = [aws_s3_bucket.this]

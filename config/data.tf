@@ -16,6 +16,11 @@ data "aws_subnets" "private" {
   }
 }
 
+data "aws_subnet" "private_subnet" {
+  for_each = toset(data.aws_subnets.private.ids)
+  id       = each.value
+}
+
 data "aws_security_group" "node" {
   filter {
     name   = "tag:Name"

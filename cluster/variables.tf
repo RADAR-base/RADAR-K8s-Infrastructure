@@ -146,3 +146,14 @@ variable "default_storage_class" {
     error_message = "Invalid storage class. Allowed values are 'radar-base-ebs-sc-gp2', 'radar-base-ebs-sc-gp3', 'radar-base-ebs-sc-io1' or 'radar-base-ebs-sc-io2'."
   }
 }
+
+variable "ecr_repository_names" {
+  type        = list(string)
+  description = "Default prefixes for ECR repositories if used for hosting the images"
+  default = [
+    "ecr-public*",
+    "k8s*",
+    "quay*",
+    "radarbase*",
+  ]
+}
