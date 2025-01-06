@@ -34,14 +34,13 @@ repos:
   - id: terraform_checkov
     args:
     - --args=--quiet
-    # CKV_TF_1: https://github.com/bridgecrewio/checkov/issues/5286
     # CKV2_AWS_19: This EIP will be attached to the NLB when nginx-ingress is deployed
     # CKV2_AWS_6: This is implicitly guranateed and public access is blocked for S3 buckets
     # CKV_AWS_18,CKV_AWS_144,CKV_AWS_21,CKV_AWS_145,CKV2_AWS_61,CKV2_AWS_62: These S3 rules should be applied case by case
     # CKV2_AWS_39,CKV2_AWS_30: This will result in extra charge and should be only enabled for troubleshooting and stringent auditing
     # CKV2_AWS_38: DNSSEC signing needs to be optional
     # CKV_AWS_23,CKV_AWS_355,CKV_AWS_290: Temporarly skip these checks, Helm chart testing isn't needed for the repo
-    - --args=--skip-check CKV_TF_1,CKV2_AWS_19,CKV2_AWS_30,CKV2_AWS_38,CKV2_AWS_39,CKV_AWS_18,CKV_AWS_144,CKV_AWS_21,CKV_AWS_145,CKV2_AWS_61,CKV2_AWS_62,CKV2_AWS_6,CKV_AWS_23,CKV_AWS_355,CKV_AWS_290,CKV2_GHA_1
+    - --args=--skip-check CKV2_AWS_19,CKV2_AWS_30,CKV2_AWS_38,CKV2_AWS_39,CKV_AWS_18,CKV_AWS_144,CKV_AWS_21,CKV_AWS_145,CKV2_AWS_61,CKV2_AWS_62,CKV2_AWS_6,CKV_AWS_23,CKV_AWS_355,CKV_AWS_290,CKV2_GHA_1
     - --args=--download-external-modules False
 - repo: local
   hooks:

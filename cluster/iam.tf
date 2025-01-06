@@ -1,6 +1,5 @@
 module "allow_eks_access_iam_policy" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = "5.48.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-policy?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   name          = "${var.eks_cluster_name}-allow-eks-access"
   create_policy = true
@@ -41,8 +40,7 @@ module "allow_eks_access_iam_policy" {
 }
 
 module "eks_admins_iam_role" {
-  source           = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  version          = "5.48.0"
+  source           = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-assumable-role?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
   role_description = "The administrative role for the EKS cluster"
 
   role_name         = "${var.eks_cluster_name}-admin-role"
@@ -60,8 +58,7 @@ module "eks_admins_iam_role" {
 
 
 module "allow_assume_eks_admins_iam_policy" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = "5.48.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-policy?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   name          = "${var.eks_cluster_name}-allow-assume-eks-admin-role"
   create_policy = true
@@ -89,8 +86,7 @@ resource "aws_iam_policy_attachment" "eks_admins_policy_attachment" {
 }
 
 module "iam_user" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-user"
-  version = "5.48.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-user?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   name                          = "${var.eks_cluster_name}-ecr-readonly-user"
   create_iam_user_login_profile = false

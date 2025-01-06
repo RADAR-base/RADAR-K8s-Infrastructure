@@ -1,6 +1,6 @@
 module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=573f574c922782bc658f05523d0c902a4792b0a8" # commit hash of version 5.17.0
+
 
   name = "${var.eks_cluster_name}-vpc"
   cidr = var.vpc_cidr
