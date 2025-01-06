@@ -36,29 +36,29 @@ resource "aws_security_group" "rds_access" {
 
 }
 
-#trivy:ignore:AVD-AWS-0077 Temporarly skip these checks
-#trivy:ignore:AVD-AWS-0177 Temporarly skip these checks
-#trivy:ignore:AVD-AWS-0176 Temporarly skip these checks
 resource "aws_db_instance" "radar_postgres" {
   count = var.enable_rds ? 1 : 0
 
-  identifier                   = "${var.eks_cluster_name}-postgres"
-  db_name                      = "radarbase"
-  engine                       = "postgres"
-  engine_version               = var.postgres_version
-  instance_class               = "db.t4g.micro"
-  username                     = "postgres"
-  password                     = var.radar_postgres_password
-  allocated_storage            = 5
-  storage_type                 = "standard"
-  storage_encrypted            = true
-  skip_final_snapshot          = true
-  publicly_accessible          = false
-  multi_az                     = false
-  db_subnet_group_name         = aws_db_subnet_group.rds_subnet[0].name
-  vpc_security_group_ids       = [aws_security_group.rds_access[0].id]
-  performance_insights_enabled = true
-  copy_tags_to_snapshot        = true
+  identifier                          = "${var.eks_cluster_name}-postgres"
+  db_name                             = "radarbase"
+  engine                              = "postgres"
+  engine_version                      = var.postgres_version
+  instance_class                      = "db.t4g.micro"
+  username                            = "postgres"
+  password                            = var.radar_postgres_password
+  allocated_storage                   = 5
+  storage_type                        = "standard"
+  storage_encrypted                   = true
+  skip_final_snapshot                 = true
+  publicly_accessible                 = false
+  multi_az                            = false
+  db_subnet_group_name                = aws_db_subnet_group.rds_subnet[0].name
+  vpc_security_group_ids              = [aws_security_group.rds_access[0].id]
+  performance_insights_enabled        = true
+  copy_tags_to_snapshot               = true
+  backup_retention_period             = 7
+  iam_database_authentication_enabled = true
+  deletion_protection                 = true # This needs to be set to false before you really want to delete the database with "terraform destroy"
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-postgres" }), var.common_tags)
 

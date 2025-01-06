@@ -29,6 +29,7 @@
 
 | Name | Type |
 |------|------|
+| [aws_cloudwatch_log_group.msk_broker](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_db_instance.radar_postgres](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance) | resource |
 | [aws_db_subnet_group.rds_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_eip.cluster_loadbalancer_eip](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
@@ -96,6 +97,7 @@
 | <a name="input_enable_karpenter"></a> [enable\_karpenter](#input\_enable\_karpenter) | Do you need Karpenter? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_metrics"></a> [enable\_metrics](#input\_enable\_metrics) | Do you need Metrics Server? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_msk"></a> [enable\_msk](#input\_enable\_msk) | Do you need MSK? [true, false] | `bool` | n/a | yes |
+| <a name="input_enable_msk_logging"></a> [enable\_msk\_logging](#input\_enable\_msk\_logging) | Do you need logging on MSK brokers? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_rds"></a> [enable\_rds](#input\_enable\_rds) | Do you need RDS? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_route53"></a> [enable\_route53](#input\_enable\_route53) | Do you need Route53? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_s3"></a> [enable\_s3](#input\_enable\_s3) | Do you need S3? [true, false] | `bool` | n/a | yes |

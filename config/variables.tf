@@ -131,6 +131,11 @@ variable "enable_msk" {
   description = "Do you need MSK? [true, false]"
 }
 
+variable "enable_msk_logging" {
+  type        = bool
+  description = "Do you need logging on MSK brokers? [true, false]"
+}
+
 variable "enable_rds" {
   type        = bool
   description = "Do you need RDS? [true, false]"
