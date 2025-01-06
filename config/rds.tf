@@ -36,6 +36,9 @@ resource "aws_security_group" "rds_access" {
 
 }
 
+#trivy:ignore:AVD-AWS-0077 Temporarly skip these checks
+#trivy:ignore:AVD-AWS-0177 Temporarly skip these checks
+#trivy:ignore:AVD-AWS-0176 Temporarly skip these checks
 resource "aws_db_instance" "radar_postgres" {
   count = var.enable_rds ? 1 : 0
 

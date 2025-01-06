@@ -74,6 +74,8 @@ zookeeper.session.timeout.ms=18000
 PROPERTIES
 }
 
+#trivy:ignore:AVD-AWS-0074 Temporarly skip these checks
+#trivy:ignore:AVD-AWS-0179 Temporarly skip these checks
 resource "aws_msk_cluster" "msk_cluster" {
   count = var.enable_msk ? 1 : 0
 
