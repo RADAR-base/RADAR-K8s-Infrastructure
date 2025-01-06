@@ -58,6 +58,8 @@ resource "aws_db_instance" "radar_postgres" {
   copy_tags_to_snapshot        = true
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-postgres" }), var.common_tags)
+
+  #checkov:skip=CKV2_AWS_30: This will result in extra charge and should be only enabled for troubleshooting and stringent auditing
 }
 
 resource "kubectl_manifest" "create_databases_if_not_exist" {

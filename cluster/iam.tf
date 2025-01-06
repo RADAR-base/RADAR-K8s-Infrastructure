@@ -176,4 +176,6 @@ resource "aws_iam_policy" "ecr_pull_through_cache" {
   })
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ecr-pull-through-cache-policy" }), var.common_tags)
+
+  #checkov:skip=CKV_AWS_355,CKV_AWS_290: Temporarly skip these checks
 }

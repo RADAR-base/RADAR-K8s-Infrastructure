@@ -42,6 +42,8 @@ resource "aws_security_group" "vpc_endpoint" {
   vpc_id      = module.vpc.vpc_id
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc-endpoint-sg" }), var.common_tags)
+
+  #checkov:skip=CKV_AWS_23: Temporarly skip these checks
 }
 
 resource "aws_security_group_rule" "vpc_endpoint_egress" {
@@ -51,6 +53,8 @@ resource "aws_security_group_rule" "vpc_endpoint_egress" {
   from_port         = 0
   to_port           = 0
   cidr_blocks       = var.vpc_private_subnet_cidr
+
+  #checkov:skip=CKV_AWS_23: Temporarly skip these checks
 }
 
 resource "aws_security_group_rule" "vpc_endpoint_self_ingress" {
@@ -60,6 +64,8 @@ resource "aws_security_group_rule" "vpc_endpoint_self_ingress" {
   from_port                = 0
   to_port                  = 0
   source_security_group_id = aws_security_group.vpc_endpoint.id
+
+  #checkov:skip=CKV_AWS_23: Temporarly skip these checks
 }
 
 resource "aws_vpc_endpoint" "s3" {

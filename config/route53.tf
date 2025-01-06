@@ -12,6 +12,9 @@ resource "aws_route53_zone" "primary" {
   count = var.enable_route53 && length(var.domain_name) == 1 ? 1 : 0
   name  = local.domain_name
   tags  = merge(tomap({ "Name" : "${var.eks_cluster_name}-primary-zone" }), var.common_tags)
+
+  #checkov:skip=CKV2_AWS_39: This will result in extra charge and should be only enabled for troubleshooting and stringent auditing
+  #checkov:skip=CKV2_AWS_38: DNSSEC signing needs to be optional
 }
 
 resource "aws_route53_record" "main" {
