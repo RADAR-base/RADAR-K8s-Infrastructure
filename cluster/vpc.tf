@@ -1,6 +1,6 @@
 module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=573f574c922782bc658f05523d0c902a4792b0a8" # commit hash of version 5.17.0
+
 
   name = "${var.eks_cluster_name}-vpc"
   cidr = var.vpc_cidr
@@ -39,27 +39,33 @@ module "vpc" {
 
 resource "aws_security_group" "vpc_endpoint" {
   name_prefix = "${var.eks_cluster_name}-vpc-endpoint-sg-"
+  description = "This security group is for controlling ingress and egress traffic of VPC endpoints powered by PrivateLink."
   vpc_id      = module.vpc.vpc_id
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-vpc-endpoint-sg" }), var.common_tags)
+
 }
 
 resource "aws_security_group_rule" "vpc_endpoint_egress" {
   security_group_id = aws_security_group.vpc_endpoint.id
+  description       = "Allows unrestricted egress from VPC endpoints to private subnets."
   type              = "egress"
   protocol          = "-1"
   from_port         = 0
   to_port           = 0
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = var.vpc_private_subnet_cidr
+
 }
 
 resource "aws_security_group_rule" "vpc_endpoint_self_ingress" {
   security_group_id        = aws_security_group.vpc_endpoint.id
+  description              = "Allows unrestricted ingress within the VPC endpoint security group."
   type                     = "ingress"
   protocol                 = "-1"
   from_port                = 0
   to_port                  = 0
   source_security_group_id = aws_security_group.vpc_endpoint.id
+
 }
 
 resource "aws_vpc_endpoint" "s3" {

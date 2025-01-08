@@ -1,0 +1,51 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+    exclude: |
+      (?x)^(
+        config/README.md|
+        cluster/README.md
+      )$
+  - id: mixed-line-ending
+  - id: check-yaml
+    args:
+    - --allow-multiple-documents
+  - id: check-added-large-files
+  - id: check-executables-have-shebangs
+  - id: check-shebang-scripts-are-executable
+  - id: check-merge-conflict
+  - id: no-commit-to-branch
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.96.2
+  hooks:
+  - id: terraform_fmt
+  - id: terraform_validate
+  - id: terraform_tflint
+  - id: terraform_trivy
+    args:
+    - --args=--severity MEDIUM,HIGH,CRITICAL
+    - --args=--skip-dirs="*/.terraform"
+    - --args=--tf-exclude-downloaded-modules
+  - id: terraform_checkov
+    args:
+    - --args=--quiet
+    - --args=--download-external-modules False
+- repo: local
+  hooks:
+  - id: terraform-docs-cluster
+    name: Generate docs for the Terraform cluster/
+    language: system
+    entry: terraform-docs markdown table cluster/
+    pass_filenames: false
+    files: 'cluster/'
+  - id: terraform-docs-config
+    name: Generate docs for the Terraform config/
+    language: system
+    entry: terraform-docs markdown table config/
+    pass_filenames: false
+    files: 'config/'

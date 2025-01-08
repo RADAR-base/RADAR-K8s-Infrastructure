@@ -10,6 +10,11 @@ output "radar_base_eks_cluster_kms_key_arn" {
   value = module.eks.kms_key_arn
 }
 
+output "assume_eks_admins_role" {
+  description = "EKS admin role ARN"
+  value       = module.allow_assume_eks_admins_iam_policy.arn
+}
+
 output "radar_base_eks_dmz_node_group_name" {
   value = var.create_dmz_node_group ? element(split(":", module.eks.eks_managed_node_groups["dmz-${var.eks_cluster_name}"].node_group_id), 1) : null
 }

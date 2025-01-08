@@ -74,6 +74,13 @@ zookeeper.session.timeout.ms=18000
 PROPERTIES
 }
 
+resource "aws_cloudwatch_log_group" "msk_broker" {
+  count = var.enable_msk_logging ? 1 : 0
+  name  = "${var.eks_cluster_name}-msk-broker-logs"
+}
+
+#trivy:ignore:AVD-AWS-0074 Logging on MSK brokers can be enabled by setting var.enable_msk_logging to true
+#trivy:ignore:AVD-AWS-0179 By default an AWS-managed KMS key is used to encrypt MSK data at rest
 resource "aws_msk_cluster" "msk_cluster" {
   count = var.enable_msk ? 1 : 0
 
@@ -97,6 +104,7 @@ resource "aws_msk_cluster" "msk_cluster" {
   encryption_info {
     encryption_in_transit {
       client_broker = "TLS"
+      in_cluster    = true
     }
   }
 
@@ -122,6 +130,18 @@ resource "aws_msk_cluster" "msk_cluster" {
   configuration_info {
     arn      = aws_msk_configuration.msk_configuration[0].arn
     revision = 1
+  }
+
+  dynamic "logging_info" {
+    for_each = var.enable_msk_logging ? [1] : []
+    content {
+      broker_logs {
+        cloudwatch_logs {
+          enabled   = var.enable_msk_logging
+          log_group = aws_cloudwatch_log_group.msk_broker.name
+        }
+      }
+    }
   }
 }
 
