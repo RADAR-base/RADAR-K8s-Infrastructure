@@ -7,6 +7,21 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
 [![Lint and validate](https://github.com/RADAR-base/RADAR-K8s-Infrastructure/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/phidatalab/RADAR-K8s-Infrastructure/actions/workflows/pre-commit.yaml/badge.svg)
 [![Join our community Slack](https://img.shields.io/badge/slack-radarbase-success.svg?logo=slack)](https://docs.google.com/forms/d/e/1FAIpQLScKNZ-QonmxNkekDMLLbP-b_IrNHyDRuQValBy1BAsLOjEFpg/viewform)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Dependencies](#dependencies)
+- [Usage](#usage)
+  - [Workspaces](#workspaces)
+  - [Configure credentials](#configure-credentials)
+  - [Create the infrastructure](#create-the-infrastructure)
+  - [Connect to and verify the cluster](#connect-to-and-verify-the-cluster)
+  - [Configure the cluster (optional)](#configure-the-cluster-optional)
+  - [Contributing](#contributing)
+  - [Known limitations](#known-limitations)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Dependencies
 
 [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.7.0, < 1.8.0<br>
@@ -140,9 +155,11 @@ The dependencies and linting tools and managed via Devbox, you need to [install 
 devbox shell
 ```
 
-To download all of the dependencies and install to Git hooks to lint the configuration before it is commited.
+To download all of the dependencies and install to Git hooks to lint the configuration before it is committed.
 
-In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatiblity with running `aws eks describe-addons-versions` and then searching for the addons that are defined in [cluster/data.tf](./cluster/data.tf).
+In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatibility with running `aws eks describe-addons-versions` and then searching for the addons that are defined in [cluster/data.tf](./cluster/data.tf).
+
+This project also uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) to have a standardized commit message. Please have a look and make sure your commit message follows that.
 
 ## Known limitations
 

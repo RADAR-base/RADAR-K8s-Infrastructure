@@ -105,7 +105,7 @@ variable "karpenter_version" {
 variable "radar_postgres_password" {
   type        = string
   description = "Password for the PostgreSQL database used by Radar components"
-  # Make sure to chage the default value when var.enable_rds is set to "true"
+  # Make sure to change the default value when var.enable_rds is set to "true"
   default   = "change_me"
   sensitive = true
 }
