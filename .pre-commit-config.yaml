@@ -41,6 +41,7 @@ repos:
   - id: terraform_tflint
   - id: terraform_trivy
     args:
+    - --hook-config=--parallelism-limit=1
     - --args=--severity MEDIUM,HIGH,CRITICAL
     - --args=--skip-dirs="*/.terraform"
     - --args=--tf-exclude-downloaded-modules
