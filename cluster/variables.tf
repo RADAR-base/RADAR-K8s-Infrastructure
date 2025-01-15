@@ -154,6 +154,7 @@ variable "ecr_repository_names" {
     "ecr-public*",
     "k8s*",
     "quay*",
+    "docker-hub*",
     "radarbase*",
   ]
 }

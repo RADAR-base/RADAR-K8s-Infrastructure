@@ -19,8 +19,8 @@
     "init_hook": [
       "echo 'Welcome to devbox!' > /dev/null",
       "pre-commit install",
-      "cd $DEVBOX_PROJECT_ROOT/cluster && terraform init -upgrade",
-      "cd $DEVBOX_PROJECT_ROOT/config && terraform init -upgrade",
+      "cd $DEVBOX_PROJECT_ROOT/cluster && rm -rf .terraform && terraform init",
+      "cd $DEVBOX_PROJECT_ROOT/config && rm -rf .terraform && terraform init",
     ],
     "scripts": {
       "install_cluster": [
