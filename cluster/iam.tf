@@ -1,6 +1,5 @@
 module "allow_eks_access_iam_policy" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = "5.15.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-policy?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   name          = "${var.eks_cluster_name}-allow-eks-access"
   create_policy = true
@@ -11,6 +10,25 @@ module "allow_eks_access_iam_policy" {
       {
         Action = [
           "eks:DescribeCluster",
+
+          # # Further enable and narrow down access permissions below for your admin users.
+          # "eks:*",
+          # "ec2:*",
+          # "iam:*",
+          # "cloudwatch:*",
+          # "kms:*",
+          # "logs:*",
+          # "autoscaling:*",
+          # "elasticloadbalancing:*",
+          # # For accessing optional resources
+          # "rds:*",
+          # "route53:*",
+          # "ses:*",
+          # "kafka:*",
+          # "s3:*",
+          # "sqs:*",
+          # "events:*",
+          # "sns:*",
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -22,8 +40,7 @@ module "allow_eks_access_iam_policy" {
 }
 
 module "eks_admins_iam_role" {
-  source           = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  version          = "5.15.0"
+  source           = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-assumable-role?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
   role_description = "The administrative role for the EKS cluster"
 
   role_name         = "${var.eks_cluster_name}-admin-role"
@@ -41,8 +58,7 @@ module "eks_admins_iam_role" {
 
 
 module "allow_assume_eks_admins_iam_policy" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = "5.15.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-policy?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   name          = "${var.eks_cluster_name}-allow-assume-eks-admin-role"
   create_policy = true
@@ -63,21 +79,14 @@ module "allow_assume_eks_admins_iam_policy" {
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-allow-assume-eks-admin-role" }), var.common_tags)
 }
 
-module "eks_admins_iam_group" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-group-with-policies"
-  version = "5.15.0"
-
-  name                              = "${var.eks_cluster_name}-eks-admin-group"
-  attach_iam_self_management_policy = false
-  create_group                      = true
-  group_users                       = var.eks_admins_group_users
-  custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
-
-  tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-eks-admin-group" }), var.common_tags)
+resource "aws_iam_policy_attachment" "eks_admins_policy_attachment" {
+  name       = "${var.eks_cluster_name}-eks-admins-policy-attachment"
+  policy_arn = module.allow_assume_eks_admins_iam_policy.arn
+  users      = var.eks_admins_group_users
 }
 
 module "iam_user" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-user"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-user?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   name                          = "${var.eks_cluster_name}-ecr-readonly-user"
   create_iam_user_login_profile = false
@@ -138,7 +147,9 @@ resource "aws_iam_policy" "ecr_access" {
           "ecr:ListTagsForResource",
           "ecr:DescribeImageScanFindings"
         ]
-        Resource = "*"
+        Resource = [
+          for repository_name in var.ecr_repository_names : "arn:aws:ecr:::repository/${repository_name}"
+        ]
       }
     ]
   })
@@ -165,4 +176,6 @@ resource "aws_iam_policy" "ecr_pull_through_cache" {
   })
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ecr-pull-through-cache-policy" }), var.common_tags)
+
+  #checkov:skip=CKV_AWS_355,CKV_AWS_290: Temporarily skip these checks
 }

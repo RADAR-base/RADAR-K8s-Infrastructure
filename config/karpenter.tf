@@ -1,8 +1,7 @@
 module "karpenter" {
   count = var.enable_karpenter ? 1 : 0
 
-  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
-  version = "19.17.2"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=2cb1fac31b0fc2dd6a236b0c0678df75819c5a3b" # commit hash of version 19.21.0
 
   cluster_name = data.aws_eks_cluster.main.id
 

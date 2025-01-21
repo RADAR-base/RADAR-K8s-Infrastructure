@@ -1,6 +1,5 @@
 module "vpc_cni_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   role_name             = "${var.eks_cluster_name}-vpc-cni-irsa"
   attach_vpc_cni_policy = true
@@ -17,8 +16,7 @@ module "vpc_cni_irsa" {
 }
 
 module "ebs_csi_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   role_name             = "${var.eks_cluster_name}-ebs-csi-irsa"
   attach_ebs_csi_policy = true
@@ -101,8 +99,7 @@ locals {
 }
 
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "19.13.1"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git?ref=2cb1fac31b0fc2dd6a236b0c0678df75819c5a3b" # commit hash of version 19.21.0
 
   cluster_name    = var.eks_cluster_name
   cluster_version = local.eks_core_versions[var.eks_kubernetes_version].cluster_version
@@ -126,7 +123,7 @@ module "eks" {
         nodeSelector : var.create_dmz_node_group ? {
           role : "dmz-1"
         } : {},
-        affinity : {
+        affinity : var.create_dmz_node_group ? {} : {
           podAntiAffinity : {
             requiredDuringSchedulingIgnoredDuringExecution : [{
               labelSelector : {
@@ -224,6 +221,7 @@ module "eks" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "vpc_endpoints_access" {
+  description                  = "Allow ingress traffic to the VPC endpoints from EKS nodes"
   security_group_id            = aws_security_group.vpc_endpoint.id
   ip_protocol                  = "-1"
   referenced_security_group_id = module.eks.node_security_group_id

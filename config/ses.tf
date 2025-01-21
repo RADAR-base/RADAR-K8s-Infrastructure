@@ -42,9 +42,13 @@ resource "aws_ses_configuration_set" "configuration_set" {
   name  = "${var.eks_cluster_name}-ses-configuration-set"
 }
 
+
 resource "aws_sns_topic" "ses_bounce_event_topic" {
   count = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
   name  = "${var.eks_cluster_name}-ses-bounce-event-topic"
+
+  # trivy:ignore:AVD-AWS-0136 The CMK requirement should stay optional and by default an AWS managed key is used for encryption
+  kms_master_key_id = "alias/aws/sns"
 }
 
 resource "aws_sns_topic_subscription" "ses_bounce_event_subscriptions" {

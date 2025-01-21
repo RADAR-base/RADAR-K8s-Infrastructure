@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.6/.schema/devbox.schema.json",
+  "packages": [
+    "terraform-docs@latest",
+    "terraform@latest",
+    "pre-commit@latest",
+    "tflint@latest",
+    "trivy@latest",
+    "checkov@latest",
+    "kubernetes-helm@latest",
+    "commitizen@latest",
+    "typos@latest",
+    "codespell@latest",
+    "doctoc@latest",
+    "gitleaks@latest",
+    "actionlint@latest",
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null",
+      "pre-commit install",
+      "cd $DEVBOX_PROJECT_ROOT/cluster && rm -rf .terraform && terraform init",
+      "cd $DEVBOX_PROJECT_ROOT/config && rm -rf .terraform && terraform init",
+    ],
+    "scripts": {
+      "install_cluster": [
+        "cd $DEVBOX_PROJECT_ROOT/cluster && terraform apply",
+        "aws eks update-kubeconfig --name `terraform output eks_cluster_name` --alias `terraform output eks_cluster_name` --role-arn `terraform output assume_eks_admins_role`",
+        "kubectl --context `terraform output eks_cluster_name` get nodes",
+        "kubectl --context `terraform output eks_cluster_name` get pods -A",
+      ],
+      "install_config": [
+        "cd $DEVBOX_PROJECT_ROOT/config && terraform apply",
+      ],
+    },
+  },
+}

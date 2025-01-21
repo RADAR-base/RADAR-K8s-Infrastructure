@@ -6,6 +6,7 @@ with_dmz_pods           = false
 enable_metrics          = false
 enable_karpenter        = false
 enable_msk              = false
+enable_msk_logging      = false
 enable_rds              = false
 enable_route53          = false
 enable_ses              = false

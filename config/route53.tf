@@ -12,6 +12,9 @@ resource "aws_route53_zone" "primary" {
   count = var.enable_route53 && length(var.domain_name) == 1 ? 1 : 0
   name  = local.domain_name
   tags  = merge(tomap({ "Name" : "${var.eks_cluster_name}-primary-zone" }), var.common_tags)
+
+  #checkov:skip=CKV2_AWS_39: This will result in extra charge and should be only enabled for troubleshooting and stringent auditing
+  #checkov:skip=CKV2_AWS_38: DNSSEC signing needs to be optional
 }
 
 resource "aws_route53_record" "main" {
@@ -37,8 +40,7 @@ resource "aws_route53_record" "this" {
 module "external_dns_irsa" {
   count = var.enable_route53 && length(var.domain_name) == 1 ? 1 : 0
 
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   role_name                     = "${var.eks_cluster_name}-external-dns-irsa"
   attach_external_dns_policy    = true
@@ -57,8 +59,7 @@ module "external_dns_irsa" {
 module "cert_manager_irsa" {
   count = var.enable_route53 && length(var.domain_name) == 1 ? 1 : 0
 
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   role_name                     = "${var.eks_cluster_name}-cert-manager-irsa"
   attach_cert_manager_policy    = true

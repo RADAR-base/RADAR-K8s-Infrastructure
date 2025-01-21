@@ -3,6 +3,9 @@ resource "aws_s3_bucket" "this" {
 
   bucket = each.value
   tags   = merge(tomap({ "Name" : each.key }), var.common_tags)
+
+  #checkov:skip=CKV2_AWS_6: This is implicitly guranateed and public access is blocked for S3 buckets
+  #checkov:skip=CKV_AWS_18,CKV_AWS_144,CKV_AWS_21,CKV_AWS_145,CKV2_AWS_61,CKV2_AWS_62: These S3 rules should be applied case by case
 }
 
 resource "aws_s3_bucket_ownership_controls" "this" {
@@ -10,7 +13,7 @@ resource "aws_s3_bucket_ownership_controls" "this" {
 
   bucket = aws_s3_bucket.this[each.key].id
   rule {
-    object_ownership = "BucketOwnerPreferred"
+    object_ownership = "BucketOwnerEnforced"
   }
 
   depends_on = [aws_s3_bucket.this]

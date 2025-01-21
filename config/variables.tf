@@ -23,6 +23,12 @@ variable "AWS_SESSION_TOKEN" {
   sensitive   = true
 }
 
+variable "AWS_PROFILE" {
+  type        = string
+  description = "AWS Profile that resources are created in"
+  default     = "default"
+}
+
 variable "eks_cluster_name" {
   type        = string
   description = "EKS cluster name"
@@ -105,7 +111,7 @@ variable "karpenter_version" {
 variable "radar_postgres_password" {
   type        = string
   description = "Password for the PostgreSQL database used by Radar components"
-  # Make sure to chage the default value when var.enable_rds is set to "true"
+  # Make sure to change the default value when var.enable_rds is set to "true"
   default   = "change_me"
   sensitive = true
 }
@@ -129,6 +135,11 @@ variable "enable_karpenter" {
 variable "enable_msk" {
   type        = bool
   description = "Do you need MSK? [true, false]"
+}
+
+variable "enable_msk_logging" {
+  type        = bool
+  description = "Do you need logging on MSK brokers? [true, false]"
 }
 
 variable "enable_rds" {

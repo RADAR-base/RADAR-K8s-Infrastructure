@@ -1,0 +1,45 @@
+formatter: "" # this is required
+
+version: ""
+
+# header-from: DOCS.md
+footer-from: ""
+
+recursive:
+  enabled: false
+  path: modules
+
+sections:
+  hide: []
+  show: []
+
+content: ""
+
+output:
+  file: "README.md"
+  mode: replace
+  template: |-
+    {{ .Content }}
+
+output-values:
+  enabled: false
+  from: ""
+
+sort:
+  enabled: true
+  by: name
+
+settings:
+  anchor: true
+  color: true
+  default: true
+  description: false
+  escape: true
+  hide-empty: true
+  html: true
+  indent: 2
+  lockfile: true
+  read-comments: true
+  required: true
+  sensitive: true
+  type: true

@@ -7,12 +7,14 @@ variable "AWS_REGION" {
 variable "AWS_ACCESS_KEY_ID" {
   type        = string
   description = "AWS access key associated with an IAM account"
+  default     = ""
   sensitive   = true
 }
 
 variable "AWS_SECRET_ACCESS_KEY" {
   type        = string
   description = "AWS secret key associated with the access key"
+  default     = ""
   sensitive   = true
 }
 
@@ -23,6 +25,12 @@ variable "AWS_SESSION_TOKEN" {
   sensitive   = true
 }
 
+variable "AWS_PROFILE" {
+  type        = string
+  description = "AWS Profile that resources are created in"
+  default     = "default"
+}
+
 variable "eks_cluster_name" {
   type        = string
   description = "EKS cluster name"
@@ -31,12 +39,6 @@ variable "eks_cluster_name" {
     condition     = length(var.eks_cluster_name) > 0
     error_message = "The cluster name cannot be empty."
   }
-}
-
-variable "environment" {
-  type        = string
-  description = "Environment name"
-  default     = "dev"
 }
 
 variable "common_tags" {
@@ -51,11 +53,11 @@ variable "common_tags" {
 variable "eks_kubernetes_version" {
   type        = string
   description = "Amazon EKS Kubernetes version"
-  default     = "1.28"
+  default     = "1.31"
 
   validation {
-    condition     = contains(["1.28", "1.27", "1.26", "1.25"], var.eks_kubernetes_version)
-    error_message = "Invalid EKS Kubernetes version. Supported versions are '1.28', '1.27', '1.26', '1.25'."
+    condition     = contains(["1.31", "1.30", "1.29", "1.28"], var.eks_kubernetes_version)
+    error_message = "Invalid EKS Kubernetes version. Supported versions are '1.31', '1.30', '1.29', '1.28'."
   }
 }
 
@@ -108,13 +110,50 @@ variable "dmz_node_size" {
   }
 }
 
-variable "defaut_storage_class" {
+variable "vpc_cidr" {
+  type        = string
+  description = "VPC CIDR"
+  default     = "10.0.0.0/16"
+}
+
+variable "vpc_private_subnet_cidr" {
+  description = "List of private subnet configurations"
+  type        = list(any)
+  default = [
+    "10.0.0.0/19",
+    "10.0.32.0/19",
+    "10.0.64.0/19",
+  ]
+}
+
+variable "vpc_public_subnet_cidr" {
+  description = "List of public subnet configurations"
+  type        = list(any)
+  default = [
+    "10.0.96.0/19",
+    "10.0.128.0/19",
+    "10.0.160.0/19",
+  ]
+}
+
+variable "default_storage_class" {
   type        = string
   description = "Default storage class used for describing the EBS usage"
   default     = "radar-base-ebs-sc-gp2"
 
   validation {
-    condition     = var.defaut_storage_class == "radar-base-ebs-sc-gp2" || var.defaut_storage_class == "radar-base-ebs-sc-gp3" || var.defaut_storage_class == "radar-base-ebs-sc-io1" || var.defaut_storage_class == "radar-base-ebs-sc-io2"
+    condition     = var.default_storage_class == "radar-base-ebs-sc-gp2" || var.default_storage_class == "radar-base-ebs-sc-gp3" || var.default_storage_class == "radar-base-ebs-sc-io1" || var.default_storage_class == "radar-base-ebs-sc-io2"
     error_message = "Invalid storage class. Allowed values are 'radar-base-ebs-sc-gp2', 'radar-base-ebs-sc-gp3', 'radar-base-ebs-sc-io1' or 'radar-base-ebs-sc-io2'."
   }
+}
+
+variable "ecr_repository_names" {
+  type        = list(string)
+  description = "Default prefixes for ECR repositories if used for hosting the images"
+  default = [
+    "ecr-public*",
+    "k8s*",
+    "quay*",
+    "radarbase*",
+  ]
 }
