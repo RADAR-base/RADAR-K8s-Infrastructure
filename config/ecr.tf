@@ -17,7 +17,7 @@ resource "aws_secretsmanager_secret_version" "dockerhub_credentials_version" {
 
 resource "aws_ecr_pull_through_cache_rule" "dockerhub" {
   count                 = var.enable_ecr_ptc ? 1 : 0
-  ecr_repository_prefix = "docker-hub"
+  ecr_repository_prefix = "radar-base-docker-hub"
   upstream_registry_url = "registry-1.docker.io"
   credential_arn        = aws_secretsmanager_secret.dockerhub_credentials[0].arn
 }
@@ -138,4 +138,63 @@ resource "aws_secretsmanager_secret_rotation" "dockerhub" {
   rotation_rules {
     automatically_after_days = 30
   }
+}
+
+resource "aws_ecr_repository_creation_template" "dockerhub" {
+  count                = var.enable_ecr_ptc ? 1 : 0
+  prefix               = "radar-base-docker-hub"
+  description          = "A template for creating PTC repositories for images from Docker Hub"
+  image_tag_mutability = "MUTABLE"
+  custom_role_arn      = local.worker_node_group.node_role_arn
+
+  applied_for = [
+    "PULL_THROUGH_CACHE",
+  ]
+
+  lifecycle_policy = <<EOT
+{
+  "rules": [
+    {
+      "rulePriority": 1,
+      "description": "Expire all untagged images but 1",
+      "selection": {
+        "tagStatus": "untagged",
+        "countType": "imageCountMoreThan",
+        "countNumber": 1
+      },
+      "action": {
+          "type": "expire"
+      }
+    },
+    {
+      "rulePriority": 2,
+      "description": "Only keep most recent 5 tagged images",
+      "selection": {
+        "tagStatus": "tagged",
+        "tagPatternList": ["*"],
+        "countType": "imageCountMoreThan",
+        "countNumber": 5
+      },
+      "action": {
+          "type": "expire"
+      }
+    },
+    {
+      "rulePriority": 3,
+      "description": "Expire images older than 7 days",
+      "selection": {
+        "tagStatus": "any",
+        "countType": "sinceImagePushed",
+        "countUnit": "days",
+        "countNumber": 7
+      },
+      "action": {
+        "type": "expire"
+      }
+    }
+  ]
+}
+EOT
+
+  resource_tags = { for k, v in var.common_tags : k => v if k != "Environment" }
 }
