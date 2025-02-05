@@ -140,12 +140,59 @@ resource "aws_secretsmanager_secret_rotation" "dockerhub" {
   }
 }
 
+resource "aws_iam_role" "ecr_repository_creator" {
+  count = var.enable_ecr_ptc ? 1 : 0
+  name  = "radar-base-ecr-repository-creation-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ecr.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = { for k, v in var.common_tags : k => v if k != "Environment" }
+}
+
+resource "aws_iam_policy" "ecr_repository_permissions" {
+  count = var.enable_ecr_ptc ? 1 : 0
+  name  = "radar-base-ecr-repository-creation-policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:CreateRepository",
+          "ecr:PutLifecyclePolicy",
+          "ecr:PutImageTagMutability",
+          "ecr:TagResource"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = { for k, v in var.common_tags : k => v if k != "Environment" }
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_attach" {
+  count      = var.enable_ecr_ptc ? 1 : 0
+  role       = aws_iam_role.ecr_repository_creator[0].name
+  policy_arn = aws_iam_policy.ecr_repository_permissions[0].arn
+}
+
 resource "aws_ecr_repository_creation_template" "dockerhub" {
   count                = var.enable_ecr_ptc ? 1 : 0
   prefix               = "radar-base-docker-hub"
   description          = "A template for creating PTC repositories for images from Docker Hub"
   image_tag_mutability = "MUTABLE"
-  custom_role_arn      = local.worker_node_group.node_role_arn
+  custom_role_arn      = aws_iam_role.ecr_repository_creator[0].arn
 
   applied_for = [
     "PULL_THROUGH_CACHE",
