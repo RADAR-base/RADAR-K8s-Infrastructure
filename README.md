@@ -24,7 +24,7 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
 
 # Dependencies
 
-[Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.7.0, < 1.8.0<br>
+[Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.9.0<br>
 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) >= 2.11
 
 # Usage

@@ -151,9 +151,10 @@ variable "ecr_repository_names" {
   type        = list(string)
   description = "Default prefixes for ECR repositories if used for hosting the images"
   default = [
-    "ecr-public*",
-    "k8s*",
-    "quay*",
-    "radarbase*",
+    "radar-base-ecr-public",
+    "radar-base-k8s",
+    "radar-base-quay",
+    "radar-base-docker-hub",
+    "radar-base-ghcr",
   ]
 }
