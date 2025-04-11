@@ -2,8 +2,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0.0, < 6.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.62.0, < 6.0.0 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | ~> 1.14.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.24.0 |
 
@@ -11,7 +11,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.83.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.94.1 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 1.14.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.24.0 |
 
@@ -60,7 +60,7 @@
 | <a name="input_create_dmz_node_group"></a> [create\_dmz\_node\_group](#input\_create\_dmz\_node\_group) | Whether or not to create a DMZ node group with taints | `bool` | `false` | no |
 | <a name="input_default_storage_class"></a> [default\_storage\_class](#input\_default\_storage\_class) | Default storage class used for describing the EBS usage | `string` | `"radar-base-ebs-sc-gp2"` | no |
 | <a name="input_dmz_node_size"></a> [dmz\_node\_size](#input\_dmz\_node\_size) | Node size of the DMZ node group | `map(number)` | <pre>{<br/>  "desired": 1,<br/>  "max": 2,<br/>  "min": 0<br/>}</pre> | no |
-| <a name="input_ecr_repository_names"></a> [ecr\_repository\_names](#input\_ecr\_repository\_names) | Default prefixes for ECR repositories if used for hosting the images | `list(string)` | <pre>[<br/>  "ecr-public*",<br/>  "k8s*",<br/>  "quay*",<br/>  "radarbase*"<br/>]</pre> | no |
+| <a name="input_ecr_repository_names"></a> [ecr\_repository\_names](#input\_ecr\_repository\_names) | Default prefixes for ECR repositories if used for hosting the images | `list(string)` | <pre>[<br/>  "radar-base-ecr-public",<br/>  "radar-base-k8s",<br/>  "radar-base-quay",<br/>  "radar-base-docker-hub",<br/>  "radar-base-ghcr"<br/>]</pre> | no |
 | <a name="input_eks_admins_group_users"></a> [eks\_admins\_group\_users](#input\_eks\_admins\_group\_users) | EKS admin IAM user group | `list(string)` | `[]` | no |
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | EKS cluster name | `string` | n/a | yes |
 | <a name="input_eks_kubernetes_version"></a> [eks\_kubernetes\_version](#input\_eks\_kubernetes\_version) | Amazon EKS Kubernetes version | `string` | `"1.31"` | no |

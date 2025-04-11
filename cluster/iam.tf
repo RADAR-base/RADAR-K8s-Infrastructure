@@ -166,11 +166,14 @@ resource "aws_iam_policy" "ecr_pull_through_cache" {
       {
         Effect = "Allow"
         Action = [
-          "ecr:CreatePullThroughCacheRule",
-          "ecr:BatchImportUpstreamImage",
-          "ecr:CreateRepository"
+          "ecr:BatchImportUpstreamImage"
         ]
         Resource = "*"
+      },
+      {
+        "Action" : ["secretsmanager:GetSecretValue"],
+        "Effect" : "Allow",
+        "Resource" : "arn:aws:secretsmanager:${var.AWS_REGION}::secret:ecr-pullthroughcache/radar-base*"
       }
     ]
   })
