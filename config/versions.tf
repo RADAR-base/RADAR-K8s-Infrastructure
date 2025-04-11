@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.0.0, < 6.0.0"
+      version = ">= 5.62.0, < 6.0.0"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -16,6 +16,10 @@ terraform {
       source  = "gavinbunney/kubectl"
       version = "~> 1.14.0"
     }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.7.0"
+    }
   }
-  required_version = ">= 1.7.0"
+  required_version = ">= 1.9.0"
 }

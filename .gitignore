@@ -36,5 +36,8 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Ignore generated archive files
+**/.archive_files
+
 misc/experimental
 .DS_Store

@@ -41,6 +41,7 @@ repos:
   - id: terraform_tflint
   - id: terraform_trivy
     args:
+    - --hook-config=--parallelism-limit=1
     - --args=--severity MEDIUM,HIGH,CRITICAL
     - --args=--skip-dirs="*/.terraform"
     - --args=--tf-exclude-downloaded-modules
@@ -54,12 +55,22 @@ repos:
   - id: actionlint-system
 - repo: local
   hooks:
+  - id: update-terraform-modules-cluster
+    name: Update terraform modules for the Terraform cluster/
+    language: system
+    entry: terraform -chdir=cluster init -upgrade
+    pass_filenames: false
   - id: terraform-docs-cluster
     name: Generate docs for the Terraform cluster/
     language: system
     entry: terraform-docs markdown table cluster/
     pass_filenames: false
     files: 'cluster/'
+  - id: update-terraform-modules-config
+    name: Update terraform modules for the Terraform config/
+    language: system
+    entry: terraform -chdir=config init -upgrade
+    pass_filenames: false
   - id: terraform-docs-config
     name: Generate docs for the Terraform config/
     language: system

@@ -12,3 +12,4 @@ enable_route53          = false
 enable_ses              = false
 enable_s3               = false
 enable_eip              = false
+enable_ecr_ptc          = false
