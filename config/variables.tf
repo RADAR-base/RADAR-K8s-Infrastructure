@@ -65,6 +65,12 @@ variable "domain_name" {
   }
 }
 
+variable "ses_bounce_destinations" {
+  type        = list(string)
+  description = "List of email addresses for receiving bounced email notifications"
+  default     = []
+}
+
 variable "instance_capacity_type" {
   type        = string
   description = "Capacity type used by EKS managed node groups"
@@ -105,9 +111,19 @@ variable "karpenter_version" {
 variable "radar_postgres_password" {
   type        = string
   description = "Password for the PostgreSQL database used by Radar components"
-  # Make sure to change the default value when var.enable_rds is set to "true"
-  default   = "change_me"
-  sensitive = true
+  sensitive   = true
+}
+
+variable "docker_hub_username" {
+  type        = string
+  description = "Docker Hub username for ECR pull through cache"
+  sensitive   = true
+}
+
+variable "docker_hub_access_token" {
+  type        = string
+  description = "Docker Hub access token for ECR pull through cache"
+  sensitive   = true
 }
 
 variable "with_dmz_pods" {
@@ -139,6 +155,11 @@ variable "enable_msk_logging" {
 variable "enable_rds" {
   type        = bool
   description = "Do you need RDS? [true, false]"
+
+  validation {
+    condition     = (!var.enable_rds) || (var.enable_rds && length(var.radar_postgres_password) > 0)
+    error_message = "Enabling RDS requires 'radar_postgres_password' to be set."
+  }
 }
 
 variable "enable_route53" {
@@ -159,4 +180,14 @@ variable "enable_s3" {
 variable "enable_eip" {
   type        = bool
   description = "Do you need EIP? [true, false]"
+}
+
+variable "enable_ecr_ptc" {
+  type        = bool
+  description = "Do you need ECR pull-through cache? [true, false]"
+
+  validation {
+    condition     = (!var.enable_ecr_ptc) || (var.enable_ecr_ptc && length(var.docker_hub_username) > 0 && length(var.docker_hub_access_token) > 0)
+    error_message = "Enabling ECR pull-through cache requires 'docker_hub_username' and 'docker_hub_access_token' to be set."
+  }
 }
