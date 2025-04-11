@@ -58,6 +58,7 @@
 | [aws_msk_configuration.msk_configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/msk_configuration) | resource |
 | [aws_route53_record.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.smtp_dkim_record](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
+| [aws_route53_record.smtp_dmarc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.smtp_mail_from_mx](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.smtp_mail_from_txt](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
@@ -71,9 +72,15 @@
 | [aws_secretsmanager_secret_version.dockerhub_credentials_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [aws_security_group.msk_cluster_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.rds_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_ses_configuration_set.configuration_set](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_configuration_set) | resource |
 | [aws_ses_domain_dkim.smtp_dkim](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_domain_dkim) | resource |
 | [aws_ses_domain_identity.smtp_identity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_domain_identity) | resource |
 | [aws_ses_domain_mail_from.smtp_mail_from](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_domain_mail_from) | resource |
+| [aws_ses_event_destination.sns](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_event_destination) | resource |
+| [aws_ses_identity_notification_topic.ses_bounce_domain_identity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_identity_notification_topic) | resource |
+| [aws_ses_identity_notification_topic.ses_complaint_domain_identity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_identity_notification_topic) | resource |
+| [aws_sns_topic.ses_bounce_event_topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
+| [aws_sns_topic_subscription.ses_bounce_event_subscriptions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
 | [helm_release.karpenter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.kubernetes_dashboard](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.metrics_server](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
@@ -128,6 +135,7 @@
 | <a name="input_metrics_server_version"></a> [metrics\_server\_version](#input\_metrics\_server\_version) | n/a | `string` | `"3.12.1"` | no |
 | <a name="input_postgres_version"></a> [postgres\_version](#input\_postgres\_version) | n/a | `string` | `"13.14"` | no |
 | <a name="input_radar_postgres_password"></a> [radar\_postgres\_password](#input\_radar\_postgres\_password) | Password for the PostgreSQL database used by Radar components | `string` | n/a | yes |
+| <a name="input_ses_bounce_destinations"></a> [ses\_bounce\_destinations](#input\_ses\_bounce\_destinations) | List of email addresses for receiving bounced email notifications | `list(string)` | `[]` | no |
 | <a name="input_with_dmz_pods"></a> [with\_dmz\_pods](#input\_with\_dmz\_pods) | Whether or not to utilise the DMZ node group if it exists | `bool` | `false` | no |
 
 ## Outputs

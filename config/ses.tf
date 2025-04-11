@@ -37,6 +37,56 @@ resource "aws_route53_record" "smtp_mail_from_mx" {
   depends_on = [aws_route53_zone.primary]
 }
 
+resource "aws_ses_configuration_set" "configuration_set" {
+  count = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
+  name  = "${var.eks_cluster_name}-ses-configuration-set"
+}
+
+
+resource "aws_sns_topic" "ses_bounce_event_topic" {
+  count = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
+  name  = "${var.eks_cluster_name}-ses-bounce-event-topic"
+
+  # trivy:ignore:AVD-AWS-0136 The CMK requirement should stay optional and by default an AWS managed key is used for encryption
+  kms_master_key_id = "alias/aws/sns"
+}
+
+resource "aws_sns_topic_subscription" "ses_bounce_event_subscriptions" {
+  for_each = toset(var.ses_bounce_destinations)
+
+  topic_arn = aws_sns_topic.ses_bounce_event_topic[0].arn
+  protocol  = "email"
+  endpoint  = each.value
+}
+
+resource "aws_ses_identity_notification_topic" "ses_bounce_domain_identity" {
+  count                    = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
+  topic_arn                = aws_sns_topic.ses_bounce_event_topic[0].arn
+  notification_type        = "Bounce"
+  identity                 = keys(var.domain_name)[0]
+  include_original_headers = true
+}
+
+resource "aws_ses_identity_notification_topic" "ses_complaint_domain_identity" {
+  count                    = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
+  topic_arn                = aws_sns_topic.ses_bounce_event_topic[0].arn
+  notification_type        = "Complaint"
+  identity                 = keys(var.domain_name)[0]
+  include_original_headers = true
+}
+
+resource "aws_ses_event_destination" "sns" {
+  count                  = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
+  name                   = "${var.eks_cluster_name}-ses-event-destination-sns"
+  configuration_set_name = aws_ses_configuration_set.configuration_set[0].name
+  enabled                = true
+  matching_types         = ["bounce", "complaint"]
+
+  sns_destination {
+    topic_arn = aws_sns_topic.ses_bounce_event_topic[0].arn
+  }
+}
+
 resource "aws_route53_record" "smtp_mail_from_txt" {
   count   = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
   zone_id = aws_route53_zone.primary[0].zone_id
@@ -44,6 +94,17 @@ resource "aws_route53_record" "smtp_mail_from_txt" {
   type    = "TXT"
   ttl     = "600"
   records = ["v=spf1 include:amazonses.com ~all"]
+
+  depends_on = [aws_route53_zone.primary]
+}
+
+resource "aws_route53_record" "smtp_dmarc" {
+  count   = var.enable_route53 && length(var.domain_name) == 1 && var.enable_ses ? 1 : 0
+  zone_id = aws_route53_zone.primary[0].zone_id
+  name    = "_dmarc.${keys(var.domain_name)[0]}"
+  type    = "TXT"
+  ttl     = "300"
+  records = ["v=DMARC1; p=none;"]
 
   depends_on = [aws_route53_zone.primary]
 }
