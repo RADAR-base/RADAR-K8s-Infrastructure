@@ -19,15 +19,6 @@ resource "aws_s3_bucket_ownership_controls" "this" {
   depends_on = [aws_s3_bucket.this]
 }
 
-resource "aws_s3_bucket_acl" "this" {
-  for_each = { for k, v in local.s3_bucket_names : k => v if var.enable_s3 }
-
-  bucket = aws_s3_bucket.this[each.key].id
-  acl    = "private"
-
-  depends_on = [aws_s3_bucket_ownership_controls.this]
-}
-
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   for_each = { for k, v in local.s3_bucket_names : k => v if var.enable_s3 }
 
