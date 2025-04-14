@@ -75,8 +75,8 @@
 
 | Name | Description |
 |------|-------------|
-| <a name="output_assume_eks_admins_role"></a> [assume\_eks\_admins\_role](#output\_assume\_eks\_admins\_role) | EKS admin role ARN |
 | <a name="output_radar_base_default_storage_class"></a> [radar\_base\_default\_storage\_class](#output\_radar\_base\_default\_storage\_class) | n/a |
+| <a name="output_radar_base_eks_admins_role"></a> [radar\_base\_eks\_admins\_role](#output\_radar\_base\_eks\_admins\_role) | EKS admin role ARN |
 | <a name="output_radar_base_eks_cluster_endpoint"></a> [radar\_base\_eks\_cluster\_endpoint](#output\_radar\_base\_eks\_cluster\_endpoint) | n/a |
 | <a name="output_radar_base_eks_cluster_kms_key_arn"></a> [radar\_base\_eks\_cluster\_kms\_key\_arn](#output\_radar\_base\_eks\_cluster\_kms\_key\_arn) | n/a |
 | <a name="output_radar_base_eks_cluster_name"></a> [radar\_base\_eks\_cluster\_name](#output\_radar\_base\_eks\_cluster\_name) | n/a |
