@@ -17,6 +17,7 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
   - [Create the infrastructure](#create-the-infrastructure)
   - [Connect to and verify the cluster](#connect-to-and-verify-the-cluster)
   - [Configure the cluster (optional)](#configure-the-cluster-optional)
+  - [Resource overview](#resource-overview)
   - [Contributing](#contributing)
   - [Known limitations](#known-limitations)
 
@@ -146,6 +147,11 @@ Created resources (if all enabled):
 - SES SMTP endpoint
 - CloudWatch event rules and targets
 - Essential IAM policies, roles, users for aforementioned resources
+
+## Resource overview
+<p align="center">
+  <img src="./image/radar_k8s_resources.png" alt="RADAR K8s resources" width="auto">
+</p>
 
 ## Contributing
 
