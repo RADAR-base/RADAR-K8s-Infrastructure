@@ -26,4 +26,9 @@ output "postgresql_database_name" {
 output "application_gateway_public_ip" {
   description = "Public IP address of the Application Gateway"
   value       = azurerm_public_ip.agw.ip_address
+}
+
+output "load_balancer_public_ip" {
+  description = "Public IP address of the Load Balancer"
+  value       = azurerm_public_ip.lb.ip_address
 } 
