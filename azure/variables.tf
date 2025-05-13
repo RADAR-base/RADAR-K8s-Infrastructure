@@ -1,7 +1,7 @@
 variable "subscription_id" {
   description = "The subscription ID where resources will be created"
   type        = string
-  default     = "f9a80383-5b9c-483a-8257-97bb0ac4a447"
+  default     = "65c10e6e-5fcf-43f8-b928-9b2d4167bbd1"
 }
 
 variable "location" {
@@ -19,7 +19,7 @@ variable "environment" {
 variable "project" {
   description = "Project name"
   type        = string
-  default     = "radar-test"
+  default     = "sander"
 }
 
 variable "postgres_admin_username" {
@@ -39,4 +39,16 @@ variable "allowed_devops_ips" {
   description = "List of IP addresses allowed to access the database for DevOps purposes"
   type        = list(string)
   default     = []
+}
+
+variable "aks_node_count" {
+  description = "Number of nodes in the default node pool"
+  type        = number
+  default     = 1
+}
+
+variable "aks_vm_size" {
+  description = "Size of the VM for AKS nodes"
+  type        = string
+  default     = "Standard_D2s_v3"
 } 

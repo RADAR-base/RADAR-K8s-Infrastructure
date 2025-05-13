@@ -3,32 +3,54 @@ output "resource_group_name" {
   value       = azurerm_resource_group.main.name
 }
 
-output "aks_cluster_name" {
-  description = "Name of the AKS cluster"
-  value       = azurerm_kubernetes_cluster.main.name
+output "virtual_network_name" {
+  description = "Name of the virtual network"
+  value       = module.network.vnet_id
 }
 
-output "acr_name" {
-  description = "Name of the Azure Container Registry"
-  value       = azurerm_container_registry.main.name
+output "virtual_network_id" {
+  description = "ID of the virtual network"
+  value       = module.network.vnet_id
 }
 
-output "postgresql_server_fqdn" {
-  description = "FQDN of the PostgreSQL Server"
-  value       = azurerm_postgresql_server.main.fqdn
+output "subnet_id" {
+  description = "ID of the subnet"
+  value       = module.network.subnet_id
 }
 
-output "postgresql_database_name" {
-  description = "Name of the PostgreSQL Database"
-  value       = azurerm_postgresql_database.main.name
+output "kubernetes_cluster_name" {
+  description = "Name of the Kubernetes cluster"
+  value       = module.kubernetes.cluster_id
 }
 
-output "application_gateway_public_ip" {
-  description = "Public IP address of the Application Gateway"
-  value       = azurerm_public_ip.agw.ip_address
+output "kubernetes_cluster_id" {
+  description = "ID of the Kubernetes cluster"
+  value       = module.kubernetes.cluster_id
 }
 
-output "load_balancer_public_ip" {
-  description = "Public IP address of the Load Balancer"
-  value       = azurerm_public_ip.lb.ip_address
+output "kube_config" {
+  description = "Kubernetes configuration"
+  value       = module.kubernetes.kube_config
+  sensitive   = true
+}
+
+output "container_registry_name" {
+  description = "Name of the container registry"
+  value       = module.registry.acr_id
+}
+
+output "container_registry_login_server" {
+  description = "Login server of the container registry"
+  value       = module.registry.login_server
+}
+
+output "container_registry_admin_username" {
+  description = "Admin username of the container registry"
+  value       = module.registry.admin_username
+}
+
+output "container_registry_admin_password" {
+  description = "Admin password of the container registry"
+  value       = module.registry.admin_password
+  sensitive   = true
 } 
