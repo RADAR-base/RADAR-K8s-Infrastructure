@@ -1,7 +1,6 @@
 variable "subscription_id" {
   description = "The subscription ID where resources will be created"
   type        = string
-  default     = "65c10e6e-5fcf-43f8-b928-9b2d4167bbd1"
 }
 
 variable "location" {
@@ -25,14 +24,12 @@ variable "project" {
 variable "postgres_admin_username" {
   description = "PostgreSQL administrator username"
   type        = string
-  default     = "psqladmin"
 }
 
 variable "postgres_admin_password" {
   description = "PostgreSQL administrator password"
   type        = string
   sensitive   = true
-  default     = "aVe2irYv"
 }
 
 variable "allowed_devops_ips" {
