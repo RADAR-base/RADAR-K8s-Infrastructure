@@ -53,4 +53,25 @@ output "container_registry_admin_password" {
   description = "Admin password of the container registry"
   value       = module.registry.admin_password
   sensitive   = true
+}
+
+output "postgresql_fqdn" {
+  description = "The FQDN of the PostgreSQL Flexible Server"
+  value       = module.postgresql-flexible-server.fqdn
+}
+
+output "postgresql_instance_id" {
+  description = "The instance ID of the PostgreSQL Flexible Server"
+  value       = module.postgresql-flexible-server.instance_id
+}
+
+output "postgresql_password" {
+  description = "The admin password for the PostgreSQL Flexible Server"
+  value       = module.postgresql-flexible-server.password
+  sensitive   = true
+}
+
+output "postgresql_username" {
+  description = "The admin username for the PostgreSQL Flexible Server"
+  value       = module.postgresql-flexible-server.username
 } 

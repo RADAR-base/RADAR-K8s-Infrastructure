@@ -4,6 +4,7 @@ locals {
     Project     = var.project
     Environment = var.environment
   }
+  location = "northeurope"
 }
 
 # Validate subscription ID
@@ -26,6 +27,7 @@ module "network" {
   environment        = var.environment
   resource_group_name = azurerm_resource_group.main.name
   location           = var.location
+  use_existing_subnet = false  # 由Terraform统一管理子网
   tags               = local.tags
 }
 
@@ -64,4 +66,13 @@ resource "azurerm_role_assignment" "aks_to_acr" {
   role_definition_name            = "AcrPull"
   scope                           = module.registry.acr_id
   skip_service_principal_aad_check = true
-} 
+}
+
+module "postgresql-flexible-server" {
+  source = "./postgresql-flexible-server"
+  environment = var.environment
+  tags = local.tags
+  location = local.location
+  project = var.project
+  resource_group_name = azurerm_resource_group.main.name
+}

@@ -1,6 +1,6 @@
 # Azure Terraform Functionality
 
-This project uses Terraform to automate the deployment of Azure resources, including resource groups, virtual networks, subnets, Azure Kubernetes Service (AKS), and Azure Container Registry (ACR).
+This project uses Terraform to automate the deployment of Azure resources, including resource groups, virtual networks, subnets, Azure Kubernetes Service (AKS), Azure Container Registry (ACR), and PostgreSQL Flexible Server.
 
 ## Directory Structure
 
@@ -19,10 +19,14 @@ azure/
 │   ├── rbac.tf      # Role assignment from AKS to ACR
 │   ├── variables.tf # Kubernetes module variable definitions
 │   └── outputs.tf   # Kubernetes module output definitions
-└── registry/        # Container registry module
-    ├── main.tf      # ACR configuration
-    ├── variables.tf # Container registry module variable definitions
-    └── outputs.tf   # Container registry module output definitions
+├── registry/        # Container registry module
+│   ├── main.tf      # ACR configuration
+│   ├── variables.tf # Container registry module variable definitions
+│   └── outputs.tf   # Container registry module output definitions
+└── postgresql-flexible-server/  # PostgreSQL Flexible Server module
+    ├── main.tf      # PostgreSQL server configuration
+    ├── variables.tf # PostgreSQL module variable definitions
+    └── outputs.tf   # PostgreSQL module output definitions
 ```
 
 ## Functionality
@@ -32,6 +36,12 @@ azure/
 - **AKS Cluster**: Deploys Azure Kubernetes Service, configuring default node pools, network policies, and key vault integration.
 - **ACR**: Creates an Azure Container Registry for storing and managing container images.
 - **Role Assignment**: Assigns the AcrPull role to AKS for ACR, enabling integration between AKS and ACR.
+- **PostgreSQL Flexible Server**: Deploys a PostgreSQL 16 server with the following features:
+  - Private DNS Zone integration
+  - VNet integration
+  - Automatic backup enabled
+  - High availability configuration
+  - Zone redundancy disabled (zone = null)
 
 ## Usage
 
@@ -61,7 +71,8 @@ azure/
 
 - This project only manages Azure resources and does not involve local Kubernetes operations.
 - If you need to manage Kubernetes resources, generate a kubeconfig via CI/CD or remotely and pass it to the provider.
-- All sensitive information (such as ACR passwords and kube_config) is marked as sensitive and will not be displayed in plain text in the output.
+- All sensitive information (such as ACR passwords, kube_config, and PostgreSQL credentials) is marked as sensitive and will not be displayed in plain text in the output.
+- The PostgreSQL server is configured with private networking, so access is only available from within the VNet or through a VPN/Private Link.
 
 ## Outputs
 
@@ -75,4 +86,8 @@ azure/
 - `container_registry_name`: Name of the container registry
 - `container_registry_login_server`: Login server of the container registry
 - `container_registry_admin_username`: Admin username of the container registry
-- `container_registry_admin_password`: Admin password of the container registry (sensitive) 
+- `container_registry_admin_password`: Admin password of the container registry (sensitive)
+- `postgresql_fqdn`: The fully qualified domain name of the PostgreSQL server
+- `postgresql_instance_id`: The instance ID of the PostgreSQL server
+- `postgresql_password`: The administrator password (sensitive)
+- `postgresql_username`: The administrator username 
