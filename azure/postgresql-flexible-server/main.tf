@@ -9,7 +9,8 @@ module "postgresql-flexible-server" {
   resource_group = var.resource_group_name
   zone = null
   psql_version = 16
-  # sku_name = "Standard_B1ms"
+  sku_name = "B_Standard_B1ms"
   ip_rules  = {}
   databases = []
+  administrator_login = var.administrator_login
 } 

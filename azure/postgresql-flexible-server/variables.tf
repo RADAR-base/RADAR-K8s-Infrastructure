@@ -1,15 +1,15 @@
 variable "environment" {
-  description = "Environment value"
+  description = "Environment name"
   type        = string
 }
 
 variable "tags" {
-  description = "A mapping of tags to assign to the resource"
+  description = "Tags to apply to all resources"
   type        = map(string)
 }
 
 variable "location" {
-  description = "Target Azure location to deploy the resource"
+  description = "Azure region where resources will be created"
   type        = string
 }
 
@@ -19,6 +19,12 @@ variable "project" {
 }
 
 variable "resource_group_name" {
-  description = "Name of existing resource group to deploy resources into"
+  description = "Name of the resource group"
   type        = string
+}
+
+variable "administrator_login" {
+  description = "The administrator login name for the PostgreSQL server"
+  type        = string
+  default     = "psqladmin"
 } 
