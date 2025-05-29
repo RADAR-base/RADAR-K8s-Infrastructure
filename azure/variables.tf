@@ -1,7 +1,7 @@
 variable "subscription_id" {
   description = "The subscription ID where resources will be created"
   type        = string
-  default     = "65c10e6e-5fcf-43f8-b928-9b2d4167bbd1"
+  default     = "" # set subscription ID
 }
 
 variable "location" {
