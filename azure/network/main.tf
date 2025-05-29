@@ -7,7 +7,6 @@ resource "azurerm_virtual_network" "main" {
   tags                = var.tags
 }
 
-# 检查现有子网
 data "azurerm_subnet" "existing_main" {
   count                = var.use_existing_subnet ? 1 : 0
   name                 = "${var.project}-${var.environment}-subnet"
@@ -38,7 +37,7 @@ resource "azurerm_subnet" "psql" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = var.subnet_address_prefixes_psql
-  service_endpoints    = ["Microsoft.Storage"]
+  service_endpoints    = ["Microsoft.Storage", "Microsoft.KeyVault"]
 
   delegation {
     name = "fs"

@@ -8,12 +8,8 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = ">= 2.36.0"
     }
-    local = {
-      source  = "hashicorp/local"
-      version = ">= 2.0.0"
-    }
   }
-  required_version = "1.5.7"
+  required_version = ">= 1.5.7, < 2.0.0"
 }
 
 provider "azurerm" {

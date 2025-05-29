@@ -19,7 +19,7 @@ resource "azurerm_resource_group" "main" {
   tags     = local.tags
 }
 
-# 使用网络模块
+# Use network module
 module "network" {
   source = "./network"
 
@@ -27,11 +27,13 @@ module "network" {
   environment        = var.environment
   resource_group_name = azurerm_resource_group.main.name
   location           = var.location
-  use_existing_subnet = false  # 由Terraform统一管理子网
+  use_existing_subnet = false  # Manage subnet with Terraform
   tags               = local.tags
+
+  depends_on = [azurerm_resource_group.main]
 }
 
-# 使用容器注册表模块
+# Use container registry module
 module "registry" {
   source = "./registry"
 
@@ -40,9 +42,11 @@ module "registry" {
   resource_group_name = azurerm_resource_group.main.name
   location           = var.location
   tags               = local.tags
+
+  depends_on = [azurerm_resource_group.main]
 }
 
-# 使用 Kubernetes 模块
+# Use Kubernetes module
 module "kubernetes" {
   source = "./kubernetes"
 
@@ -53,26 +57,27 @@ module "kubernetes" {
   subnet_id          = module.network.subnet_id
   tags               = local.tags
 
-  # ACR 相关变量
+  # ACR related variables
   acr_id             = module.registry.acr_id
   acr_login_server   = module.registry.login_server
   acr_admin_username = module.registry.admin_username
   acr_admin_password = module.registry.admin_password
-}
 
-# AKS 到 ACR 的角色分配
-resource "azurerm_role_assignment" "aks_to_acr" {
-  principal_id                     = module.kubernetes.kubelet_identity[0].object_id
-  role_definition_name            = "AcrPull"
-  scope                           = module.registry.acr_id
-  skip_service_principal_aad_check = true
+  depends_on = [
+    azurerm_resource_group.main,
+    module.network,
+    module.registry
+  ]
 }
 
 module "postgresql-flexible-server" {
   source = "./postgresql-flexible-server"
+  
   environment = var.environment
   tags = local.tags
   location = local.location
   project = var.project
   resource_group_name = azurerm_resource_group.main.name
+
+  depends_on = [azurerm_resource_group.main]
 }
