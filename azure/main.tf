@@ -23,12 +23,12 @@ resource "azurerm_resource_group" "main" {
 module "network" {
   source = "./network"
 
-  project            = var.project
-  environment        = var.environment
+  project             = var.project
+  environment         = var.environment
   resource_group_name = azurerm_resource_group.main.name
-  location           = var.location
-  use_existing_subnet = false  # Manage subnet with Terraform
-  tags               = local.tags
+  location            = var.location
+  use_existing_subnet = false # Manage subnet with Terraform
+  tags                = local.tags
 
   depends_on = [azurerm_resource_group.main]
 }
@@ -37,11 +37,11 @@ module "network" {
 module "registry" {
   source = "./registry"
 
-  project            = var.project
-  environment        = var.environment
+  project             = var.project
+  environment         = var.environment
   resource_group_name = azurerm_resource_group.main.name
-  location           = var.location
-  tags               = local.tags
+  location            = var.location
+  tags                = local.tags
 
   depends_on = [azurerm_resource_group.main]
 }
@@ -50,12 +50,12 @@ module "registry" {
 module "kubernetes" {
   source = "./kubernetes"
 
-  project            = var.project
-  environment        = var.environment
+  project             = var.project
+  environment         = var.environment
   resource_group_name = azurerm_resource_group.main.name
-  location           = var.location
-  subnet_id          = module.network.subnet_id
-  tags               = local.tags
+  location            = var.location
+  subnet_id           = module.network.subnet_id
+  tags                = local.tags
 
   # ACR related variables
   acr_id             = module.registry.acr_id
@@ -72,11 +72,11 @@ module "kubernetes" {
 
 module "postgresql-flexible-server" {
   source = "./postgresql-flexible-server"
-  
-  environment = var.environment
-  tags = local.tags
-  location = local.location
-  project = var.project
+
+  environment         = var.environment
+  tags                = local.tags
+  location            = local.location
+  project             = var.project
   resource_group_name = azurerm_resource_group.main.name
 
   depends_on = [azurerm_resource_group.main]
