@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 1.0.0"
+}
+
 module "postgresql-flexible-server" {
   source  = "data-platform-hq/postgresql-flexible-server/azurerm"
   version = "1.3.0"

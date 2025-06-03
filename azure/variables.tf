@@ -21,13 +21,3 @@ variable "project" {
   type        = string
   default     = "radar-base"
 }
-
-variable "common_tags" {
-  type        = map(string)
-  description = "Common tags associated to resources created"
-  default = {
-    Project     = "radar-base"
-    Environment = "dev"
-    ManagedBy   = "terraform"
-  }
-}

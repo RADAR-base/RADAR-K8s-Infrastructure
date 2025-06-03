@@ -7,11 +7,6 @@ locals {
   location = "northeurope"
 }
 
-# Validate subscription ID
-data "azurerm_subscription" "current" {
-  subscription_id = var.subscription_id
-}
-
 # Resource Group
 resource "azurerm_resource_group" "main" {
   name     = local.resource_group_name
@@ -59,9 +54,6 @@ module "kubernetes" {
 
   # ACR related variables
   acr_id             = module.registry.acr_id
-  acr_login_server   = module.registry.login_server
-  acr_admin_username = module.registry.admin_username
-  acr_admin_password = module.registry.admin_password
 
   depends_on = [
     azurerm_resource_group.main,

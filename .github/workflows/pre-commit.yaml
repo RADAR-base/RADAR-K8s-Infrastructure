@@ -13,13 +13,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.11.0
         with:
           enable-cache: 'true'
 
+      - name: Debug Information
+        run: |
+          devbox version
+          devbox info
+          ls -la
+
+      - name: Setup Devbox
+        run: |
+          devbox install
+          devbox run -- terraform version
+          devbox run -- pre-commit --version
+
       - name: Run pre-commit on all files
         env:
           SKIP: "no-commit-to-branch"
-        run: devbox run -- pre-commit run --verbose --all-files --show-diff-on-failure
+          PRE_COMMIT_HOME: /tmp/pre-commit-cache
+        run: |
+          devbox run -- pre-commit run --verbose --all-files --show-diff-on-failure
