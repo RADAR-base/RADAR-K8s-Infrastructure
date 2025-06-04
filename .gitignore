@@ -41,3 +41,5 @@ terraform.rc
 
 misc/experimental
 .DS_Store
+.idea
+.github
