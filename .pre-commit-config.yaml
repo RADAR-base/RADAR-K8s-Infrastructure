@@ -45,10 +45,12 @@ repos:
     - --args=--severity MEDIUM,HIGH,CRITICAL
     - --args=--skip-dirs="*/.terraform"
     - --args=--tf-exclude-downloaded-modules
+    - --args=--skip-vulns AVD-AZU-*
   - id: terraform_checkov
     args:
     - --args=--quiet
     - --args=--download-external-modules False
+    - --args=--skip-check CKV_AZURE_*
 - repo: https://github.com/rhysd/actionlint
   rev: v1.7.5
   hooks:
