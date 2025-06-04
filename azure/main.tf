@@ -53,7 +53,7 @@ module "kubernetes" {
   tags                = local.tags
 
   # ACR related variables
-  acr_id             = module.registry.acr_id
+  acr_id = module.registry.acr_id
 
   depends_on = [
     azurerm_resource_group.main,

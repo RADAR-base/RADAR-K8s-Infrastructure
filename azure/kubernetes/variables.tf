@@ -63,4 +63,9 @@ variable "tags" {
   description = "Resource tags"
   type        = map(string)
   default     = {}
+}
+
+variable "acr_id" {
+  description = "Azure Container Registry ID"
+  type        = string
 } 
