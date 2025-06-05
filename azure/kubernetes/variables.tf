@@ -24,14 +24,14 @@ variable "kubernetes_version" {
   default     = "1.31.7"
 }
 
-variable "ask_vm_size" {
-  description = "VM size for ASK nodes"
+variable "kubernetes_vm_size" {
+  description = "VM size for Azure kubernetes nodes"
   type        = string
   default     = "Standard_D2s_v3"
 }
 
 variable "subnet_id" {
-  description = "Subnet ID for ASK nodes"
+  description = "Subnet ID for Azure kubernetes nodes"
   type        = string
 }
 

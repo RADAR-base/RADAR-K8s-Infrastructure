@@ -17,4 +17,7 @@ module "postgresql-flexible-server" {
   ip_rules            = {}
   databases           = []
   administrator_login = var.administrator_login
+
+  #checkov:skip=CKV_TF_1: This is implicitly guranateed and public access is blocked for Azure's ASK
+
 }

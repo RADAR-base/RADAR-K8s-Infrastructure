@@ -8,7 +8,7 @@ terraform {
   }
 }
 
-# ASK Cluster
+# Azure kubernetes Cluster
 resource "azurerm_kubernetes_cluster" "main" {
   name                = "${var.project}-${var.environment}-ask"
   location            = var.location
@@ -19,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   default_node_pool {
     name           = "default"
-    vm_size        = var.ask_vm_size
+    vm_size        = var.kubernetes_vm_size
     vnet_subnet_id = var.subnet_id
     node_count     = var.node_count
   }
@@ -58,8 +58,6 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   tags = var.tags
 
-  #checkov:skip=CKV_AZURE_170,CKV_AZURE_141,CKV_AZURE_115,CKV_AZURE_117,CKV_AZURE_232,CKV_AZURE_226: ignore check
-  #checkov:skip=CKV_AZURE_116,CKV_AZURE_6,CKV_AZURE_171,CKV_AZURE_168,CKV_AZURE_4,CKV_AZURE_227: ignore check
-  #checkov:skip=CKV_TF_1,CKV_AZURE_237,CKV_AZURE_233,CKV_AZURE_167,CKV_AZURE_137,CKV_AZURE_164: ignore check
-  #checkov:skip=CKV_AZURE_165,CKV_AZURE_166,CKV_AZURE_139: ignore check
+  #checkov:skip=CKV_AZURE_115,CKV_AZURE_116,CKV_AZURE_117,CKV_AZURE_226,CKV_AZURE_232,CKV_AZURE_141,CKV_AZURE_168,CKV_AZURE_170,CKV_AZURE_171,CKV_AZURE_227: This is implicitly guranateed and public access is blocked for Azure Kubernetes Service
+
 }

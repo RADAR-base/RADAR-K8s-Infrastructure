@@ -38,6 +38,8 @@ resource "azurerm_subnet" "main" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = var.subnet_address_prefixes
+
+  #checkov:skip=CKV2_AZURE_31: This is implicitly guranateed and public access is blocked for Azure's VNET
 }
 
 # Subnet psql
@@ -58,4 +60,7 @@ resource "azurerm_subnet" "psql" {
       ]
     }
   }
+
+  #checkov:skip=CKV2_AZURE_31: This is implicitly guranateed and public access is blocked for Azure's VNET
+
 }
