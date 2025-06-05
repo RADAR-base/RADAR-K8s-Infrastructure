@@ -10,9 +10,9 @@ output "radar_base_eks_cluster_kms_key_arn" {
   value = module.eks.kms_key_arn
 }
 
-output "assume_eks_admins_role" {
+output "radar_base_eks_admins_role" {
   description = "EKS admin role ARN"
-  value       = module.allow_assume_eks_admins_iam_policy.arn
+  value       = module.eks_admins_iam_role.iam_role_arn
 }
 
 output "radar_base_eks_dmz_node_group_name" {
