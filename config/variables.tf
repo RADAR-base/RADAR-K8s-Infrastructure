@@ -99,8 +99,7 @@ variable "kafka_version" {
 
 variable "postgres_version" {
   type    = string
-  default = "13.14"
-
+  default = "13.16"
 }
 
 variable "karpenter_version" {
