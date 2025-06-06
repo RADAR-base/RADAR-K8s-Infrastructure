@@ -10,12 +10,12 @@ terraform {
 
 # Azure kubernetes Cluster
 resource "azurerm_kubernetes_cluster" "main" {
-  name                = "${var.project}-${var.environment}-ask"
+  name                = "${var.project}-${var.environment}-Kubernetes"
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = "${var.project}-${var.environment}"
   kubernetes_version  = var.kubernetes_version
-  node_resource_group = "${var.project}-${var.environment}-ask-resources"
+  node_resource_group = "${var.project}-${var.environment}-Kubernetes-resources"
 
   default_node_pool {
     name           = "default"
