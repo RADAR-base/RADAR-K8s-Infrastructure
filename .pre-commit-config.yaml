@@ -22,7 +22,8 @@ repos:
     exclude: |
       (?x)^(
         config/README.md|
-        cluster/README.md
+        cluster/README.md|
+        azure/README.md
       )$
   - id: mixed-line-ending
   - id: check-yaml
