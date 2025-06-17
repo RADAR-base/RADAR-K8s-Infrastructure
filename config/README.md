@@ -14,7 +14,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | 2.7.1 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.99.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.11.0 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 1.14.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.24.0 |
@@ -33,6 +33,7 @@
 |------|------|
 | [aws_cloudwatch_log_group.msk_broker](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_db_instance.radar_postgres](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance) | resource |
+| [aws_db_instance.radar_postgres_replicas](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance) | resource |
 | [aws_db_subnet_group.rds_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_ecr_pull_through_cache_rule.dockerhub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_pull_through_cache_rule) | resource |
 | [aws_ecr_repository_creation_template.dockerhub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository_creation_template) | resource |
@@ -123,16 +124,18 @@
 | <a name="input_enable_msk"></a> [enable\_msk](#input\_enable\_msk) | Do you need MSK? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_msk_logging"></a> [enable\_msk\_logging](#input\_enable\_msk\_logging) | Do you need logging on MSK brokers? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_rds"></a> [enable\_rds](#input\_enable\_rds) | Do you need RDS? [true, false] | `bool` | n/a | yes |
+| <a name="input_enable_rds_multi_az"></a> [enable\_rds\_multi\_az](#input\_enable\_rds\_multi\_az) | Do you need RDS Multi-AZ? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_route53"></a> [enable\_route53](#input\_enable\_route53) | Do you need Route53? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_s3"></a> [enable\_s3](#input\_enable\_s3) | Do you need S3? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_ses"></a> [enable\_ses](#input\_enable\_ses) | Do you need SES? [true, false] | `bool` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name | `string` | `"dev"` | no |
 | <a name="input_instance_capacity_type"></a> [instance\_capacity\_type](#input\_instance\_capacity\_type) | Capacity type used by EKS managed node groups | `string` | `"SPOT"` | no |
-| <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | n/a | `string` | `"3.2.0"` | no |
-| <a name="input_karpenter_version"></a> [karpenter\_version](#input\_karpenter\_version) | n/a | `string` | `"v0.29.0"` | no |
-| <a name="input_kubernetes_dashboard_version"></a> [kubernetes\_dashboard\_version](#input\_kubernetes\_dashboard\_version) | n/a | `string` | `"7.3.2"` | no |
-| <a name="input_metrics_server_version"></a> [metrics\_server\_version](#input\_metrics\_server\_version) | n/a | `string` | `"3.12.1"` | no |
-| <a name="input_postgres_version"></a> [postgres\_version](#input\_postgres\_version) | n/a | `string` | `"13.16"` | no |
+| <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | Version of the Kafka to be used for MSK | `string` | `"3.2.0"` | no |
+| <a name="input_karpenter_version"></a> [karpenter\_version](#input\_karpenter\_version) | Version of Karpenter to be used for auto scaling | `string` | `"v0.29.0"` | no |
+| <a name="input_kubernetes_dashboard_version"></a> [kubernetes\_dashboard\_version](#input\_kubernetes\_dashboard\_version) | Version of the Kubernetes Dashboard | `string` | `"7.3.2"` | no |
+| <a name="input_metrics_server_version"></a> [metrics\_server\_version](#input\_metrics\_server\_version) | Version of the Metrics Server | `string` | `"3.12.1"` | no |
+| <a name="input_postgres_read_replicas"></a> [postgres\_read\_replicas](#input\_postgres\_read\_replicas) | Number of PostgreSQL read replicas if needed | `number` | `0` | no |
+| <a name="input_postgres_version"></a> [postgres\_version](#input\_postgres\_version) | Version of the PostgreSQL to be used for RDS | `string` | `"13.16"` | no |
 | <a name="input_radar_postgres_password"></a> [radar\_postgres\_password](#input\_radar\_postgres\_password) | Password for the PostgreSQL database used by Radar components | `string` | n/a | yes |
 | <a name="input_ses_bounce_destinations"></a> [ses\_bounce\_destinations](#input\_ses\_bounce\_destinations) | List of email addresses for receiving bounced email notifications | `list(string)` | `[]` | no |
 | <a name="input_with_dmz_pods"></a> [with\_dmz\_pods](#input\_with\_dmz\_pods) | Whether or not to utilise the DMZ node group if it exists | `bool` | `false` | no |
@@ -150,10 +153,19 @@
 | <a name="output_radar_base_rds_appserver_password"></a> [radar\_base\_rds\_appserver\_password](#output\_radar\_base\_rds\_appserver\_password) | n/a |
 | <a name="output_radar_base_rds_appserver_port"></a> [radar\_base\_rds\_appserver\_port](#output\_radar\_base\_rds\_appserver\_port) | n/a |
 | <a name="output_radar_base_rds_appserver_username"></a> [radar\_base\_rds\_appserver\_username](#output\_radar\_base\_rds\_appserver\_username) | n/a |
+| <a name="output_radar_base_rds_hydra_host"></a> [radar\_base\_rds\_hydra\_host](#output\_radar\_base\_rds\_hydra\_host) | n/a |
+| <a name="output_radar_base_rds_hydra_password"></a> [radar\_base\_rds\_hydra\_password](#output\_radar\_base\_rds\_hydra\_password) | n/a |
+| <a name="output_radar_base_rds_hydra_port"></a> [radar\_base\_rds\_hydra\_port](#output\_radar\_base\_rds\_hydra\_port) | n/a |
+| <a name="output_radar_base_rds_hydra_username"></a> [radar\_base\_rds\_hydra\_username](#output\_radar\_base\_rds\_hydra\_username) | n/a |
+| <a name="output_radar_base_rds_kratos_host"></a> [radar\_base\_rds\_kratos\_host](#output\_radar\_base\_rds\_kratos\_host) | n/a |
+| <a name="output_radar_base_rds_kratos_password"></a> [radar\_base\_rds\_kratos\_password](#output\_radar\_base\_rds\_kratos\_password) | n/a |
+| <a name="output_radar_base_rds_kratos_port"></a> [radar\_base\_rds\_kratos\_port](#output\_radar\_base\_rds\_kratos\_port) | n/a |
+| <a name="output_radar_base_rds_kratos_username"></a> [radar\_base\_rds\_kratos\_username](#output\_radar\_base\_rds\_kratos\_username) | n/a |
 | <a name="output_radar_base_rds_managementportal_host"></a> [radar\_base\_rds\_managementportal\_host](#output\_radar\_base\_rds\_managementportal\_host) | n/a |
 | <a name="output_radar_base_rds_managementportal_password"></a> [radar\_base\_rds\_managementportal\_password](#output\_radar\_base\_rds\_managementportal\_password) | n/a |
 | <a name="output_radar_base_rds_managementportal_port"></a> [radar\_base\_rds\_managementportal\_port](#output\_radar\_base\_rds\_managementportal\_port) | n/a |
 | <a name="output_radar_base_rds_managementportal_username"></a> [radar\_base\_rds\_managementportal\_username](#output\_radar\_base\_rds\_managementportal\_username) | n/a |
+| <a name="output_radar_base_rds_replicas_info"></a> [radar\_base\_rds\_replicas\_info](#output\_radar\_base\_rds\_replicas\_info) | n/a |
 | <a name="output_radar_base_rds_rest_sources_auth_host"></a> [radar\_base\_rds\_rest\_sources\_auth\_host](#output\_radar\_base\_rds\_rest\_sources\_auth\_host) | n/a |
 | <a name="output_radar_base_rds_rest_sources_auth_password"></a> [radar\_base\_rds\_rest\_sources\_auth\_password](#output\_radar\_base\_rds\_rest\_sources\_auth\_password) | n/a |
 | <a name="output_radar_base_rds_rest_sources_auth_port"></a> [radar\_base\_rds\_rest\_sources\_auth\_port](#output\_radar\_base\_rds\_rest\_sources\_auth\_port) | n/a |

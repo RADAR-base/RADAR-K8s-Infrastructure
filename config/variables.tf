@@ -83,28 +83,39 @@ variable "instance_capacity_type" {
 }
 
 variable "metrics_server_version" {
-  type    = string
-  default = "3.12.1"
+  type        = string
+  description = "Version of the Metrics Server"
+  default     = "3.12.1"
 }
 
 variable "kubernetes_dashboard_version" {
-  type    = string
-  default = "7.3.2"
+  type        = string
+  description = "Version of the Kubernetes Dashboard"
+  default     = "7.3.2"
 }
 
 variable "kafka_version" {
-  type    = string
-  default = "3.2.0"
+  type        = string
+  description = "Version of the Kafka to be used for MSK"
+  default     = "3.2.0"
 }
 
 variable "postgres_version" {
-  type    = string
-  default = "13.16"
+  type        = string
+  description = "Version of the PostgreSQL to be used for RDS"
+  default     = "13.16"
+}
+
+variable "postgres_read_replicas" {
+  type        = number
+  default     = 0
+  description = "Number of PostgreSQL read replicas if needed"
 }
 
 variable "karpenter_version" {
-  type    = string
-  default = "v0.29.0"
+  type        = string
+  description = "Version of Karpenter to be used for auto scaling"
+  default     = "v0.29.0"
 }
 
 variable "radar_postgres_password" {
@@ -159,6 +170,11 @@ variable "enable_rds" {
     condition     = (!var.enable_rds) || (var.enable_rds && length(var.radar_postgres_password) > 0)
     error_message = "Enabling RDS requires 'radar_postgres_password' to be set."
   }
+}
+
+variable "enable_rds_multi_az" {
+  type        = bool
+  description = "Do you need RDS Multi-AZ? [true, false]"
 }
 
 variable "enable_route53" {
