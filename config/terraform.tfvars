@@ -8,6 +8,7 @@ enable_karpenter        = false
 enable_msk              = false
 enable_msk_logging      = false
 enable_rds              = false
+enable_rds_multi_az     = false
 enable_route53          = false
 enable_ses              = false
 enable_s3               = false
