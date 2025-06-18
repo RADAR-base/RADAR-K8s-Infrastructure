@@ -71,15 +71,39 @@ variable "ses_bounce_destinations" {
   default     = []
 }
 
-variable "instance_capacity_type" {
+variable "karpenter_version" {
   type        = string
-  description = "Capacity type used by EKS managed node groups"
-  default     = "SPOT"
+  description = "Version of Karpenter to be used for auto scaling"
+  default     = "1.3.3"
+}
+
+variable "karpenter_instance_capacity_type" {
+  type        = string
+  description = "Capacity type used by Karpenter node pools"
+  default     = "spot"
 
   validation {
-    condition     = var.instance_capacity_type == "ON_DEMAND" || var.instance_capacity_type == "SPOT"
-    error_message = "Invalid instance capacity type. Allowed values are 'ON_DEMAND' or 'SPOT'."
+    condition     = var.karpenter_instance_capacity_type == "on-demand" || var.karpenter_instance_capacity_type == "spot" || var.karpenter_instance_capacity_type == "reserved"
+    error_message = "Invalid instance capacity type. Allowed values are 'on-demand', 'spot' or 'reserved'."
   }
+}
+
+variable "karpenter_instance_category" {
+  type        = list(string)
+  description = "Instance category used by Karpenter node pools"
+  default     = ["c", "m", "r"]
+}
+
+variable "karpenter_instance_cpu" {
+  type        = list(string)
+  description = "Instance CPU used by Karpenter node pools"
+  default     = ["2", "4", "8"]
+}
+
+variable "karpenter_ami_selector_alias" {
+  type        = string
+  description = "Selector alias for the AMI used by Karpenter EC2 node class"
+  default     = "al2023@v20240807"
 }
 
 variable "metrics_server_version" {
@@ -103,19 +127,13 @@ variable "kafka_version" {
 variable "postgres_version" {
   type        = string
   description = "Version of the PostgreSQL to be used for RDS"
-  default     = "13.16"
+  default     = "13.20"
 }
 
 variable "postgres_read_replicas" {
   type        = number
   default     = 0
   description = "Number of PostgreSQL read replicas if needed"
-}
-
-variable "karpenter_version" {
-  type        = string
-  description = "Version of Karpenter to be used for auto scaling"
-  default     = "v0.29.0"
 }
 
 variable "radar_postgres_password" {
