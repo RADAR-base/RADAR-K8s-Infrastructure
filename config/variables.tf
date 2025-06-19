@@ -72,38 +72,56 @@ variable "ses_bounce_destinations" {
 }
 
 variable "karpenter_version" {
-  type        = string
-  description = "Version of Karpenter to be used for auto scaling"
-  default     = "1.3.3"
-}
-
-variable "karpenter_instance_capacity_type" {
-  type        = string
-  description = "Capacity type used by Karpenter node pools"
-  default     = "spot"
-
-  validation {
-    condition     = var.karpenter_instance_capacity_type == "on-demand" || var.karpenter_instance_capacity_type == "spot" || var.karpenter_instance_capacity_type == "reserved"
-    error_message = "Invalid instance capacity type. Allowed values are 'on-demand', 'spot' or 'reserved'."
-  }
-}
-
-variable "karpenter_instance_category" {
-  type        = list(string)
-  description = "Instance category used by Karpenter node pools"
-  default     = ["c", "m", "r"]
-}
-
-variable "karpenter_instance_cpu" {
-  type        = list(string)
-  description = "Instance CPU used by Karpenter node pools"
-  default     = ["2", "4", "8"]
+  type    = string
+  default = "1.3.3"
 }
 
 variable "karpenter_ami_selector_alias" {
   type        = string
   description = "Selector alias for the AMI used by Karpenter EC2 node class"
   default     = "al2023@v20240807"
+}
+
+variable "karpenter_node_pools" {
+  type = map(object({
+    architecture           = list(string)
+    os                     = list(string)
+    instance_capacity_type = list(string)
+    instance_category      = list(string)
+    instance_cpu           = list(string)
+  }))
+  description = "Configuration for the Karpenter node pool(s) with each key being the node pool name"
+  default     = {}
+
+  # Exemplary value for karpenter_node_pools:
+  # {
+  #   default = {
+  #     architecture           = ["amd64"]
+  #     instance_capacity_type = ["spot"]
+  #     instance_category      = ["c", "m", "r"]
+  #     instance_cpu           = ["2", "4", "8"]
+  #     os                     = ["linux"]
+  #   },
+  #   on-demand = {
+  #     architecture           = ["amd64"]
+  #     instance_capacity_type = ["on-demand"]
+  #     instance_category      = ["c", "m", "r"]
+  #     instance_cpu           = ["2", "4", "8"]
+  #     os                     = ["linux"]
+  #   }
+  # }
+
+  validation {
+    condition = alltrue([
+      for np_name, np_config in var.karpenter_node_pools :
+      alltrue([
+        for capacity_type in np_config.instance_capacity_type :
+        contains(["spot", "on-demand", "reserved"], capacity_type)
+      ])
+    ])
+
+    error_message = "Invalid instance capacity type. Allowed values are 'on-demand', 'spot' or 'reserved'."
+  }
 }
 
 variable "metrics_server_version" {

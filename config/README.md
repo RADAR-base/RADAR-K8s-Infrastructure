@@ -132,10 +132,8 @@
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name | `string` | `"dev"` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | Version of the Kafka to be used for MSK | `string` | `"3.2.0"` | no |
 | <a name="input_karpenter_ami_selector_alias"></a> [karpenter\_ami\_selector\_alias](#input\_karpenter\_ami\_selector\_alias) | Selector alias for the AMI used by Karpenter EC2 node class | `string` | `"al2023@v20240807"` | no |
-| <a name="input_karpenter_instance_capacity_type"></a> [karpenter\_instance\_capacity\_type](#input\_karpenter\_instance\_capacity\_type) | Capacity type used by Karpenter node pools | `string` | `"spot"` | no |
-| <a name="input_karpenter_instance_category"></a> [karpenter\_instance\_category](#input\_karpenter\_instance\_category) | Instance category used by Karpenter node pools | `list(string)` | <pre>[<br/>  "c",<br/>  "m",<br/>  "r"<br/>]</pre> | no |
-| <a name="input_karpenter_instance_cpu"></a> [karpenter\_instance\_cpu](#input\_karpenter\_instance\_cpu) | Instance CPU used by Karpenter node pools | `list(string)` | <pre>[<br/>  "2",<br/>  "4",<br/>  "8"<br/>]</pre> | no |
-| <a name="input_karpenter_version"></a> [karpenter\_version](#input\_karpenter\_version) | Version of Karpenter to be used for auto scaling | `string` | `"1.3.3"` | no |
+| <a name="input_karpenter_node_pools"></a> [karpenter\_node\_pools](#input\_karpenter\_node\_pools) | Configuration for the Karpenter node pool(s) with each key being the node pool name | <pre>map(object({<br/>    architecture           = list(string)<br/>    os                     = list(string)<br/>    instance_capacity_type = list(string)<br/>    instance_category      = list(string)<br/>    instance_cpu           = list(string)<br/>  }))</pre> | `{}` | no |
+| <a name="input_karpenter_version"></a> [karpenter\_version](#input\_karpenter\_version) | n/a | `string` | `"1.3.3"` | no |
 | <a name="input_kubernetes_dashboard_version"></a> [kubernetes\_dashboard\_version](#input\_kubernetes\_dashboard\_version) | Version of the Kubernetes Dashboard | `string` | `"7.3.2"` | no |
 | <a name="input_metrics_server_version"></a> [metrics\_server\_version](#input\_metrics\_server\_version) | Version of the Metrics Server | `string` | `"3.12.1"` | no |
 | <a name="input_postgres_read_replicas"></a> [postgres\_read\_replicas](#input\_postgres\_read\_replicas) | Number of PostgreSQL read replicas if needed | `number` | `0` | no |

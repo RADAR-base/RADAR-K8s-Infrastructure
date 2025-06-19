@@ -18,7 +18,7 @@ module "karpenter" {
 }
 
 locals {
-  common_settings_v1 = [
+  common_settings = [
     {
       name  = "settings.clusterName"
       value = data.aws_eks_cluster.main.id
@@ -57,11 +57,11 @@ locals {
     },
     {
       name  = "replicas"
-      value = 2
+      value = 1
     },
   ]
 
-  tolerations_settings_v1 = [
+  tolerations_settings = [
     {
       name  = "tolerations[0].key"
       value = "dmz-pod"
@@ -95,7 +95,7 @@ resource "helm_release" "karpenter" {
 
 
   dynamic "set" {
-    for_each = var.with_dmz_pods ? concat(local.common_settings_v1, local.tolerations_settings_v1) : local.common_settings_v1
+    for_each = var.with_dmz_pods ? concat(local.common_settings, local.tolerations_settings) : local.common_settings
 
     content {
       name  = set.value.name
@@ -126,13 +126,13 @@ resource "helm_release" "karpenter_crd" {
 }
 
 resource "kubectl_manifest" "karpenter_node_pool" {
-  count = var.enable_karpenter ? 1 : 0
+  for_each = var.enable_karpenter ? var.karpenter_node_pools : {}
 
   yaml_body = yamlencode({
     apiVersion = "karpenter.sh/v1"
     kind       = "NodePool"
     metadata = {
-      name = "default"
+      name = each.key
     }
     spec = {
       template = {
@@ -142,36 +142,32 @@ resource "kubectl_manifest" "karpenter_node_pool" {
               {
                 key      = "kubernetes.io/arch"
                 operator = "In"
-                values   = ["amd64"]
+                values   = each.value.architecture
               },
               {
                 key      = "kubernetes.io/os"
                 operator = "In"
-                values   = ["linux"]
+                values   = each.value.os
               },
               {
                 key      = "karpenter.sh/capacity-type"
                 operator = "In"
-                values   = [var.karpenter_instance_capacity_type]
+                values   = each.value.instance_capacity_type
               },
               {
                 key      = "karpenter.k8s.aws/instance-category"
                 operator = "In"
-                values   = var.karpenter_instance_category
+                values   = each.value.instance_category
               },
               {
                 key      = "karpenter.k8s.aws/instance-cpu"
                 operator = "In"
-                values   = var.karpenter_instance_cpu
+                values   = each.value.instance_cpu
               },
               {
                 key      = "topology.kubernetes.io/zone"
                 operator = "In"
-                values = [
-                  "${var.AWS_REGION}a",
-                  # "${var.AWS_REGION}b",
-                  # "${var.AWS_REGION}c",
-                ]
+                values   = local.worker_node_zones
               },
             ],
           )
