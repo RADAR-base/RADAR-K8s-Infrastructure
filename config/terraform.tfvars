@@ -2,6 +2,7 @@ AWS_REGION              = "eu-west-2"
 environment             = "dev"
 domain_name             = {} # Pair of top level domain and hosted zone ID for deployed applications, e.g., { "radar-base.org" : "ZABCDEFGHIJKLMNOPQRST" }
 ses_bounce_destinations = [] # List of email addresses for receiving bounced email notifications, e.g., [ "first.last@radar-base.org" ]
+karpenter_node_pools    = {} # Map of Karpenter node pools configuration, see the value schema and example in variables.tf
 with_dmz_pods           = false
 enable_metrics          = false
 enable_karpenter        = false

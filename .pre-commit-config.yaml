@@ -44,7 +44,7 @@ repos:
     args:
     - --hook-config=--parallelism-limit=1
     - --args=--severity MEDIUM,HIGH,CRITICAL
-    - --args=--skip-dirs="*/.terraform"
+    - --args=--skip-dirs="**.terraform"
     - --args=--tf-exclude-downloaded-modules
   - id: terraform_checkov
     args:

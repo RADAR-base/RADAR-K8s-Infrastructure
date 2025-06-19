@@ -77,4 +77,8 @@ locals {
     for name in keys(data.aws_eks_node_group.main) : data.aws_eks_node_group.main[name] if startswith(name, "worker-${var.eks_cluster_name}-")
   ][0] # There is only one worker node group so be this
 
+  worker_node_zones = [
+    for subnet in data.aws_subnet.private_subnet :
+    subnet.availability_zone if contains(local.worker_node_group.subnet_ids, subnet.id)
+  ]
 }
