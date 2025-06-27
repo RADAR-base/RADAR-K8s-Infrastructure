@@ -76,10 +76,10 @@ variable "karpenter_version" {
   default = "1.3.3"
 }
 
-variable "karpenter_ami_selector_alias" {
+variable "karpenter_ami_version_alias" {
   type        = string
-  description = "Selector alias for the AMI used by Karpenter EC2 node class"
-  default     = "al2023@v20240807"
+  description = "Selector alias for the AMI version used by Karpenter EC2 node class"
+  default     = "al2023@v20250519"
 }
 
 variable "karpenter_node_pools" {

@@ -218,7 +218,7 @@ resource "kubectl_manifest" "karpenter_node_class" {
         },
       ]
       amiSelectorTerms = [{
-        alias = var.karpenter_ami_selector_alias
+        alias = var.karpenter_ami_version_alias
       }]
       subnetSelectorTerms = [
         {
