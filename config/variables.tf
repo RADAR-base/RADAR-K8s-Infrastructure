@@ -71,14 +71,56 @@ variable "ses_bounce_destinations" {
   default     = []
 }
 
-variable "instance_capacity_type" {
+variable "karpenter_version" {
+  type    = string
+  default = "1.3.3"
+}
+
+variable "karpenter_ami_version_alias" {
   type        = string
-  description = "Capacity type used by EKS managed node groups"
-  default     = "SPOT"
+  description = "Selector alias for the AMI version used by Karpenter EC2 node class"
+  default     = "al2023@v20250519"
+}
+
+variable "karpenter_node_pools" {
+  type = map(object({
+    architecture           = list(string)
+    os                     = list(string)
+    instance_capacity_type = list(string)
+    instance_category      = list(string)
+    instance_cpu           = list(string)
+  }))
+  description = "Configuration for the Karpenter node pool(s) with each key being the node pool name"
+  default     = {}
+
+  # Exemplary value for karpenter_node_pools:
+  # {
+  #   default = {
+  #     architecture           = ["amd64"]
+  #     instance_capacity_type = ["spot"]
+  #     instance_category      = ["c", "m", "r"]
+  #     instance_cpu           = ["2", "4", "8"]
+  #     os                     = ["linux"]
+  #   },
+  #   on-demand = {
+  #     architecture           = ["amd64"]
+  #     instance_capacity_type = ["on-demand"]
+  #     instance_category      = ["c", "m", "r"]
+  #     instance_cpu           = ["2", "4", "8"]
+  #     os                     = ["linux"]
+  #   }
+  # }
 
   validation {
-    condition     = var.instance_capacity_type == "ON_DEMAND" || var.instance_capacity_type == "SPOT"
-    error_message = "Invalid instance capacity type. Allowed values are 'ON_DEMAND' or 'SPOT'."
+    condition = alltrue([
+      for np_name, np_config in var.karpenter_node_pools :
+      alltrue([
+        for capacity_type in np_config.instance_capacity_type :
+        contains(["spot", "on-demand", "reserved"], capacity_type)
+      ])
+    ])
+
+    error_message = "Invalid instance capacity type. Allowed values are 'on-demand', 'spot' or 'reserved'."
   }
 }
 
@@ -103,19 +145,13 @@ variable "kafka_version" {
 variable "postgres_version" {
   type        = string
   description = "Version of the PostgreSQL to be used for RDS"
-  default     = "13.16"
+  default     = "13.20"
 }
 
 variable "postgres_read_replicas" {
   type        = number
   default     = 0
   description = "Number of PostgreSQL read replicas if needed"
-}
-
-variable "karpenter_version" {
-  type        = string
-  description = "Version of Karpenter to be used for auto scaling"
-  default     = "v0.29.0"
 }
 
 variable "radar_postgres_password" {
