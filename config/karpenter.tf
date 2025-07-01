@@ -211,10 +211,10 @@ resource "kubectl_manifest" "karpenter_node_class" {
         {
           deviceName = "/dev/xvda"
           ebs = {
-            volumeSize = "40Gi"
-            volumeType = "gp3"
+            volumeSize          = "40Gi"
+            volumeType          = "gp3"
+            deleteOnTermination = true
           }
-          deleteOnTermination = true
         },
       ]
       amiSelectorTerms = [{
