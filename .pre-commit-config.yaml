@@ -21,8 +21,8 @@ repos:
   - id: end-of-file-fixer
     exclude: |
       (?x)^(
-        config/README.md|
-        cluster/README.md|
+        aws/config/README.md|
+        aws/cluster/README.md|
         azure/README.md
       )$
   - id: mixed-line-ending
@@ -44,7 +44,7 @@ repos:
     args:
     - --hook-config=--parallelism-limit=1
     - --args=--severity MEDIUM,HIGH,CRITICAL
-    - --args=--skip-dirs="**.terraform"
+    - --args=--skip-dirs=.terraform
     - --args=--tf-exclude-downloaded-modules
   - id: terraform_checkov
     args:
@@ -57,27 +57,27 @@ repos:
 - repo: local
   hooks:
   - id: update-terraform-modules-cluster
-    name: Update terraform modules for the Terraform cluster/
+    name: Update terraform modules for the Terraform aws/cluster/
     language: system
-    entry: terraform -chdir=cluster init -upgrade
+    entry: terraform -chdir=aws/cluster init -upgrade
     pass_filenames: false
   - id: terraform-docs-cluster
-    name: Generate docs for the Terraform cluster/
+    name: Generate docs for the Terraform aws/cluster/
     language: system
-    entry: terraform-docs markdown table cluster/
+    entry: terraform-docs markdown table aws/cluster/
     pass_filenames: false
-    files: 'cluster/'
+    files: 'aws/cluster/'
   - id: update-terraform-modules-config
-    name: Update terraform modules for the Terraform config/
+    name: Update terraform modules for the Terraform aws/config/
     language: system
-    entry: terraform -chdir=config init -upgrade
+    entry: terraform -chdir=aws/config init -upgrade
     pass_filenames: false
   - id: terraform-docs-config
-    name: Generate docs for the Terraform config/
+    name: Generate docs for the Terraform aws/config/
     language: system
-    entry: terraform-docs markdown table config/
+    entry: terraform-docs markdown table aws/config/
     pass_filenames: false
-    files: 'config/'
+    files: 'aws/config/'
   - id: gitleaks
     name: Run Gitleaks
     language: system
