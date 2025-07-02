@@ -1,6 +1,6 @@
 # RADAR-K8s-Infrastructure
 
-This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) templates for [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes) users who intend to deploy the platform to Kubernetes clusters supported by cloud providers such as [AWS](https://aws.amazon.com/eks/).
+This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) templates for [RADAR-Kubernetes](https://github.com/RADAR-base/RADAR-Kubernetes) users who intend to deploy the platform to Kubernetes clusters supported by cloud providers such as [AWS](https://aws.amazon.com/eks/) and [Azure](https://azure.microsoft.com).
 
 ---
 
@@ -35,12 +35,14 @@ It is recommended that you use RADAR-K8s-Infrastructure as a template and create
 
 ## Workspaces
 
-The definition of resources required for running RADAR-base components is located in the `cluster` directory, while other optional resources are defined in the `config` directory. Please treat each directory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and made fully available before you proceed with the creation of the `config` ones.
+To run RADAR-base components on AWS, the definition of required resources is located in the `aws/cluster` directory, while other optional resources are defined in the `aws/config` directory. Please treat each subdirectory as a separate workspace and perform terraform operations individually. The `cluster` resources need to be created and made fully available before you proceed with the creation of the `config` ones.
 
 To retain the user-specific configurations for future infrastructure updates, modify `terraform.tfvars` within the workspace and push the change to your repository. If needed, additional variables defined in `variables.tf` can also be included there.
 | :information_source: Important Notice |
 |:----------------------------------------|
-|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destroy` to delete all the associated resources and reduce your cloud spending. If you have resources created within `config`, run `terraform destroy` in that directory before running the counterpart in `cluster`.|
+|As a best practice, never save raw values of secret variables in your repository. Instead, always encrypt them before committing. If your cluster is no longer in use, run `terraform destroy` to delete all the associated resources and reduce your cloud spending. If you have resources created within `aws/config`, run `terraform destroy` in that directory before running the counterpart in `aws/cluster`.|
+
+To run RADAR-base components on Azure, you need a single workspace located in the `azure` directory. Please refer to [READMEs](azure/README.md) inside that directory and its subdirectories for more details.
 
 ## Configure credentials
 
@@ -55,7 +57,7 @@ export TF_VAR_AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 ## Create the infrastructure
 
 ```
-cd cluster
+cd aws/cluster
 ```
 
 ```
@@ -123,16 +125,16 @@ You could also automate this value injection by implementing your own templating
 
 ## Configure the cluster (optional)
 
-N.B.: To get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to configure your registered top-level domain and its corresponding hosted zone ID via variable `domain_name` in [config/terraform.tfvars](./config/terraform.tfvars). Additionally, set `enable_route53` to `true`.
+N.B.: To get external DNS, Cert Manager and SMTP working via Route 53 (if chosen as your DNS service), you need to configure your registered top-level domain and its corresponding hosted zone ID via variable `domain_name` in [aws/config/terraform.tfvars](./aws/config/terraform.tfvars). Additionally, set `enable_route53` to `true`.
 
 ```
-cd config
+cd aws/config
 terraform init
 terraform plan
 terraform apply --auto-approve
 ```
 
-Optional resource creations are disabled by default. To enable the creation of a specific resource named `X`, navigate to [config/terraform.tfvars](./config/terraform.tfvars) and update the value of `enable_X` to `true` before applying the template.
+Optional resource creations are disabled by default. To enable the creation of a specific resource named `X`, navigate to [aws/config/terraform.tfvars](./aws/config/terraform.tfvars) and update the value of `enable_X` to `true` before applying the template.
 
 Created resources (if all enabled):
 
@@ -157,7 +159,7 @@ devbox shell
 
 To download all of the dependencies and install to Git hooks to lint the configuration before it is committed.
 
-In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatibility with running `aws eks describe-addons-versions` and then searching for the addons that are defined in [cluster/data.tf](./cluster/data.tf).
+In order to support new version of EKS you need to make sure the addons that we use are compatible with the new target version. You can get a list of addons and their EKS compatibility with running `aws eks describe-addons-versions` and then searching for the addons that are defined in [aws/cluster/data.tf](./aws/cluster/data.tf).
 
 This project also uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) to have a standardized commit message. Please have a look and make sure your commit message follows that.
 
