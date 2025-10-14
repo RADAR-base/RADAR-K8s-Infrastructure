@@ -38,6 +38,7 @@ locals {
       desired_size = var.dmz_node_size["desired"]
       min_size     = var.dmz_node_size["min"]
       max_size     = var.dmz_node_size["max"]
+      ami_type     = "AL2023_x86_64_STANDARD"
 
       pre_bootstrap_user_data = <<-EOT
         cd /tmp
@@ -72,6 +73,7 @@ locals {
       desired_size = var.worker_node_size["desired"]
       min_size     = var.worker_node_size["min"]
       max_size     = var.worker_node_size["max"]
+      ami_type     = "AL2023_x86_64_STANDARD"
 
       pre_bootstrap_user_data = <<-EOT
         cd /tmp
