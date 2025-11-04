@@ -53,11 +53,11 @@ variable "common_tags" {
 variable "eks_kubernetes_version" {
   type        = string
   description = "Amazon EKS Kubernetes version"
-  default     = "1.31"
+  default     = "1.32"
 
   validation {
-    condition     = contains(["1.31", "1.30", "1.29", "1.28"], var.eks_kubernetes_version)
-    error_message = "Invalid EKS Kubernetes version. Supported versions are '1.31', '1.30', '1.29', '1.28'."
+    condition     = contains(["1.32", "1.31", "1.30", "1.29"], var.eks_kubernetes_version)
+    error_message = "Invalid EKS Kubernetes version. Supported versions are '1.32', '1.31', '1.30', '1.29'."
   }
 }
 
@@ -139,7 +139,7 @@ variable "vpc_public_subnet_cidr" {
 variable "default_storage_class" {
   type        = string
   description = "Default storage class used for describing the EBS usage"
-  default     = "radar-base-ebs-sc-gp2"
+  default     = "radar-base-ebs-sc-gp3"
 
   validation {
     condition     = var.default_storage_class == "radar-base-ebs-sc-gp2" || var.default_storage_class == "radar-base-ebs-sc-gp3" || var.default_storage_class == "radar-base-ebs-sc-io1" || var.default_storage_class == "radar-base-ebs-sc-io2"

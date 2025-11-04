@@ -37,6 +37,23 @@ resource "kubernetes_annotations" "unset_eks_default_gp2" {
   ]
 }
 
+resource "kubernetes_annotations" "unset_eks_default_gp3" {
+  api_version = "storage.k8s.io/v1"
+  kind        = "StorageClass"
+  force       = "true"
+
+  metadata {
+    name = "gp3"
+  }
+  annotations = {
+    "storageclass.kubernetes.io/is-default-class" = "false"
+  }
+
+  depends_on = [
+    module.eks
+  ]
+}
+
 resource "kubernetes_annotations" "set_default_storage_class" {
   api_version = "storage.k8s.io/v1"
   kind        = "StorageClass"
