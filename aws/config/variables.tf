@@ -139,7 +139,7 @@ variable "kubernetes_dashboard_version" {
 variable "kafka_version" {
   type        = string
   description = "Version of the Kafka to be used for MSK"
-  default     = "3.2.0"
+  default     = "3.9.x"
 }
 
 variable "postgres_version" {

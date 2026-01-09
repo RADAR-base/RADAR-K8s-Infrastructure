@@ -26,6 +26,11 @@ resource "aws_iam_role_policy_attachment" "msk_policy_attachment" {
   role       = aws_iam_role.msk_role[0].name
 }
 
+resource "random_id" "msk_config" {
+  count       = var.enable_msk ? 1 : 0
+  byte_length = 4
+}
+
 resource "aws_security_group" "msk_cluster_access" {
   count = var.enable_msk ? 1 : 0
 
@@ -55,7 +60,7 @@ resource "aws_msk_configuration" "msk_configuration" {
   count = var.enable_msk ? 1 : 0
 
   kafka_versions = [var.kafka_version]
-  name           = "${var.eks_cluster_name}-msk-configuration"
+  name           = "${var.eks_cluster_name}-msk-configuration${random_id.msk_config[0].hex}"
 
   server_properties = <<PROPERTIES
 auto.create.topics.enable=false
@@ -72,6 +77,10 @@ socket.send.buffer.bytes=102400
 unclean.leader.election.enable=true
 zookeeper.session.timeout.ms=18000
 PROPERTIES
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_cloudwatch_log_group" "msk_broker" {
@@ -147,6 +156,8 @@ resource "aws_msk_cluster" "msk_cluster" {
   lifecycle {
     ignore_changes = [broker_node_group_info[0].storage_info[0].ebs_storage_info[0].volume_size]
   }
+
+  depends_on = [aws_msk_configuration.msk_configuration]
 }
 
 output "radar_base_msk_bootstrap_brokers" {

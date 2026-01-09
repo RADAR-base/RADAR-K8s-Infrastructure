@@ -20,6 +20,10 @@ terraform {
       source  = "hashicorp/archive"
       version = "~> 2.7.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.7.0"
+    }
   }
   required_version = ">= 1.9.0"
 }
