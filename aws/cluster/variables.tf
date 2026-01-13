@@ -94,6 +94,12 @@ variable "eks_admins_group_users" {
   default     = []
 }
 
+variable "eks_admins_mfa_required" {
+  type        = bool
+  description = "Whether or not MFA is required for EKS admin IAM users"
+  default     = false
+}
+
 variable "create_dmz_node_group" {
   type        = bool
   description = "Whether or not to create a DMZ node group with taints"
