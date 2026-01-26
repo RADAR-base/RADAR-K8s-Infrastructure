@@ -27,7 +27,7 @@
 |------|--------|---------|
 | <a name="module_cert_manager_irsa"></a> [cert\_manager\_irsa](#module\_cert\_manager\_irsa) | git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks | e20e0b9a42084bbc885fd5abb18b8744810bd567 |
 | <a name="module_external_dns_irsa"></a> [external\_dns\_irsa](#module\_external\_dns\_irsa) | git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks | e20e0b9a42084bbc885fd5abb18b8744810bd567 |
-| <a name="module_karpenter"></a> [karpenter](#module\_karpenter) | git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter | 37e3348dffe06ea4b9adf9b54512e4efdb46f425 |
+| <a name="module_karpenter"></a> [karpenter](#module\_karpenter) | git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter | 8a0efdbbc84180a26e0bacfd2b6fcfceac53b3b6 |
 
 ## Resources
 
@@ -136,7 +136,7 @@
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | Version of the Kafka to be used for MSK | `string` | `"3.9.x"` | no |
 | <a name="input_karpenter_ami_version_alias"></a> [karpenter\_ami\_version\_alias](#input\_karpenter\_ami\_version\_alias) | Selector alias for the AMI version used by Karpenter EC2 node class | `string` | `"al2023@v20250519"` | no |
 | <a name="input_karpenter_node_pools"></a> [karpenter\_node\_pools](#input\_karpenter\_node\_pools) | Configuration for the Karpenter node pool(s) with each key being the node pool name | <pre>map(object({<br/>    architecture           = list(string)<br/>    os                     = list(string)<br/>    instance_capacity_type = list(string)<br/>    instance_category      = list(string)<br/>    instance_cpu           = list(string)<br/>  }))</pre> | `{}` | no |
-| <a name="input_karpenter_version"></a> [karpenter\_version](#input\_karpenter\_version) | n/a | `string` | `"1.3.3"` | no |
+| <a name="input_karpenter_version"></a> [karpenter\_version](#input\_karpenter\_version) | n/a | `string` | `"1.3.6"` | no |
 | <a name="input_kubernetes_dashboard_version"></a> [kubernetes\_dashboard\_version](#input\_kubernetes\_dashboard\_version) | Version of the Kubernetes Dashboard | `string` | `"7.3.2"` | no |
 | <a name="input_metrics_server_version"></a> [metrics\_server\_version](#input\_metrics\_server\_version) | Version of the Metrics Server | `string` | `"3.12.1"` | no |
 | <a name="input_postgres_read_replicas"></a> [postgres\_read\_replicas](#input\_postgres\_read\_replicas) | Number of PostgreSQL read replicas if needed | `number` | `0` | no |

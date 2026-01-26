@@ -1,7 +1,7 @@
 module "karpenter" {
   count = var.enable_karpenter ? 1 : 0
 
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=37e3348dffe06ea4b9adf9b54512e4efdb46f425" # commit hash of version 20.36.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-eks.git//modules/karpenter?ref=8a0efdbbc84180a26e0bacfd2b6fcfceac53b3b6" # commit hash of version 20.37.2
 
   cluster_name          = data.aws_eks_cluster.main.id
   enable_v1_permissions = true

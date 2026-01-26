@@ -73,7 +73,7 @@ variable "ses_bounce_destinations" {
 
 variable "karpenter_version" {
   type    = string
-  default = "1.3.3"
+  default = "1.3.6"
 }
 
 variable "karpenter_ami_version_alias" {
