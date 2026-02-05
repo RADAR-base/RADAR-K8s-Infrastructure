@@ -72,6 +72,11 @@ module "allow_assume_eks_admins_iam_policy" {
         ]
         Effect   = "Allow"
         Resource = module.eks_admins_iam_role.iam_role_arn
+        Condition = var.eks_admins_mfa_required ? {
+          Bool = {
+            "aws:MultiFactorAuthPresent" = "true"
+          }
+        } : null
       },
     ]
   })

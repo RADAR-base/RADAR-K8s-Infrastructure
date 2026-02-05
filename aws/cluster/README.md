@@ -63,6 +63,7 @@
 | <a name="input_dmz_node_size"></a> [dmz\_node\_size](#input\_dmz\_node\_size) | Node size of the DMZ node group | `map(number)` | <pre>{<br/>  "desired": 1,<br/>  "max": 2,<br/>  "min": 0<br/>}</pre> | no |
 | <a name="input_ecr_repository_names"></a> [ecr\_repository\_names](#input\_ecr\_repository\_names) | Default prefixes for ECR repositories if used for hosting the images | `list(string)` | <pre>[<br/>  "radar-base-ecr-public",<br/>  "radar-base-k8s",<br/>  "radar-base-quay",<br/>  "radar-base-docker-hub",<br/>  "radar-base-ghcr"<br/>]</pre> | no |
 | <a name="input_eks_admins_group_users"></a> [eks\_admins\_group\_users](#input\_eks\_admins\_group\_users) | EKS admin IAM user group | `list(string)` | `[]` | no |
+| <a name="input_eks_admins_mfa_required"></a> [eks\_admins\_mfa\_required](#input\_eks\_admins\_mfa\_required) | Whether or not MFA is required for EKS admin IAM users | `bool` | `false` | no |
 | <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | EKS cluster name | `string` | n/a | yes |
 | <a name="input_eks_kubernetes_version"></a> [eks\_kubernetes\_version](#input\_eks\_kubernetes\_version) | Amazon EKS Kubernetes version | `string` | `"1.32"` | no |
 | <a name="input_instance_capacity_type"></a> [instance\_capacity\_type](#input\_instance\_capacity\_type) | Capacity type used by EKS managed node groups | `string` | `"SPOT"` | no |
