@@ -145,7 +145,7 @@ variable "kafka_version" {
 variable "postgres_version" {
   type        = string
   description = "Version of the PostgreSQL to be used for RDS"
-  default     = "13.20"
+  default     = "14.20"
 }
 
 variable "postgres_read_replicas" {

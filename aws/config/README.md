@@ -140,7 +140,7 @@
 | <a name="input_kubernetes_dashboard_version"></a> [kubernetes\_dashboard\_version](#input\_kubernetes\_dashboard\_version) | Version of the Kubernetes Dashboard | `string` | `"7.3.2"` | no |
 | <a name="input_metrics_server_version"></a> [metrics\_server\_version](#input\_metrics\_server\_version) | Version of the Metrics Server | `string` | `"3.12.1"` | no |
 | <a name="input_postgres_read_replicas"></a> [postgres\_read\_replicas](#input\_postgres\_read\_replicas) | Number of PostgreSQL read replicas if needed | `number` | `0` | no |
-| <a name="input_postgres_version"></a> [postgres\_version](#input\_postgres\_version) | Version of the PostgreSQL to be used for RDS | `string` | `"13.20"` | no |
+| <a name="input_postgres_version"></a> [postgres\_version](#input\_postgres\_version) | Version of the PostgreSQL to be used for RDS | `string` | `"14.20"` | no |
 | <a name="input_radar_postgres_password"></a> [radar\_postgres\_password](#input\_radar\_postgres\_password) | Password for the PostgreSQL database used by Radar components | `string` | n/a | yes |
 | <a name="input_ses_bounce_destinations"></a> [ses\_bounce\_destinations](#input\_ses\_bounce\_destinations) | List of email addresses for receiving bounced email notifications | `list(string)` | `[]` | no |
 | <a name="input_with_dmz_pods"></a> [with\_dmz\_pods](#input\_with\_dmz\_pods) | Whether or not to utilise the DMZ node group if it exists | `bool` | `false` | no |

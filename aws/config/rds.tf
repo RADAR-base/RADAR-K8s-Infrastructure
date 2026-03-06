@@ -60,6 +60,7 @@ resource "aws_db_instance" "radar_postgres" {
   iam_database_authentication_enabled = true
   deletion_protection                 = true  # This needs to be set to false before you really want to delete the database with "terraform destroy"
   apply_immediately                   = false # If set to true, it will not wait for the next maintenance window and can result in a downtime
+  allow_major_version_upgrade         = true
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-postgres" }), var.common_tags)
 
