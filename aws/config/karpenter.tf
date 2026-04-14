@@ -82,10 +82,10 @@ locals {
 }
 
 resource "aws_iam_role_policy" "karpenter_list_instance_profiles" {
-  count = var.enable_karpenter_v1 ? 1 : 0
+  count = var.enable_karpenter ? 1 : 0
 
   name = "KarpenterListInstanceProfiles"
-  role = module.karpenter_v1[0].iam_role_name
+  role = module.karpenter[0].iam_role_name
 
   policy = jsonencode({
     Version = "2012-10-17"

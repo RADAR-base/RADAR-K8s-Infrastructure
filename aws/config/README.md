@@ -48,6 +48,7 @@
 | [aws_iam_role.ecr_repository_creator](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.msk_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.secret_rotation_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.karpenter_list_instance_profiles](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.secret_rotation_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy_attachment.ecr_attach](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.msk_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -134,9 +135,11 @@
 | <a name="input_enable_ses"></a> [enable\_ses](#input\_enable\_ses) | Do you need SES? [true, false] | `bool` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name | `string` | `"dev"` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | Version of the Kafka to be used for MSK | `string` | `"3.9.x"` | no |
-| <a name="input_karpenter_ami_version_alias"></a> [karpenter\_ami\_version\_alias](#input\_karpenter\_ami\_version\_alias) | Selector alias for the AMI version used by Karpenter EC2 node class | `string` | `"al2023@v20250519"` | no |
+| <a name="input_karpenter_ami_version_alias"></a> [karpenter\_ami\_version\_alias](#input\_karpenter\_ami\_version\_alias) | Selector alias for the AMI version used by Karpenter EC2 node class | `string` | `"bottlerocket@1.54.0"` | no |
 | <a name="input_karpenter_node_pools"></a> [karpenter\_node\_pools](#input\_karpenter\_node\_pools) | Configuration for the Karpenter node pool(s) with each key being the node pool name | <pre>map(object({<br/>    architecture           = list(string)<br/>    os                     = list(string)<br/>    instance_capacity_type = list(string)<br/>    instance_category      = list(string)<br/>    instance_cpu           = list(string)<br/>  }))</pre> | `{}` | no |
 | <a name="input_karpenter_version"></a> [karpenter\_version](#input\_karpenter\_version) | n/a | `string` | `"1.3.6"` | no |
+| <a name="input_karpenter_volume_size"></a> [karpenter\_volume\_size](#input\_karpenter\_volume\_size) | EBS data volume size for Karpenter nodes | `string` | `"40Gi"` | no |
+| <a name="input_karpenter_volume_type"></a> [karpenter\_volume\_type](#input\_karpenter\_volume\_type) | EBS volume type for Karpenter nodes | `string` | `"gp3"` | no |
 | <a name="input_kubernetes_dashboard_version"></a> [kubernetes\_dashboard\_version](#input\_kubernetes\_dashboard\_version) | Version of the Kubernetes Dashboard | `string` | `"7.3.2"` | no |
 | <a name="input_metrics_server_version"></a> [metrics\_server\_version](#input\_metrics\_server\_version) | Version of the Metrics Server | `string` | `"3.12.1"` | no |
 | <a name="input_postgres_read_replicas"></a> [postgres\_read\_replicas](#input\_postgres\_read\_replicas) | Number of PostgreSQL read replicas if needed | `number` | `0` | no |
