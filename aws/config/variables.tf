@@ -79,7 +79,19 @@ variable "karpenter_version" {
 variable "karpenter_ami_version_alias" {
   type        = string
   description = "Selector alias for the AMI version used by Karpenter EC2 node class"
-  default     = "al2023@v20250519"
+  default     = "bottlerocket@1.54.0"
+}
+
+variable "karpenter_volume_type" {
+  type        = string
+  description = "EBS volume type for Karpenter nodes"
+  default     = "gp3"
+}
+
+variable "karpenter_volume_size" {
+  type        = string
+  description = "EBS data volume size for Karpenter nodes"
+  default     = "40Gi"
 }
 
 variable "karpenter_node_pools" {
