@@ -79,7 +79,7 @@ variable "karpenter_version" {
 variable "karpenter_ami_version_alias" {
   type        = string
   description = "Selector alias for the AMI version used by Karpenter EC2 node class"
-  default     = "bottlerocket@1.54.0"
+  default     = "al2023@latest"
 }
 
 variable "karpenter_volume_type" {
