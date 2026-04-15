@@ -53,11 +53,11 @@ variable "common_tags" {
 variable "eks_kubernetes_version" {
   type        = string
   description = "Amazon EKS Kubernetes version"
-  default     = "1.32"
+  default     = "1.35"
 
   validation {
-    condition     = contains(["1.32", "1.31", "1.30", "1.29"], var.eks_kubernetes_version)
-    error_message = "Invalid EKS Kubernetes version. Supported versions are '1.32', '1.31', '1.30', '1.29'."
+    condition     = contains(["1.32", "1.33", "1.34", "1.35"], var.eks_kubernetes_version)
+    error_message = "Invalid EKS Kubernetes version. Supported versions are '1.35', '1.34', '1.33', '1.32'."
   }
 }
 

@@ -81,6 +81,25 @@ locals {
   ]
 }
 
+resource "aws_iam_role_policy" "karpenter_list_instance_profiles" {
+  count = var.enable_karpenter ? 1 : 0
+
+  name = "KarpenterListInstanceProfiles"
+  role = module.karpenter[0].iam_role_name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "AllowListInstanceProfiles"
+        Effect   = "Allow"
+        Action   = "iam:ListInstanceProfiles"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "helm_release" "karpenter" {
   count = var.enable_karpenter ? 1 : 0
 
@@ -206,16 +225,32 @@ resource "kubectl_manifest" "karpenter_node_class" {
       name = "default"
     }
     spec = {
-      role = regex("[^/]+$", module.karpenter[0].node_iam_role_arn)
-      blockDeviceMappings = [
+      blockDeviceMappings = can(regex("^bottlerocket@", var.karpenter_ami_version_alias)) ? [
         {
           deviceName = "/dev/xvda"
           ebs = {
-            volumeSize          = "40Gi"
-            volumeType          = "gp3"
+            volumeSize          = "4Gi"
+            volumeType          = var.karpenter_volume_type
             deleteOnTermination = true
           }
         },
+        {
+          deviceName = "/dev/xvdb"
+          ebs = {
+            volumeSize          = var.karpenter_volume_size
+            volumeType          = var.karpenter_volume_type
+            deleteOnTermination = true
+          }
+        }
+        ] : [
+        {
+          deviceName = "/dev/xvda"
+          ebs = {
+            volumeSize          = var.karpenter_volume_size
+            volumeType          = var.karpenter_volume_type
+            deleteOnTermination = true
+          }
+        }
       ]
       amiSelectorTerms = [{
         alias = var.karpenter_ami_version_alias
