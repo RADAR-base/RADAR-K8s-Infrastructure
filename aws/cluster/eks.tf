@@ -19,8 +19,10 @@ module "ebs_csi_irsa" {
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-role-for-service-accounts-eks?ref=e20e0b9a42084bbc885fd5abb18b8744810bd567" # commit hash of version 5.48.0
 
   role_name             = "${var.eks_cluster_name}-ebs-csi-irsa"
-  attach_ebs_csi_policy = true
-
+  attach_ebs_csi_policy = false
+  role_policy_arns = {
+    EBSCSIDriverPolicyV2 = "arn:aws:iam::aws:policy/AmazonEBSCSIDriverPolicyV2"
+  }
 
   oidc_providers = {
     main = {
