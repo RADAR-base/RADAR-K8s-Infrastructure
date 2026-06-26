@@ -17,6 +17,7 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
   - [Create the infrastructure](#create-the-infrastructure)
   - [Connect to and verify the cluster](#connect-to-and-verify-the-cluster)
   - [Configure the cluster (optional)](#configure-the-cluster-optional)
+  - [Accessing Headlamp](#accessing-headlamp)
   - [Contributing](#contributing)
   - [Known limitations](#known-limitations)
 
