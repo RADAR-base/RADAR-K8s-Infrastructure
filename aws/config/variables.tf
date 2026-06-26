@@ -142,10 +142,10 @@ variable "metrics_server_version" {
   default     = "3.12.1"
 }
 
-variable "kubernetes_dashboard_version" {
+variable "headlamp_version" {
   type        = string
-  description = "Version of the Kubernetes Dashboard"
-  default     = "7.3.2"
+  description = "Version of the Headlamp"
+  default     = "0.43.0"
 }
 
 variable "kafka_version" {
@@ -157,7 +157,7 @@ variable "kafka_version" {
 variable "postgres_version" {
   type        = string
   description = "Version of the PostgreSQL to be used for RDS"
-  default     = "14.20"
+  default     = "14.22"
 }
 
 variable "postgres_read_replicas" {

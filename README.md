@@ -17,6 +17,7 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
   - [Create the infrastructure](#create-the-infrastructure)
   - [Connect to and verify the cluster](#connect-to-and-verify-the-cluster)
   - [Configure the cluster (optional)](#configure-the-cluster-optional)
+  - [Accessing Headlamp](#accessing-headlamp)
   - [Contributing](#contributing)
   - [Known limitations](#known-limitations)
 
@@ -140,7 +141,7 @@ Created resources (if all enabled):
 
 - EIP allocated for the load balancer created by Ingress-NGINX
 - Karpenter provisioner, the node template and the SQS interruption queue
-- Metrics Server along with the Kubernetes Dashboard and the read-only user
+- Metrics Server along with Headlamp and the read-only user
 - MSK cluster featuring Kafka brokers and zookeepers
 - RDS instance running managementportal, appserver and rest_sources_auth databases
 - Route53 zone and records accompanied by IRSAs for external DNS and Cert Manager
@@ -148,6 +149,26 @@ Created resources (if all enabled):
 - SES SMTP endpoint
 - CloudWatch event rules and targets
 - Essential IAM policies, roles, users for aforementioned resources
+
+## Accessing Headlamp
+
+The `kubernetes-dashboard` is deprecated and has been replaced by [Headlamp](https://headlamp.dev/). Headlamp is a lightweight, extensible web UI for viewing and managing Kubernetes clusters.
+
+It is deployed by the `config` workspace when `enable_metrics = true`, into the `headlamp` namespace, and is exposed as a `ClusterIP` service (no ingress). Access it locally via `kubectl port-forward`.
+
+```bash
+# 1. Forward the Headlamp service to localhost
+kubectl port-forward -n headlamp service/headlamp 8080:80
+
+# 2. Open the in-cluster view in your browser
+#    (a plain http://localhost:8080 may 404 on first load — use the path below or hard-reload)
+open http://localhost:8080/c/main/
+
+# 3. Get the login token for the read-only headlamp-user service account
+kubectl get secret headlamp-user-token -n headlamp -o jsonpath='{.data.token}' | base64 -d; echo
+```
+
+Paste the token into Headlamp's **ID token** field to log in. The `headlamp-user` service account is bound to the `read-only-cluster-role` (`get`/`list`/`watch` only), so the UI is view-only; widen the ClusterRole binding if write access is required.
 
 ## Contributing
 
