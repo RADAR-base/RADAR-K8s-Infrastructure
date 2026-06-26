@@ -149,6 +149,26 @@ Created resources (if all enabled):
 - CloudWatch event rules and targets
 - Essential IAM policies, roles, users for aforementioned resources
 
+## Accessing Headlamp
+
+The `kubernetes-dashboard` is deprecated and has been replaced by [Headlamp](https://headlamp.dev/). Headlamp is a lightweight, extensible web UI for viewing and managing Kubernetes clusters.
+
+It is deployed by the `config` workspace when `enable_metrics = true`, into the `headlamp` namespace, and is exposed as a `ClusterIP` service (no ingress). Access it locally via `kubectl port-forward`.
+
+```bash
+# 1. Forward the Headlamp service to localhost
+kubectl port-forward -n headlamp service/headlamp 8080:80
+
+# 2. Open the in-cluster view in your browser
+#    (a plain http://localhost:8080 may 404 on first load — use the path below or hard-reload)
+open http://localhost:8080/c/main/
+
+# 3. Get the login token for the read-only headlamp-user service account
+kubectl get secret headlamp-user-token -n headlamp -o jsonpath='{.data.token}' | base64 -d; echo
+```
+
+Paste the token into Headlamp's **ID token** field to log in. The `headlamp-user` service account is bound to the `read-only-cluster-role` (`get`/`list`/`watch` only), so the UI is view-only; widen the ClusterRole binding if write access is required.
+
 ## Contributing
 
 The dependencies and linting tools and managed via Devbox, you need to [install it](https://jetify-com.vercel.app/docs/devbox/installing_devbox/#install-devbox) before proceeding. Once that is done you can run
