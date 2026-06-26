@@ -70,7 +70,7 @@ resource "kubernetes_cluster_role_binding_v1" "headlamp_user" {
   count = var.enable_metrics ? 1 : 0
 
   metadata {
-    name = "headlamp_user"
+    name = "headlamp-user"
   }
   role_ref {
     api_group = "rbac.authorization.k8s.io"
