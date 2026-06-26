@@ -15,56 +15,82 @@ resource "helm_release" "metrics_server" {
   wait = true
 }
 
-resource "kubernetes_namespace" "kubernetes_dashboard" {
+resource "kubernetes_namespace" "headlamp" {
   count = var.enable_metrics ? 1 : 0
 
   metadata {
-    name = "kubernetes-dashboard"
+    name = "headlamp"
   }
 }
 
-resource "helm_release" "kubernetes_dashboard" {
+resource "helm_release" "headlamp" {
   count = var.enable_metrics ? 1 : 0
 
-  name       = "kubernetes-dashboard"
-  repository = "https://kubernetes.github.io/dashboard/"
-  chart      = "kubernetes-dashboard"
-  namespace  = kubernetes_namespace.kubernetes_dashboard[0].metadata[0].name
-  version    = var.kubernetes_dashboard_version
+  name       = "headlamp"
+  repository = "https://kubernetes-sigs.github.io/headlamp/"
+  chart      = "headlamp"
+  namespace  = kubernetes_namespace.headlamp[0].metadata[0].name
+  version    = var.headlamp_version
 
-  depends_on = [kubernetes_namespace.kubernetes_dashboard]
-
+  depends_on = [kubernetes_namespace.headlamp]
 }
 
-resource "kubernetes_service_account_v1" "dashboard_user" {
+resource "kubernetes_service_account_v1" "headlamp_user" {
   count = var.enable_metrics ? 1 : 0
 
   metadata {
-    name      = "dashboard-user"
-    namespace = helm_release.kubernetes_dashboard[0].name
+    name      = "headlamp-user"
+    namespace = kubernetes_namespace.headlamp[0].metadata[0].name
   }
 
   depends_on = [
-    helm_release.kubernetes_dashboard
+    helm_release.headlamp
   ]
 }
 
-resource "kubernetes_secret_v1" "dashboard_user" {
+resource "kubernetes_secret_v1" "headlamp_user" {
   count = var.enable_metrics ? 1 : 0
 
   metadata {
-    name      = "dashboard-user-token"
-    namespace = kubernetes_namespace.kubernetes_dashboard[0].metadata[0].name
+    name      = "headlamp-user-token"
+    namespace = kubernetes_namespace.headlamp[0].metadata[0].name
     annotations = {
-      "kubernetes.io/service-account.name" = kubernetes_service_account_v1.dashboard_user[0].metadata[0].name
+      "kubernetes.io/service-account.name" = kubernetes_service_account_v1.headlamp_user[0].metadata[0].name
     }
   }
   type                           = "kubernetes.io/service-account-token"
   wait_for_service_account_token = true
 
   depends_on = [
-    helm_release.kubernetes_dashboard
+    helm_release.headlamp
   ]
+}
+
+resource "kubernetes_cluster_role_binding_v1" "headlamp_user" {
+  count = var.enable_metrics ? 1 : 0
+
+  metadata {
+    name = "headlamp_user"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role_v1.read_only[0].metadata[0].name
+  }
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account_v1.headlamp_user[0].metadata[0].name
+    namespace = kubernetes_namespace.headlamp[0].metadata[0].name
+  }
+  depends_on = [
+    helm_release.headlamp,
+    kubernetes_service_account_v1.headlamp_user
+  ]
+}
+
+output "radar_base_headlamp_user_token" {
+  value     = var.enable_metrics ? kubernetes_secret_v1.headlamp_user[0].data.token : null
+  sensitive = true
 }
 
 resource "kubernetes_cluster_role_v1" "read_only" {
@@ -136,31 +162,4 @@ resource "kubernetes_cluster_role_v1" "read_only" {
     resources  = ["storageclasses", "volumeattachments"]
     verbs      = ["get", "list", "watch"]
   }
-}
-
-resource "kubernetes_cluster_role_binding_v1" "dashboard_user" {
-  count = var.enable_metrics ? 1 : 0
-
-  metadata {
-    name = "dashboard-user"
-  }
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = kubernetes_cluster_role_v1.read_only[0].metadata[0].name
-  }
-  subject {
-    kind      = "ServiceAccount"
-    name      = kubernetes_service_account_v1.dashboard_user[0].metadata[0].name
-    namespace = kubernetes_namespace.kubernetes_dashboard[0].metadata[0].name
-  }
-  depends_on = [
-    helm_release.kubernetes_dashboard,
-    kubernetes_service_account_v1.dashboard_user
-  ]
-}
-
-output "radar_base_k8s_dashboard_user_token" {
-  value     = var.enable_metrics ? kubernetes_secret_v1.dashboard_user[0].data.token : null
-  sensitive = true
 }

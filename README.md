@@ -140,7 +140,7 @@ Created resources (if all enabled):
 
 - EIP allocated for the load balancer created by Ingress-NGINX
 - Karpenter provisioner, the node template and the SQS interruption queue
-- Metrics Server along with the Kubernetes Dashboard and the read-only user
+- Metrics Server along with Headlamp and the read-only user
 - MSK cluster featuring Kafka brokers and zookeepers
 - RDS instance running managementportal, appserver and rest_sources_auth databases
 - Route53 zone and records accompanied by IRSAs for external DNS and Cert Manager
