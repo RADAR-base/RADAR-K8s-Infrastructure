@@ -20,6 +20,8 @@ This repository aims to provide [IaC](https://en.wikipedia.org/wiki/Infrastructu
   - [Accessing Headlamp](#accessing-headlamp)
   - [Contributing](#contributing)
   - [Known limitations](#known-limitations)
+  - [MSK Decommissioning](#msk-decommissioning)
+    - [Migration Steps](#migration-steps)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -190,3 +192,94 @@ This project also uses [Conventional Commits](https://www.conventionalcommits.or
 - Sometimes Terraform tries to replace the existing MSK cluster while re-applying the templates even if there is no change on the cluster. Mitigate this with `terraform untaint aws_msk_cluster.msk_cluster`.
 - Prior to `terraform destroy`, infrastructure resources created by pods/controllers and may not be visible to Terraform need to be deleted, e.g., nginx-ingress's NLB. A good practice is to always begin by running `helmfile destroy`.
 - If Karpenter is used for node provisioning, ensure the nodes created by it are not lingering around before running `terraform destroy`.
+
+## MSK Decommissioning
+MSK has been decommissioned in favour of the in-cluster Confluent Platform Kafka (`cp-kafka`). The following procedure was followed to migrate with zero data loss.
+
+### Migration Steps
+
+**1. Enable cp-kafka and cp-zookeeper**
+
+Decrypt the `production.yaml` file from repo `RADAR-Kubernetes`, set `cp_kafka` and `cp_zookeeper` install flags from `false` to `true` and Encrypt it before applying the changes.
+
+Flow should be `decrypt → edit (production.yaml) → re-encrypt`
+```bash
+./bin/decrypt -e dev
+./bin/encrypt -e dev
+```
+
+apply the changes using command:
+```bash
+helmfile apply -f ./helmfile.d/10-services.yaml --selector name=cp-zookeeper --selector name=cp-kafka
+```
+
+**2. Update producers to the new bootstrap server**
+
+Update the bootstrap server to the cp-kafka headless service on port 9092 `(cp-kafka-headless:9092)` for the following components:
+- `cp-schema-registry`
+- `catalog-server`
+- `radar-fitbit-connector`
+- `radar-gateway`
+- `radar-push-endpoint`
+
+NOTE: `decrypt → edit → re-encrypt` before apply the changes
+
+Apply the updated configs:
+```bash
+helmfile apply -f ./helmfile.d/10-services.yaml --selector name=cp-schema-registry --selector name=catalog-server --selector name=radar-fitbit-connector --selector name=radar-gateway --selector name=radar-push-endpoint
+```
+
+Wait until consumer lag reaches **0** before proceeding:
+```bash
+kubectl exec -it cp-kafka-0 -- kafka-consumer-groups --bootstrap-server cp-kafka-headless:9092 --describe --all-groups
+```
+
+**3. Scale down radar-output and clean up offsets**
+```bash
+kubectl scale deployment radar-output --replicas=0
+```
+
+Delete the intermediate S3 bucket contents and clear Redis offset keys:
+```bash
+# Delete intermediate S3 bucket
+aws s3 rm s3://<intermediate-bucket-name>/topics/ --recursive
+
+# Connect to Redis master and delete offset keys
+kubectl exec -it redis-master-0 -- redis-cli
+ KEYS offsets*
+ EVAL "return redis.call('del', unpack(redis.call('keys', 'offsets/*')))" 0
+```
+
+**4. Deploy consumers with the new endpoint**
+
+Update `radar-s3-connector` to use `cp-kafka-headless:9092` as the bootstrap server and deploy:
+```bash
+helmfile apply -f ./helmfile.d/10-services.yaml --selector name=radar-s3-connector
+```
+
+**5. Scale radar-output back up and verify**
+```bash
+kubectl scale deployment radar-output --replicas=1
+kubectl logs -f deployment/radar-output
+```
+
+Check the logs to confirm files are being processed (Redis output entries visible).
+
+**6. Confirm new offsets in Redis**
+Connect to the Redis master and verify:
+```bash
+kubectl exec -it radar-output-redis-master-0 -- redis-cli
+KEYS offset*
+```
+
+- New consumer offsets have been created under the new bootstrap server
+- The intermediate S3 bucket is processing output starting from `topics/0` or the new offsets
+
+**7. Decommission MSK via Terraform**
+
+Set `enable_msk = false` in `config/terraform.tfvars` and apply:
+```bash
+cd config
+terraform plan   # confirm only MSK resources are destroyed
+terraform apply --auto-approve
+```
