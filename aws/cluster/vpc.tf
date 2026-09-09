@@ -86,8 +86,8 @@ resource "aws_vpc_endpoint" "ecr" {
   service_name        = "com.amazonaws.${var.AWS_REGION}.ecr.dkr"
   vpc_endpoint_type   = "Interface"
   security_group_ids  = [aws_security_group.vpc_endpoint.id]
-  subnet_ids          = module.vpc.private_subnets
-  private_dns_enabled = false
+  subnet_ids          = [module.vpc.private_subnets[0]]
+  private_dns_enabled = true
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-ecr-vpc-endpoint" }), var.common_tags)
 }
@@ -97,8 +97,8 @@ resource "aws_vpc_endpoint" "sts" {
   service_name        = "com.amazonaws.${var.AWS_REGION}.sts"
   vpc_endpoint_type   = "Interface"
   security_group_ids  = [aws_security_group.vpc_endpoint.id]
-  subnet_ids          = module.vpc.private_subnets
-  private_dns_enabled = false
+  subnet_ids          = [module.vpc.private_subnets[0]]
+  private_dns_enabled = true
 
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-sts-vpc-endpoint" }), var.common_tags)
 }
