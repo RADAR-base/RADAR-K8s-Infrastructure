@@ -38,7 +38,9 @@
 | [aws_db_instance.radar_postgres_replicas](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance) | resource |
 | [aws_db_subnet_group.rds_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_ecr_pull_through_cache_rule.dockerhub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_pull_through_cache_rule) | resource |
+| [aws_ecr_pull_through_cache_rule.ghcr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_pull_through_cache_rule) | resource |
 | [aws_ecr_repository_creation_template.dockerhub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository_creation_template) | resource |
+| [aws_ecr_repository_creation_template.ghcr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository_creation_template) | resource |
 | [aws_eip.cluster_loadbalancer_eip](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_iam_access_key.s3_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_access_key) | resource |
 | [aws_iam_access_key.smtp_user_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_access_key) | resource |
@@ -70,8 +72,10 @@
 | [aws_s3_bucket_ownership_controls.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_secretsmanager_secret.dockerhub_credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret.ghcr_credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
 | [aws_secretsmanager_secret_rotation.dockerhub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_rotation) | resource |
 | [aws_secretsmanager_secret_version.dockerhub_credentials_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
+| [aws_secretsmanager_secret_version.ghcr_credentials_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 | [aws_security_group.msk_cluster_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.rds_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_ses_configuration_set.configuration_set](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_configuration_set) | resource |
@@ -134,6 +138,8 @@
 | <a name="input_enable_s3"></a> [enable\_s3](#input\_enable\_s3) | Do you need S3? [true, false] | `bool` | n/a | yes |
 | <a name="input_enable_ses"></a> [enable\_ses](#input\_enable\_ses) | Do you need SES? [true, false] | `bool` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name | `string` | `"dev"` | no |
+| <a name="input_ghcr_access_token"></a> [ghcr\_access\_token](#input\_ghcr\_access\_token) | GitHub Container Registry access token for ECR pull through cache | `string` | n/a | yes |
+| <a name="input_ghcr_username"></a> [ghcr\_username](#input\_ghcr\_username) | GitHub Container Registry username for ECR pull through cache | `string` | n/a | yes |
 | <a name="input_headlamp_version"></a> [headlamp\_version](#input\_headlamp\_version) | Version of the Headlamp | `string` | `"0.43.0"` | no |
 | <a name="input_kafka_version"></a> [kafka\_version](#input\_kafka\_version) | Version of the Kafka to be used for MSK | `string` | `"3.9.x"` | no |
 | <a name="input_karpenter_ami_version_alias"></a> [karpenter\_ami\_version\_alias](#input\_karpenter\_ami\_version\_alias) | Selector alias for the AMI version used by Karpenter EC2 node class | `string` | `"al2023@latest"` | no |
