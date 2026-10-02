@@ -76,9 +76,14 @@ resource "aws_vpc_endpoint" "s3" {
   tags = merge(tomap({ "Name" : "${var.eks_cluster_name}-s3-vpc-endpoint" }), var.common_tags)
 }
 
-resource "aws_vpc_endpoint_route_table_association" "s3" {
+resource "aws_vpc_endpoint_route_table_association" "s3_private" {
   vpc_endpoint_id = aws_vpc_endpoint.s3.id
   route_table_id  = module.vpc.private_route_table_ids[0]
+}
+
+resource "aws_vpc_endpoint_route_table_association" "s3_public" {
+  vpc_endpoint_id = aws_vpc_endpoint.s3.id
+  route_table_id  = module.vpc.public_route_table_ids[0]
 }
 
 resource "aws_vpc_endpoint" "ecr" {
