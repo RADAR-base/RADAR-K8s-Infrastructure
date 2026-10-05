@@ -184,6 +184,18 @@ variable "docker_hub_access_token" {
   sensitive   = true
 }
 
+variable "ghcr_username" {
+  type        = string
+  description = "GitHub Container Registry username for ECR pull through cache"
+  sensitive   = true
+}
+
+variable "ghcr_access_token" {
+  type        = string
+  description = "GitHub Container Registry access token for ECR pull through cache"
+  sensitive   = true
+}
+
 variable "with_dmz_pods" {
   type        = bool
   description = "Whether or not to utilise the DMZ node group if it exists"
