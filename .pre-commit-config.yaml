@@ -67,6 +67,12 @@ repos:
     entry: terraform-docs markdown table aws/cluster/
     pass_filenames: false
     files: 'aws/cluster/'
+  - id: terraform-test-cluster
+    name: Run the unit tests for the Terraform aws/cluster/
+    language: system
+    entry: terraform -chdir=aws/cluster test
+    pass_filenames: false
+    files: 'aws/cluster/'
   - id: update-terraform-modules-config
     name: Update terraform modules for the Terraform aws/config/
     language: system
@@ -76,6 +82,12 @@ repos:
     name: Generate docs for the Terraform aws/config/
     language: system
     entry: terraform-docs markdown table aws/config/
+    pass_filenames: false
+    files: 'aws/config/'
+  - id: terraform-test-config
+    name: Run the unit tests for the Terraform aws/config/
+    language: system
+    entry: terraform -chdir=aws/config test
     pass_filenames: false
     files: 'aws/config/'
   - id: gitleaks
