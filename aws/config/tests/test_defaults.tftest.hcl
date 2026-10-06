@@ -22,14 +22,14 @@ variables {
   enable_ecr_ptc   = false
   with_dmz_pods    = false
   ses_bounce_destinations = []
-
-  AWS_ACCESS_KEY_ID       = "test"
-  AWS_SECRET_ACCESS_KEY   = "test"
   radar_postgres_password = "test"
   docker_hub_username     = "test"
   docker_hub_access_token = "test"
   ghcr_username           = "test"
   ghcr_access_token       = "test"
+
+  AWS_ACCESS_KEY_ID       = "test"
+  AWS_SECRET_ACCESS_KEY   = "test"
 }
 
 run "no_optional_resources_are_planned" {
