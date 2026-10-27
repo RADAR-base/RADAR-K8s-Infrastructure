@@ -148,7 +148,7 @@ variable "default_storage_class" {
   default     = "radar-base-ebs-sc-gp3"
 
   validation {
-    condition     = contains([for k, v in local.storage_classes: v], var.default_storage_class)
+    condition     = contains([for k, v in local.storage_classes : v], var.default_storage_class)
     error_message = "Invalid storage class. Allowed values are 'radar-base-ebs-sc-gp2', 'radar-base-ebs-sc-gp3', 'radar-base-ebs-sc-io1' or 'radar-base-ebs-sc-io2'."
   }
 }
